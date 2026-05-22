@@ -2,6 +2,7 @@ import { NETWORK_CODES } from "@/constants/constants";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
+import NetworkDetector from "../global/networkDetector";
 import { RoundBtn } from "../onboarding/buttons";
 
 const Number = ({
@@ -83,35 +84,37 @@ const Number = ({
       </View>
 
       {/**** text input */}
-
-      <TextInput
-        style={[
-          styles.input,
-          {
-            borderColor: errors
-              ? "#be1010"
-              : !focused && firstTimeFocus
-                ? "#10be10"
-                : focused
-                  ? "#ffffff"
-                  : "#ffffff87",
-            color: errors
-              ? "#be1010"
-              : !focused && firstTimeFocus
-                ? "#10be10"
-                : "#ffffff",
-          },
-        ]}
-        placeholder="020XXXXXXX"
-        placeholderTextColor="#ffffff87"
-        keyboardType="phone-pad"
-        onFocus={() => handleFocus(true)}
-        onBlur={() => handleFocus(false)}
-        autoFocus={true}
-        maxLength={10}
-        value={phoneNumber}
-        onChangeText={handlePhoneNumberChange}
-      />
+      <View style={styles.inputWrapper}>
+        <NetworkDetector phoneNumber={phoneNumber} />
+        <TextInput
+          style={[
+            styles.input,
+            {
+              borderColor: errors
+                ? "#be1010"
+                : !focused && firstTimeFocus
+                  ? "#10be10"
+                  : focused
+                    ? "#ffffff"
+                    : "#ffffff87",
+              color: errors
+                ? "#be1010"
+                : !focused && firstTimeFocus
+                  ? "#10be10"
+                  : "#ffffff",
+            },
+          ]}
+          placeholder="020XXXXXXX"
+          placeholderTextColor="#ffffff87"
+          keyboardType="phone-pad"
+          onFocus={() => handleFocus(true)}
+          onBlur={() => handleFocus(false)}
+          autoFocus={true}
+          maxLength={10}
+          value={phoneNumber}
+          onChangeText={handlePhoneNumberChange}
+        />
+      </View>
 
       {/**** validation error lists */}
       {errors && (
@@ -165,11 +168,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+
   input: {
+    flex: 1,
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 5,
     fontSize: 18,
     paddingHorizontal: 15,
+    minHeight: 40,
     letterSpacing: 1,
     color: "#ffffffcc",
   },

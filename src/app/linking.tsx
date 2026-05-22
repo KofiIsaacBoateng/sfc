@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 const linking = () => {
   return (
     <View style={styles.container}>
-      <Text>linking</Text>
+      <Text style={{ color: "#ffffff" }}>linking</Text>
     </View>
   );
 };
