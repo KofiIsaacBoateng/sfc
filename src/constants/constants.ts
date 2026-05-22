@@ -18,3 +18,8 @@ export const SLIDES: { id: string; title: string; subtext: string }[] = [
       "You set the rules. Cap your contactless wallet to GHS 20 right from your phone and completely freeze it if lost.",
   },
 ];
+
+export const NETWORK_CODES: { mtn: string[]; telecel: string[] } = {
+  mtn: ["024", "054", "025", "055", "059", "053"],
+  telecel: ["020", "050"],
+};

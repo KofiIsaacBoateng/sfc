@@ -1,17 +1,46 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Pressable, StyleSheet, Text, ViewStyle } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  ViewStyle,
+} from "react-native";
 
 const RoundBtn = ({
   onPress,
   style,
+  loading,
+  disabled,
 }: {
   onPress: () => void;
   style?: ViewStyle;
+  disabled: boolean;
+  loading: boolean;
 }) => {
   return (
-    <Pressable style={[styles.roundBtn, style]} onPress={onPress}>
-      <Ionicons name="arrow-forward" size={20} color="#ffffffcc" />
+    <Pressable
+      disabled={disabled || loading}
+      style={[
+        styles.roundBtn,
+        style,
+        { backgroundColor: disabled ? "#0d0d0d" : "#be10ac" },
+      ]}
+      onPress={onPress}
+    >
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color={disabled ? "#ffffff44" : "#ffffffcc"}
+        />
+      ) : (
+        <Ionicons
+          name="arrow-forward"
+          size={20}
+          color={disabled ? "#ffffff44" : "#ffffffcc"}
+        />
+      )}
     </Pressable>
   );
 };
