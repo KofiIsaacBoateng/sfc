@@ -38,34 +38,38 @@ const OTP = ({
 
   const handleChange = (text: string, index: number) => {
     setIsValidOtp(undefined);
-    if (text.length === 1) {
-      setOtp((prev) => {
-        prev[index] = text;
-        return prev;
-      });
-      setCurrentInput((prev) => (prev === OTP_LENGTH - 1 ? prev : prev + 1));
-      if (index < OTP_LENGTH) {
-        const input = inputRefs.current[index + 1];
-        if (input) {
-          input.focus();
-        }
-      }
-    }
 
-    if (text.length === 1 && index === OTP_LENGTH - 1) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
+    // Clean string (only keep the character typed)
+    const cleanedText = text.slice(-1);
+
+    if (cleanedText.length === 1) {
+      setOtp((prev) => {
+        const next = [...prev];
+        next[index] = cleanedText;
+        // Evaluate if entire string block is complete to trigger action button
+        const isComplete = next.every((val) => val !== "");
+        setDisabled(!isComplete);
+        return next;
+      });
+
+      // Shift focus cleanly
+      if (index < OTP_LENGTH - 1) {
+        setCurrentInput(index + 1);
+        inputRefs.current[index + 1]?.focus();
+      }
     }
   };
 
   const handleKeyPress = (e: TextInputKeyPressEvent, index: number) => {
     if (e.nativeEvent.key !== "Backspace") return;
     setIsValidOtp(undefined);
+
+    // If current input is empty, clear previous box and slide focus backward
     if (otp[index] === "" && index > 0) {
       setOtp((prev) => {
-        prev[index - 1] = "";
-        return prev;
+        let temp = [...prev];
+        temp[index - 1] = "";
+        return temp;
       });
       const input = inputRefs.current[index - 1];
       if (input) {
@@ -74,9 +78,12 @@ const OTP = ({
       setCurrentInput(index - 1);
       return;
     }
+
+    //  Clear current element slot
     setOtp((prev) => {
-      prev[index] = "";
-      return prev;
+      let temp = [...prev];
+      temp[index] = "";
+      return temp;
     });
   };
 
@@ -96,7 +103,7 @@ const OTP = ({
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>Verify Identity</Text>
         <Text style={styles.subtitle}>
-          Enter the 4-digit code sent via SMS to verify device authorization.
+          Enter the 6-digit code sent via SMS to verify.
         </Text>
       </View>
 
