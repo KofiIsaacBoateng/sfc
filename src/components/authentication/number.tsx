@@ -1,7 +1,7 @@
 import { NETWORK_CODES } from "@/constants/constants";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
+import Animated, { SlideOutLeft } from "react-native-reanimated";
 import NetworkDetector from "../global/networkDetector";
 import { RoundBtn } from "../onboarding/buttons";
 
@@ -71,11 +71,7 @@ const Number = ({
   }, [focused]);
 
   return (
-    <Animated.View
-      entering={SlideInRight}
-      exiting={SlideOutLeft}
-      animatedProps={{ animationDelay: 0.2, style: styles.container }}
-    >
+    <Animated.View exiting={SlideOutLeft} style={styles.container}>
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>Enter your MoMo Number</Text>
         <Text style={styles.subtitle}>

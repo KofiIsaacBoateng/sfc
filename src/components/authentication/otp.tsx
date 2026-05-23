@@ -7,7 +7,7 @@ import {
   TextInputKeyPressEvent,
   View,
 } from "react-native";
-import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
+import Animated, { SlideInRight } from "react-native-reanimated";
 import { RoundBtn } from "../onboarding/buttons";
 
 const OTP_LENGTH = 6;
@@ -95,11 +95,7 @@ const OTP = ({
   }, []);
 
   return (
-    <Animated.View
-      entering={SlideInRight}
-      exiting={SlideOutLeft}
-      animatedProps={{ animationDelay: 0.2, style: styles.container }}
-    >
+    <Animated.View entering={SlideInRight.delay(300)} style={styles.container}>
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>Verify Identity</Text>
         <Text style={styles.subtitle}>

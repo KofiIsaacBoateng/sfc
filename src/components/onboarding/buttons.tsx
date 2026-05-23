@@ -16,8 +16,8 @@ const RoundBtn = ({
 }: {
   onPress: () => void;
   style?: ViewStyle;
-  disabled: boolean;
-  loading: boolean;
+  disabled?: boolean;
+  loading?: boolean;
 }) => {
   return (
     <Pressable
