@@ -1,14 +1,23 @@
 import { NETWORK_CODES } from "@/constants/constants";
 import React from "react";
-import { Image, ImageStyle, StyleSheet, View, ViewStyle } from "react-native";
+import {
+  Image,
+  ImageStyle,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 
 const NetworkDetector = ({
   containerStyle,
   imageStyle,
+  borderColor,
   phoneNumber,
 }: {
   containerStyle?: ViewStyle;
   imageStyle?: ImageStyle;
+  borderColor?: string;
   phoneNumber: string;
 }) => {
   let detected = NETWORK_CODES.mtn.includes(phoneNumber.slice(0, 3))
@@ -20,7 +29,7 @@ const NetworkDetector = ({
     <View
       style={[
         styles.container,
-        { opacity: detected ? 1 : 0.5 },
+        { opacity: detected ? 1 : 0.5, borderColor },
         containerStyle,
       ]}
     >
@@ -35,7 +44,7 @@ const NetworkDetector = ({
           source={require(`@/assets/images/networks/telecel.png`)}
         />
       ) : (
-        <></>
+        <Text style={{ color: borderColor, fontSize: 25 }}>---</Text>
       )}
     </View>
   );
@@ -45,7 +54,7 @@ export default NetworkDetector;
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
     borderColor: "#ffffffcc",
     borderRadius: 5,
     minWidth: 40,

@@ -81,7 +81,18 @@ const Number = ({
 
       {/**** text input */}
       <View style={styles.inputWrapper}>
-        <NetworkDetector phoneNumber={phoneNumber} />
+        <NetworkDetector
+          borderColor={
+            errors
+              ? "#be1010"
+              : !focused && firstTimeFocus
+                ? "#10be10"
+                : focused
+                  ? "#ffffff"
+                  : "#ffffff87"
+          }
+          phoneNumber={phoneNumber}
+        />
         <TextInput
           style={[
             styles.input,

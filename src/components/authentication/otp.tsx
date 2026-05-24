@@ -13,8 +13,10 @@ import { RoundBtn } from "../onboarding/buttons";
 const OTP_LENGTH = 6;
 const OTP = ({
   handleVerifyOtp,
+  phoneNumber,
 }: {
   handleVerifyOtp: (input: string) => boolean;
+  phoneNumber: string;
 }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [disabled, setDisabled] = useState(true);
@@ -99,7 +101,8 @@ const OTP = ({
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>Verify Identity</Text>
         <Text style={styles.subtitle}>
-          Enter the 6-digit code sent via SMS to verify.
+          Enter the 6-digit code sent via SMS to {phoneNumber.slice(0, 3)}
+          *******.
         </Text>
       </View>
 

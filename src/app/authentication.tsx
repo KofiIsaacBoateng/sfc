@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const authentication = () => {
   const { bottom, top } = useSafeAreaInsets();
   const [step, setStep] = useState(0);
-  const [number, setNumber] = useState<string | undefined>(undefined);
+  const [number, setNumber] = useState<string>("");
   const [otp, setOtp] = useState<string | undefined>(undefined);
 
   const handleSendOtp = (inputNumber: string) => {
@@ -30,7 +30,7 @@ const authentication = () => {
       {step === 0 ? (
         <Number handleSendOtp={handleSendOtp} />
       ) : (
-        <OTP handleVerifyOtp={handleVerifyOtp} />
+        <OTP handleVerifyOtp={handleVerifyOtp} phoneNumber={number} />
       )}
     </View>
   );
