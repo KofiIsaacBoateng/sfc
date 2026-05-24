@@ -34,7 +34,7 @@ const UserRole = () => {
           onPress={() => setSelected("user")}
           style={[
             styles.card,
-            { backgroundColor: selected === "user" ? "#be10ac" : "#0d0d0d" },
+            { borderColor: selected === "user" ? "#ffffffcc" : "#ffffff44" },
           ]}
         >
           <View style={styles.image} />
@@ -45,6 +45,17 @@ const UserRole = () => {
               and retail spends.
             </Text>
           </View>
+          <View
+            style={[
+              styles.activeIndicator,
+              {
+                backgroundColor:
+                  selected === "user" ? "#ffffffcc" : "transparent",
+              },
+            ]}
+          >
+            <View style={styles.innerCircle} />
+          </View>
         </Pressable>
 
         <Pressable
@@ -52,7 +63,7 @@ const UserRole = () => {
           style={[
             styles.card,
             {
-              backgroundColor: selected === "merchant" ? "#be10ac" : "#0d0d0d",
+              borderColor: selected === "merchant" ? "#ffffffcc" : "#ffffff44",
             },
           ]}
         >
@@ -63,6 +74,18 @@ const UserRole = () => {
               I want a frictionless, pocket-sized POS to collect instant
               cashless payments from clients.
             </Text>
+          </View>
+
+          <View
+            style={[
+              styles.activeIndicator,
+              {
+                backgroundColor:
+                  selected === "merchant" ? "#ffffff" : "transparent",
+              },
+            ]}
+          >
+            <View style={styles.innerCircle} />
           </View>
         </Pressable>
       </View>
@@ -82,7 +105,7 @@ const styles = StyleSheet.create({
   container: {
     width,
     height,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     backgroundColor: "#000000",
   },
   header: {
@@ -107,28 +130,29 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "100%",
-    paddingRight: 10,
-    paddingLeft: 70,
+    paddingRight: 15,
+    paddingLeft: 60,
     paddingVertical: 15,
     borderRadius: 15,
+    borderWidth: 1,
     flexDirection: "row",
-    gap: 10,
+    gap: 15,
   },
   image: {
     position: "absolute",
     top: -15,
     bottom: -10,
-    width: 40,
+    width: 30,
     marginLeft: 10,
     transform: [{ rotate: "15deg" }],
     backgroundColor: "gray",
   },
   content: {
-    gap: 5,
+    gap: 10,
     flex: 1,
   },
   contentTitle: {
-    fontSize: 20,
+    fontSize: 16,
     letterSpacing: 1,
     color: "#ffffffcc",
     fontWeight: "900",
@@ -138,5 +162,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#ffffffcc",
     fontWeight: "600",
+    lineHeight: 25,
+  },
+
+  activeIndicator: {
+    width: 20,
+    aspectRatio: 1,
+    borderRadius: 50,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#ffffff",
+    marginVertical: "auto",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  innerCircle: {
+    width: 10,
+    aspectRatio: 1,
+    borderRadius: 50,
+    backgroundColor: "#000000",
   },
 });

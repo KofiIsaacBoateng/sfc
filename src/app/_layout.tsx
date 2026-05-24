@@ -10,7 +10,7 @@ function RootLayoutNav() {
     <ThemeProvider value={DefaultTheme}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack
-          initialRouteName="onboarding"
+          initialRouteName="userrole"
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="(tabs)" />
