@@ -1,19 +1,24 @@
+import Header from "@/components/home/header";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const home = () => {
+const Home = () => {
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
-      <Text>home</Text>
+    <View style={[styles.container, { paddingTop: top + 20 }]}>
+      {/**** header */}
+      <Header />
     </View>
   );
 };
 
-export default home;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000000",
+    paddingHorizontal: 15,
   },
 });

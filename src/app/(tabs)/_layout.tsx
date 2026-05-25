@@ -1,26 +1,20 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { View } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { StyleSheet } from "react-native";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#ffffff",
-        tabBarInactiveTintColor: "#fff",
-        tabBarBackground: () => (
-          <View
-            style={{
-              backgroundColor: "#000000",
-              position: "absolute",
-              padding: 0,
-              inset: 0,
-              margin: 0,
-            }}
-          />
-        ),
+        tabBarInactiveTintColor: "#ffffff87",
+        tabBarStyle: {
+          backgroundColor: "#1E293B",
+          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopColor: "#ffffff44",
+        },
         headerShown: false,
       }}
       initialRouteName="home"
@@ -29,8 +23,25 @@ export default function TabLayout() {
         name="home"
         options={{
           title: "Home",
-          tabBarIcon: () => (
-            <Ionicons name="home" size={20} color={"#ffffff"} />
+          tabBarIcon: ({ focused }) => (
+            <Feather
+              name="home"
+              size={20}
+              color={focused ? "#ffffff" : "#ffffff87"}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: "Explore",
+          tabBarIcon: ({ focused }) => (
+            <FontAwesome6
+              name="nfc-symbol"
+              size={18}
+              color={focused ? "#ffffff" : "#ffffff87"}
+            />
           ),
         }}
       />
@@ -38,8 +49,12 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: () => (
-            <Ionicons name="person" size={20} color={"#ffffff"} />
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="person-outline"
+              size={16}
+              color={focused ? "#ffffff" : "#ffffff87"}
+            />
           ),
         }}
       />

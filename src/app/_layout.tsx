@@ -8,15 +8,13 @@ import "react-native-reanimated";
 function RootLayoutNav() {
   return (
     <ThemeProvider value={DefaultTheme}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack
-          // initialRouteName="userrole"
-          screenOptions={{ headerShown: false }}
-        >
+      <GestureHandlerRootView style={styles.container}>
+        <Stack initialRouteName="(tabs)" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="onboarding" />
           <Stack.Screen name="userrole" />
           <Stack.Screen name="authentication" />
           <Stack.Screen name="linking" />
+          <Stack.Screen name="merchant" />
           <Stack.Screen name="(tabs)" />
         </Stack>
       </GestureHandlerRootView>
@@ -32,8 +30,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#000000",
   },
 });

@@ -1,12 +1,12 @@
+import Intro from "@/components/global/Intro";
 import {
   ModalNotification,
   ToastNotification,
 } from "@/components/global/Notification";
 import CheckList from "@/components/linking/CheckList";
 import ValidateProduct from "@/components/linking/ValidateProduct";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import Animated, { SlideInDown, SlideOutUp } from "react-native-reanimated";
 
 interface Status {
   supported: boolean | undefined;
@@ -17,7 +17,9 @@ interface Status {
 const linking = () => {
   const [currentStage, setCurrentStage] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
-  const [toast, setToast] = useState<{ type: "error" | "info" | "success"; message: string } | undefined>(undefined);
+  const [toast, setToast] = useState<
+    { type: "error" | "info" | "success"; message: string } | undefined
+  >(undefined);
   const [isCheckingSupport, setIsCheckingSupport] = useState(false);
   const [isEnabling, setIsEnabling] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
@@ -100,21 +102,25 @@ const linking = () => {
     setStatus((prev) => ({ ...prev, linked: true }));
   };
 
-  useEffect(() => {
-    let timeout = setTimeout(() => {
-      setShowIntro(false);
-    }, 2000);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
-
   return (
     <View style={styles.container}>
       {/**** intro */}
       {showIntro ? (
-        <Intro />
+        <Intro exit={() => setShowIntro(false)}>
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: "900",
+              color: "#ffffffcc",
+              textAlign: "center",
+            }}
+          >
+            Link{" "}
+            <Text style={{ fontWeight: "300" }}>
+              your product to your account
+            </Text>
+          </Text>
+        </Intro>
       ) : (
         <CheckList
           stage={currentStage}
@@ -181,33 +187,6 @@ const linking = () => {
         />
       )}
     </View>
-  );
-};
-
-const Intro = () => {
-  return (
-    <Animated.View
-      entering={SlideInDown.duration(500)}
-      exiting={SlideOutUp.duration(500)}
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        paddingHorizontal: 15,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 30,
-          fontWeight: "900",
-          color: "#ffffffcc",
-          textAlign: "center",
-        }}
-      >
-        Link{" "}
-        <Text style={{ fontWeight: "300" }}>your product to your account</Text>
-      </Text>
-    </Animated.View>
   );
 };
 

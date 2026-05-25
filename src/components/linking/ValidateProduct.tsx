@@ -18,7 +18,7 @@ const ValidateProduct = ({
 
   const validateNFC = () => {
     // validate nfc here
-    const validated = Math.random() >= 0.9;
+    const validated = Math.random() >= 0.3;
     setTimeout(() => {
       setState("reading");
       setTimeout(() => {
@@ -62,7 +62,7 @@ const ValidateProduct = ({
             autoPlay
             loop
             duration={1000}
-            style={[styles.lottie, { height: height * 0.9 }]}
+            style={[styles.lottie]}
           />
         ) : (
           <></>
@@ -73,7 +73,7 @@ const ValidateProduct = ({
           autoPlay
           loop
           speed={2}
-          style={[styles.lottie, { opacity: 0.7, height: height * 0.5 }]}
+          style={[styles.lottie, { opacity: 0.7 }]}
         />
       ) : success === true ? (
         <Lottie
@@ -81,7 +81,7 @@ const ValidateProduct = ({
           autoPlay
           loop={false}
           duration={1800}
-          style={[styles.lottie, { height: height * 0.4, opacity: 0.8 }]}
+          style={[styles.lottie, { opacity: 0.8 }]}
         />
       ) : success === false ? (
         <Lottie
@@ -89,7 +89,7 @@ const ValidateProduct = ({
           autoPlay
           loop={false}
           duration={1800}
-          style={[styles.lottie, { height: height * 0.5, opacity: 0.8 }]}
+          style={[styles.lottie, { opacity: 0.8 }]}
         />
       ) : (
         <></>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
 
   lottie: {
-    height: height * 0.7,
+    height: width,
     aspectRatio: 1,
   },
 
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     fontWeight: "300",
-    marginTop: 15,
+    marginTop: 25,
     marginHorizontal: 30,
   },
 });
