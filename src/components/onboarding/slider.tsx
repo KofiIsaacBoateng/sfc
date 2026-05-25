@@ -63,7 +63,8 @@ const Slider = ({
             {
               textAlign: "center",
               textTransform: "uppercase",
-              fontWeight: "700",
+              fontWeight: "500",
+              fontSize: 35,
             },
           ]}
         >
@@ -74,7 +75,7 @@ const Slider = ({
             styles.subtext,
             {
               textAlign: "center",
-              fontWeight: "600",
+              fontWeight: "300",
             },
           ]}
         >
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 45,
   },
   subtext: {
-    color: "#ffffffcc",
+    color: "#ffffffdd",
     lineHeight: 20,
     marginTop: 10,
     fontSize: 16,

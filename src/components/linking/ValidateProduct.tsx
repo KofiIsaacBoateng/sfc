@@ -18,7 +18,7 @@ const ValidateProduct = ({
 
   const validateNFC = () => {
     // validate nfc here
-    const validated = Math.random() >= 0.4;
+    const validated = Math.random() >= 0.9;
     setTimeout(() => {
       setState("reading");
       setTimeout(() => {
@@ -72,8 +72,8 @@ const ValidateProduct = ({
           source={require("@/assets/animations/nfc-loading.json")}
           autoPlay
           loop
-          speed={0.7}
-          style={[styles.lottie, { opacity: 0.7 }]}
+          speed={2}
+          style={[styles.lottie, { opacity: 0.7, height: height * 0.5 }]}
         />
       ) : success === true ? (
         <Lottie
@@ -89,7 +89,7 @@ const ValidateProduct = ({
           autoPlay
           loop={false}
           duration={1800}
-          style={[styles.lottie]}
+          style={[styles.lottie, { height: height * 0.5, opacity: 0.8 }]}
         />
       ) : (
         <></>
@@ -132,9 +132,10 @@ const styles = StyleSheet.create({
 
   status: {
     color: "#ffffffcc",
-    fontSize: 18,
+    fontSize: 20,
     textAlign: "center",
-    marginTop: 10,
+    fontWeight: "300",
+    marginTop: 15,
     marginHorizontal: 30,
   },
 });

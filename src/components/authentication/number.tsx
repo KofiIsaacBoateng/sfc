@@ -7,14 +7,16 @@ import { RoundBtn } from "../onboarding/buttons";
 
 const Number = ({
   handleSendOtp,
+  number,
 }: {
   handleSendOtp: (input: string) => void;
+  number: string;
 }) => {
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>(number);
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [focused, setFocused] = useState(false);
-  const [firstTimeFocus, setFirstTimeFocus] = useState(false);
+  const [firstTimeFocus, setFirstTimeFocus] = useState(true);
   const [errors, setErrors] = useState<null | {
     length?: { message: string };
     invalid?: { message: string };
@@ -22,6 +24,13 @@ const Number = ({
 
   const handlePhoneNumberChange = (text: string) => {
     setPhoneNumber(text);
+
+    if (!firstTimeFocus) {
+      // validate while typing on when input is blurred the first time
+      validateInput(text); // input validation
+    }
+
+    // enable or disable next
     if (text.length === 10) {
       setDisabled(false);
     } else {
@@ -29,13 +38,11 @@ const Number = ({
     }
   };
 
-  const handleFocus = (value: boolean) => {
-    if (!firstTimeFocus) setFirstTimeFocus(true);
-    setFocused(value);
-  };
+  const validateInput = (text?: string): boolean => {
+    const number = text ? text : phoneNumber;
+    const networkCode = number.slice(0, 3);
+    let errorCount = 0;
 
-  const handleSubmit = () => {
-    const networkCode = phoneNumber.slice(0, 3);
     if (
       !NETWORK_CODES.mtn.includes(networkCode) &&
       !NETWORK_CODES.telecel.includes(networkCode)
@@ -46,6 +53,36 @@ const Number = ({
           message: "only mtn and telecel numbers are supported at the moment.",
         },
       }));
+      errorCount++;
+    } else {
+      setErrors((prev) => ({ length: prev?.length }));
+    }
+
+    if (number.length !== 10) {
+      setErrors((prev) => ({
+        ...prev,
+        length: { message: "phone number must be 10 characters" },
+      }));
+      errorCount++;
+    } else {
+      setErrors((prev) => ({ invalid: prev?.invalid }));
+    }
+
+    if (errorCount === 0) {
+      setErrors(null);
+      return true;
+    }
+
+    return false;
+  };
+
+  const handleFocus = (value: boolean) => {
+    if (firstTimeFocus && !value) setFirstTimeFocus(false); // indicate first time focus as false
+    setFocused(value);
+  };
+
+  const handleSubmit = () => {
+    if (!validateInput()) {
       return;
     }
 
@@ -57,18 +94,11 @@ const Number = ({
   };
 
   useEffect(() => {
-    // validate input on blur
-    if (focused || !firstTimeFocus) return;
-
-    if (phoneNumber.length !== 10) {
-      setErrors((prev) => ({
-        ...prev,
-        length: { message: "phone number must be 10 characters" },
-      }));
-    } else {
-      setErrors(null);
+    if (number) {
+      validateInput();
+      setDisabled(false);
     }
-  }, [focused]);
+  }, []);
 
   return (
     <Animated.View exiting={SlideOutLeft} style={styles.container}>
@@ -85,7 +115,7 @@ const Number = ({
           borderColor={
             errors
               ? "#be1010"
-              : !focused && firstTimeFocus
+              : !firstTimeFocus || number
                 ? "#10be10"
                 : focused
                   ? "#ffffff"
@@ -99,14 +129,14 @@ const Number = ({
             {
               borderColor: errors
                 ? "#be1010"
-                : !focused && firstTimeFocus
+                : !firstTimeFocus || number
                   ? "#10be10"
                   : focused
                     ? "#ffffff"
                     : "#ffffff87",
               color: errors
                 ? "#be1010"
-                : !focused && firstTimeFocus
+                : !firstTimeFocus || number
                   ? "#10be10"
                   : "#ffffff",
             },
@@ -114,12 +144,15 @@ const Number = ({
           placeholder="020XXXXXXX"
           placeholderTextColor="#ffffff87"
           keyboardType="phone-pad"
+          returnKeyLabel="send"
+          returnKeyType="send"
           onFocus={() => handleFocus(true)}
           onBlur={() => handleFocus(false)}
           autoFocus={true}
           maxLength={10}
           value={phoneNumber}
           onChangeText={handlePhoneNumberChange}
+          onSubmitEditing={handleSubmit}
         />
       </View>
 
@@ -142,7 +175,7 @@ const Number = ({
       <RoundBtn
         style={{ marginLeft: "auto", marginTop: 20 }}
         loading={loading}
-        disabled={disabled}
+        disabled={disabled || Boolean(errors)}
         onPress={handleSubmit}
       />
     </Animated.View>
@@ -154,6 +187,7 @@ export default Number;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 30,
   },
 
   titleWrapper: {
@@ -170,15 +204,16 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#ffffffac",
+    fontWeight: "300",
+    color: "#ffffff",
     textAlign: "center",
+    lineHeight: 25,
   },
 
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+    gap: 10,
   },
 
   input: {

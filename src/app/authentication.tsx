@@ -24,13 +24,17 @@ const authentication = () => {
     <View
       style={[
         styles.container,
-        { paddingBottom: bottom + 10, paddingTop: top + 50 },
+        { paddingBottom: bottom + 10, paddingTop: top + 20 },
       ]}
     >
       {step === 0 ? (
-        <Number handleSendOtp={handleSendOtp} />
+        <Number handleSendOtp={handleSendOtp} number={number} />
       ) : (
-        <OTP handleVerifyOtp={handleVerifyOtp} phoneNumber={number} />
+        <OTP
+          handleVerifyOtp={handleVerifyOtp}
+          goBack={() => setStep(0)}
+          phoneNumber={number}
+        />
       )}
     </View>
   );

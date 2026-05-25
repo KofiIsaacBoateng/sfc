@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
   headerSubtext: {
     textAlign: "center",
     fontSize: 16,
-    color: "#ffffffcc",
+    color: "#ffffff",
+    fontWeight: "300",
     marginTop: 5,
   },
   cards: {
@@ -160,8 +161,8 @@ const styles = StyleSheet.create({
   },
   contentSubtext: {
     fontSize: 15,
-    color: "#ffffffcc",
-    fontWeight: "600",
+    color: "#ffffff",
+    fontWeight: "300",
     lineHeight: 25,
   },
 

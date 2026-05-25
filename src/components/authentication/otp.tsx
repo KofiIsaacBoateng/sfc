@@ -1,6 +1,8 @@
-import { router } from "expo-router";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { router, useNavigation } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -14,9 +16,11 @@ const OTP_LENGTH = 6;
 const OTP = ({
   handleVerifyOtp,
   phoneNumber,
+  goBack,
 }: {
   handleVerifyOtp: (input: string) => boolean;
   phoneNumber: string;
+  goBack: () => void;
 }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [disabled, setDisabled] = useState(true);
@@ -25,6 +29,7 @@ const OTP = ({
   const [currentInput, setCurrentInput] = useState(0);
   const [isValidOtp, setIsValidOtp] = useState<boolean | undefined>(undefined);
   const inputRefs = useRef<Array<TextInput | null>>([]);
+  const navigation = useNavigation();
 
   const handleSubmit = () => {
     setLoading(true);
@@ -34,7 +39,10 @@ const OTP = ({
       setLoading(false);
       if (valid) {
         setTimeout(() => router.navigate("/linking"), 500);
+        return;
       }
+
+      inputRefs?.current[OTP_LENGTH - 1]?.focus();
     }, 1000);
   };
 
@@ -90,19 +98,34 @@ const OTP = ({
   };
 
   useEffect(() => {
-    const input = inputRefs.current[0];
-    if (input) {
-      input.focus();
-    }
+    const timeout = setTimeout(() => {
+      inputRefs?.current[0]?.focus();
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+      goBack();
+    });
+
+    return unsubscribe;
   }, []);
 
   return (
     <Animated.View entering={SlideInRight.delay(300)} style={styles.container}>
+      <Pressable
+        onPress={goBack}
+        style={{ marginRight: "auto", marginBottom: 10 }}
+      >
+        <FontAwesome6 name="angle-left" size={22} color="#ffffff87" />
+      </Pressable>
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>Verify Identity</Text>
         <Text style={styles.subtitle}>
-          Enter the 6-digit code sent via SMS to {phoneNumber.slice(0, 3)}
-          *******.
+          Enter the 6-digit code sent via SMS to *******{phoneNumber.slice(-3)}
         </Text>
       </View>
 
@@ -138,6 +161,7 @@ const OTP = ({
             maxLength={1}
             value={otp[i]}
             onChangeText={(text) => handleChange(text, i)}
+            onSubmitEditing={handleSubmit}
           />
         ))}
       </View>
@@ -173,8 +197,9 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#ffffffac",
+    fontWeight: "300",
+    color: "#ffffff",
+    lineHeight: 25,
     textAlign: "center",
   },
 

@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#ffffffcc",
-    fontWeight: "600",
+    fontWeight: "300",
     textTransform: "capitalize",
     fontSize: 16,
   },

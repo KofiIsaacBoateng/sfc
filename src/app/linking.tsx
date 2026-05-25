@@ -17,9 +17,7 @@ interface Status {
 const linking = () => {
   const [currentStage, setCurrentStage] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
-  const [toast, setToast] = useState<
-    { type: "error" | "info" | "success"; message: string } | undefined
-  >(undefined);
+  const [toast, setToast] = useState<{ type: "error" | "info" | "success"; message: string } | undefined>(undefined);
   const [isCheckingSupport, setIsCheckingSupport] = useState(false);
   const [isEnabling, setIsEnabling] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
@@ -201,12 +199,13 @@ const Intro = () => {
       <Text
         style={{
           fontSize: 30,
-          fontWeight: "700",
+          fontWeight: "900",
           color: "#ffffffcc",
           textAlign: "center",
         }}
       >
-        LINK your device to your account
+        Link{" "}
+        <Text style={{ fontWeight: "300" }}>your product to your account</Text>
       </Text>
     </Animated.View>
   );

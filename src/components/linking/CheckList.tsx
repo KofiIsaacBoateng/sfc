@@ -177,6 +177,7 @@ const ListItem = ({
           {
             opacity: stage === item.id ? 1 : 0.6,
             color: status[item.status] === false ? "#bf5555" : "#ffffffcc",
+            fontWeight: stage === item.id ? "700" : "300",
           },
         ]}
       >
@@ -202,15 +203,15 @@ const styles = StyleSheet.create({
   title: {
     color: "#ffffffcc",
     fontSize: 25,
-    fontWeight: "800",
+    fontWeight: "900",
     letterSpacing: 1,
   },
 
   subtext: {
-    color: "#ffffffac",
+    color: "#ffffffcc",
     fontSize: 15,
     lineHeight: 22,
-    fontWeight: "600",
+    fontWeight: "300",
   },
 
   list: {
@@ -245,7 +246,6 @@ const styles = StyleSheet.create({
 
   message: {
     fontSize: 18,
-    fontWeight: "bold",
   },
 
   cta: {

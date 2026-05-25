@@ -47,7 +47,24 @@ const ToastNotification = ({
         <Ionicons name="close-circle" size={24} color="#be1010" />
       )}
 
-      <Text style={{ color: "#ffffffcc", fontSize: 16 }}>{message}</Text>
+      <Text
+        style={{
+          color: "#ffffffcc",
+          fontSize: 16,
+          fontWeight: "300",
+          lineHeight: 25,
+        }}
+      >
+        {message}
+      </Text>
+
+      {/**** close btn */}
+      <Pressable
+        onPress={hide}
+        style={{ position: "absolute", top: 5, right: 5 }}
+      >
+        <Ionicons name="close" size={20} color="#ffffff87" />
+      </Pressable>
     </Animated.View>
   );
 };
@@ -74,7 +91,7 @@ const ModalNotification = ({
       <View style={[styles.modalNotification, { paddingBottom: bottom + 5 }]}>
         <Pressable
           onPress={close}
-          style={{ position: "absolute", top: 10, right: 20 }}
+          style={{ position: "absolute", top: 15, right: 15 }}
         >
           <Ionicons name="close" size={24} color="#ffffff87" />
         </Pressable>
@@ -91,14 +108,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    justifyContent: "center",
+    paddingHorizontal: 40,
+    paddingVertical: 25,
     borderRadius: 10,
     position: "absolute",
     left: 0,
     right: 0,
-    gap: 10,
+    marginHorizontal: 15,
+    gap: 15,
     backgroundColor: "#0d0d0d",
   },
 
