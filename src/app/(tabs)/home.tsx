@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const Home = () => {
   const { top } = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingTop: top + 20 }]}>
+    <View style={[styles.container, { paddingTop: top + 5 }]}>
       {/**** header */}
       <Header />
     </View>

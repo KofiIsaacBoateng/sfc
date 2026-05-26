@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -103,12 +105,21 @@ export default function MerchantPosScreen({
     ["0", ".", "⌫", "CHARGE"],
   ];
 
+  const exit = () => {
+    router.back();
+  };
+
   return (
     <Animated.View
       entering={SlideInDown.delay(500)}
       exiting={SlideOutUp.duration(500)}
       style={[styles.container]}
     >
+      {/* EXIT 2M */}
+      <Pressable onPress={exit} style={styles.exit}>
+        <Ionicons name="close-outline" color="#ffffffcc" size={25} />
+      </Pressable>
+
       {/* DISPLAY BAR CONTAINER */}
       <View style={styles.displayWrapper}>
         <Text style={styles.expressionText} numberOfLines={1}>
@@ -176,6 +187,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
     justifyContent: "flex-end",
   },
+
+  exit: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+  },
+
   displayWrapper: {
     paddingHorizontal: 20,
     paddingBottom: 20,

@@ -1,25 +1,46 @@
-import { router } from "expo-router";
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useFocusEffect } from "expo-router";
+import React, { useState } from "react";
+import { StyleSheet, Switch, Text, View } from "react-native";
 
 const Header = () => {
+  const [isMerchantMode, setIsMerchantMode] = useState(false);
+
+  const toggleMerchantMode = () => {
+    if (!isMerchantMode) {
+      setIsMerchantMode(true);
+      invokeMerchantMode();
+      return;
+    }
+    setIsMerchantMode(false);
+  };
   const invokeMerchantMode = () => {
     router.navigate("/merchant");
   };
 
+  useFocusEffect(() => {
+    setIsMerchantMode(false);
+  });
+
   return (
-    <View style={styles.wrapper}>
-      {/**** left */}
+    <View style={styles.headerwrapper}>
+      {/* left */}
       <View style={styles.left}>
-        <Text style={{ color: "#ffffffcc", fontSize: 25, fontWeight: "300" }}>
-          Home
-        </Text>
+        <Text style={styles.greeting}>Hello, Kofi</Text>
+        <Ionicons name="shield-checkmark-outline" color="#82a2d1" size={15} />
       </View>
-      {/***** right */}
+
+      {/* right */}
       <View style={styles.right}>
-        <Pressable onPress={invokeMerchantMode} style={styles.merchantMode}>
-          <Text style={styles.merchantModeText}>Merchant mode</Text>
-        </Pressable>
+        <View style={styles.merchantMode}>
+          <Text style={styles.merchantModeText}>2M</Text>
+          <Switch
+            value={isMerchantMode}
+            onValueChange={toggleMerchantMode}
+            trackColor={{ false: "#1E293B", true: "#00A896" }}
+            thumbColor={isMerchantMode ? "#FFFFFF" : "#64748B"}
+          />
+        </View>
       </View>
     </View>
   );
@@ -28,25 +49,38 @@ const Header = () => {
 export default Header;
 
 const styles = StyleSheet.create({
-  wrapper: {
+  headerwrapper: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  left: {},
-  right: {},
-  merchantMode: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 5,
-    // backgroundColor: "#be10ac",
+  left: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    gap: 5,
   },
+  right: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 30,
+  },
+
+  greeting: {
+    color: "#ffffffcc",
+    fontSize: 22,
+    fontWeight: "300",
+    letterSpacing: 1,
+  },
+
+  merchantMode: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+
   merchantModeText: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#be10ac",
+    color: "#ffffffcc",
   },
 });

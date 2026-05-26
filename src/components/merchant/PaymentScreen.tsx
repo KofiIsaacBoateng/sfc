@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useNavigation } from "expo-router";
 import Lottie from "lottie-react-native";
@@ -66,7 +67,10 @@ const PaymentScreen = ({
       goBack();
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      clearTimeout(undefined);
+    };
   }, []);
 
   return (
@@ -75,13 +79,8 @@ const PaymentScreen = ({
       exiting={SlideOutUp.duration(500)}
       style={[styles.container]}
     >
-      <Pressable
-        onPress={goBack}
-        style={{ marginLeft: "auto", marginBottom: 20 }}
-      >
-        <Text style={{ color: "#ffffff87", fontSize: 16, fontWeight: "500" }}>
-          cancel
-        </Text>
+      <Pressable onPress={goBack} style={{ marginBottom: 20 }}>
+        <Ionicons name="close" color="#ffffffcc" size={25} />
       </Pressable>
       {/**** animation */}
       <View style={styles.contentWrapper}>
@@ -118,7 +117,7 @@ const PaymentScreen = ({
             autoPlay
             loop
             duration={1800}
-            style={[styles.lottie, { opacity: 0.8 }]}
+            style={[styles.lottie, { opacity: 0.8, width: width * 0.8 }]}
           />
         ) : success === false ? (
           <Lottie
