@@ -7,7 +7,7 @@ const DigiCard = () => {
   return (
     <Animated.View entering={FadeIn.duration(400)} style={styles.walletCard}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardBrand}>sfc // kuditap</Text>
+        <Text style={styles.cardBrand}>sfc</Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>
             {isCardFrozen ? "FROZEN" : "ACTIVE"}
@@ -27,7 +27,7 @@ const DigiCard = () => {
           <Switch
             value={isCardFrozen}
             onValueChange={setIsCardFrozen}
-            trackColor={{ false: "#334155", true: "#be1010" }}
+            trackColor={{ false: "#334155", true: "#1E293B" }}
           />
         </View>
       </View>
@@ -39,13 +39,13 @@ export default DigiCard;
 
 const styles = StyleSheet.create({
   walletCard: {
-    backgroundColor: "#0F172A",
+    // backgroundColor: "#0F172A",
     borderRadius: 24,
     padding: 24,
     height: 200,
     justifyContent: "space-between",
-    borderWidth: 1,
-    borderColor: "#1E293B",
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#ffffff",
   },
   cardHeader: {
     flexDirection: "row",

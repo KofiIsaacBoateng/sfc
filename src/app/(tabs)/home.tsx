@@ -2,9 +2,10 @@ import DigiCard from "@/components/home/digicard";
 import Header from "@/components/home/header";
 import SmartCap from "@/components/home/smartcap";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+const { width } = Dimensions.get("screen");
 const Home = () => {
   const { top } = useSafeAreaInsets();
   return (
@@ -62,13 +63,14 @@ const styles = StyleSheet.create({
   },
   actionItem: { alignItems: "center", gap: 8 },
   iconCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#1E293B",
+    width: width * 0.25,
+    aspectRatio: 1 / 0.9,
+    borderWidth: 1.5,
+    borderColor: "#616e83b0",
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
   },
-  actionIcon: { color: "#FF9F1C", fontSize: 22, fontWeight: "600" },
+  actionIcon: { color: "#a5bbdf", fontSize: 22, fontWeight: "600" },
   actionLabel: { color: "#94A3B8", fontSize: 13, fontWeight: "600" },
 });
