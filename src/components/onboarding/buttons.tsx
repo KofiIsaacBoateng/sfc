@@ -25,7 +25,7 @@ const RoundBtn = ({
       style={[
         styles.roundBtn,
         style,
-        { backgroundColor: disabled ? "#0d0d0d" : "#be10ac" },
+        { backgroundColor: disabled ? "#0d0d0d" : "#491c77" },
       ]}
       onPress={onPress}
     >
@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#be10ac",
   },
   text: {
     color: "#ffffffcc",

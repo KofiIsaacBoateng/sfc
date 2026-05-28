@@ -14,11 +14,13 @@ const NetworkDetector = ({
   imageStyle,
   borderColor,
   phoneNumber,
+  title,
 }: {
   containerStyle?: ViewStyle;
   imageStyle?: ImageStyle;
   borderColor?: string;
   phoneNumber: string;
+  title?: boolean;
 }) => {
   let detected = NETWORK_CODES.mtn.includes(phoneNumber.slice(0, 3))
     ? "mtn"
@@ -29,7 +31,7 @@ const NetworkDetector = ({
     <View
       style={[
         styles.container,
-        { opacity: detected ? 1 : 0.5, borderColor },
+        { opacity: detected ? 0.7 : 0.3, borderColor },
         containerStyle,
       ]}
     >
@@ -46,6 +48,7 @@ const NetworkDetector = ({
       ) : (
         <Text style={{ color: borderColor, fontSize: 25 }}>---</Text>
       )}
+      {title && <Text style={styles.title}>{detected}</Text>}
     </View>
   );
 };
@@ -58,10 +61,12 @@ const styles = StyleSheet.create({
     borderColor: "#ffffffcc",
     borderRadius: 5,
     minWidth: 40,
-    aspectRatio: 1,
+    minHeight: 40,
     padding: 3,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    gap: 20,
   },
 
   image: {
@@ -69,5 +74,12 @@ const styles = StyleSheet.create({
     height: 30,
     objectFit: "contain",
     zIndex: 50,
+  },
+
+  title: {
+    fontSize: 16,
+    color: "#ffffffcc",
+    textTransform: "uppercase",
+    fontWeight: "400",
   },
 });

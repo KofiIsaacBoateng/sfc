@@ -1,18 +1,19 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 const SmartCap = () => {
   return (
     <View style={styles.limitSection}>
-      <Text style={styles.sectionTitle}>Tap Security Limit</Text>
+      <Text style={styles.sectionTitle}>History</Text>
       <View style={styles.limitCard}>
-        <View style={styles.limitInfo}>
+        {/* <View style={styles.limitInfo}>
           <Text style={styles.limitSub}>PIN-less Contactless Cap</Text>
           <Text style={styles.limitValue}>GHS 20.00 / tap</Text>
-        </View>
-        <Pressable style={styles.editBtn}>
+          </View>
+          <Pressable style={styles.editBtn}>
           <Text style={styles.editBtnText}>Change</Text>
-        </Pressable>
+          </Pressable> */}
+        <Text style={styles.limitSub}> No history available</Text>
       </View>
     </View>
   );

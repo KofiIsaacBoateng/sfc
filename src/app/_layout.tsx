@@ -15,6 +15,8 @@ function RootLayoutNav() {
           <Stack.Screen name="authentication" />
           <Stack.Screen name="linking" />
           <Stack.Screen name="merchant" />
+          <Stack.Screen name="send-m" />
+          <Stack.Screen name="myqr" />
           <Stack.Screen name="(tabs)" />
         </Stack>
       </GestureHandlerRootView>

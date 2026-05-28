@@ -2,8 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Switch, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Header = () => {
+  const { top } = useSafeAreaInsets();
   const [isMerchantMode, setIsMerchantMode] = useState(false);
 
   const toggleMerchantMode = () => {
@@ -23,7 +25,7 @@ const Header = () => {
   });
 
   return (
-    <View style={styles.headerwrapper}>
+    <View style={[styles.headerwrapper, { paddingTop: top + 5 }]}>
       {/* left */}
       <View style={styles.left}>
         <Text style={styles.greeting}>Hello, Kofi</Text>
@@ -37,7 +39,7 @@ const Header = () => {
           <Switch
             value={isMerchantMode}
             onValueChange={toggleMerchantMode}
-            trackColor={{ false: "#1E293B", true: "#00A896" }}
+            trackColor={{ false: "#151c29", true: "#00A896" }}
             thumbColor={isMerchantMode ? "#FFFFFF" : "#64748B"}
           />
         </View>
@@ -53,6 +55,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    backgroundColor: "#0c1118",
+    paddingHorizontal: 15,
+    paddingBottom: 10,
+    marginBottom: 10,
   },
   left: {
     flexDirection: "row",
@@ -66,9 +72,9 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
-    color: "#ffffffcc",
+    color: "#ffffff",
     fontSize: 22,
-    fontWeight: "300",
+    fontWeight: "700",
     letterSpacing: 1,
   },
 
