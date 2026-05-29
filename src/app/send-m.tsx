@@ -1,4 +1,7 @@
 import NetworkDetector from "@/components/global/networkDetector";
+import AccountData from "@/components/home/Accountdata";
+import ScanQR from "@/components/home/ScanQR";
+import ScanSFC from "@/components/home/ScanSFC";
 import { RoundBtn } from "@/components/onboarding/buttons";
 import { FontAwesome6, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -29,23 +32,37 @@ const SendMoney = () => {
   const amountInputRef = useRef<TextInput | null>(null);
   const [amount, setAmount] = useState("");
   const [amountFocus, setAmountFocus] = useState(false);
-  const [option, setOption] = useState<"sfc" | "qrc" | "manual">("sfc");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [numberFocus, setNumberFocus] = useState(false);
   const phoneNumberInputRef = useRef<TextInput | null>(null);
+  const [ctaDisabled, setCtaDisabled] = useState(true);
+  const [showManualMode, setShowManualMode] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState<
+    "main" | "qrcode" | "sfc" | "confirm"
+  >("main");
+
+  const updateAmount = (value: string) => {
+    if ((amount + value).length === 0) {
+      setCtaDisabled(true);
+    } else {
+      setCtaDisabled(false);
+    }
+
+    setAmount(value);
+  };
 
   const ctaAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: withTiming(option === "manual" ? 0 : -250, {
+          translateY: withTiming(showManualMode ? 0 : -250, {
             duration: 500,
             easing: Easing.inOut(Easing.quad),
           }),
         },
       ],
 
-      opacity: withTiming(option === "manual" ? 0 : 1, {
+      opacity: withTiming(showManualMode ? 0 : 1, {
         duration: 500,
         easing: Easing.inOut(Easing.quad),
       }),
@@ -54,7 +71,7 @@ const SendMoney = () => {
 
   const manualAnimatedStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(option === "manual" ? 1 : 0, {
+      opacity: withTiming(showManualMode ? 1 : 0, {
         duration: 500,
         easing: Easing.inOut(Easing.quad),
       }),
@@ -96,11 +113,11 @@ const SendMoney = () => {
           placeholder="25.30"
           placeholderTextColor={"#ffffff55"}
           style={[styles.amountInput]}
-          onChangeText={setAmount}
+          onChangeText={updateAmount}
           autoFocus={true}
           onFocus={() => setAmountFocus(true)}
           onBlur={() => setAmountFocus(false)}
-          keyboardType="number-pad"
+          keyboardType="decimal-pad"
           returnKeyType="done"
           returnKeyLabel="Done"
           cursorColor="#ffffff"
@@ -136,14 +153,14 @@ const SendMoney = () => {
           <TextInput
             ref={phoneNumberInputRef}
             value={phoneNumber}
-            placeholder="020123456121"
+            placeholder="eg. 0201234567"
             placeholderTextColor={"#ffffff55"}
             style={[styles.phoneInput]}
             onChangeText={setPhoneNumber}
             maxLength={10}
             onFocus={() => setNumberFocus(true)}
             onBlur={() => setNumberFocus(false)}
-            keyboardType="number-pad"
+            keyboardType="phone-pad"
             returnKeyType="done"
             returnKeyLabel="Done"
             cursorColor="#ffffff"
@@ -169,39 +186,69 @@ const SendMoney = () => {
           borderColor={"#ffffff77"}
         />
 
+        {/* phone number ctas */}
         <View style={styles.manualCtas}>
-          <Pressable style={styles.manualCta} onPress={() => setOption("sfc")}>
+          <Pressable
+            style={styles.manualCta}
+            onPress={() => setShowManualMode(false)}
+          >
             <Ionicons name="close" size={20} color="#ffffffaa" />
           </Pressable>
 
-          <RoundBtn onPress={() => {}} />
+          <RoundBtn
+            disabled={!amount || !phoneNumber}
+            onPress={() => setCurrentScreen("confirm")}
+          />
         </View>
       </Animated.View>
 
       {/* cta */}
       <Animated.View style={[styles.ctas, ctaAnimatedStyle]}>
         <Pressable
-          style={[styles.cta, { backgroundColor: "#491c77", borderWidth: 0 }]}
-          disabled={!phoneNumber}
-          onPress={() => setOption("sfc")}
+          style={[
+            styles.cta,
+            {
+              backgroundColor: !amount ? "#090b11bc" : "#491c77",
+              borderWidth: 0,
+            },
+          ]}
+          disabled={!amount}
+          onPress={() => setCurrentScreen("sfc")}
         >
           <Text style={[styles.ctaText]}>Scan sfc</Text>
         </Pressable>
         <Pressable
           style={[styles.cta]}
-          disabled={!phoneNumber}
-          onPress={() => setOption("qrc")}
+          disabled={!amount}
+          onPress={() => setCurrentScreen("qrcode")}
         >
           <Text style={[styles.ctaText]}>scan QR Code</Text>
         </Pressable>
         <Pressable
           style={[styles.cta]}
           disabled={!amount}
-          onPress={() => setOption("manual")}
+          onPress={() => setShowManualMode(true)}
         >
           <Text style={[styles.ctaText]}>Enter number manually</Text>
         </Pressable>
       </Animated.View>
+
+      {/**** support screens */}
+      {currentScreen === "confirm" && (
+        <AccountData
+          phoneNumber={phoneNumber}
+          amount={amount}
+          goBack={() => setCurrentScreen("main")}
+        />
+      )}
+
+      {currentScreen === "sfc" && (
+        <ScanSFC goBack={() => setCurrentScreen("main")} />
+      )}
+
+      {currentScreen === "qrcode" && (
+        <ScanQR goBack={() => setCurrentScreen("main")} />
+      )}
     </View>
   );
 };
@@ -211,7 +258,7 @@ export default SendMoney;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000000",
+    backgroundColor: "#090d13",
     paddingHorizontal: 20,
   },
 
@@ -305,7 +352,7 @@ const styles = StyleSheet.create({
   ctas: {
     gap: 15,
     marginTop: 50,
-    backgroundColor: "#000000",
+    backgroundColor: "#090d13",
   },
   cta: {
     alignItems: "center",
