@@ -2,7 +2,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const ScanSFC = ({ goBack }: { goBack: () => void }) => {
@@ -23,7 +23,11 @@ const ScanSFC = ({ goBack }: { goBack: () => void }) => {
   }, []);
 
   return (
-    <Animated.View style={[styles.container, { paddingTop: top + 30 }]}>
+    <Animated.View
+      entering={SlideInRight}
+      exiting={SlideOutLeft}
+      style={[styles.container, { paddingTop: top + 30 }]}
+    >
       {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={goBack}>
