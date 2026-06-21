@@ -1,5 +1,12 @@
 import React, { PropsWithChildren } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { RoundBtn, TextBtn } from "./buttons";
 
 const { width, height } = Dimensions.get("screen");
@@ -17,7 +24,6 @@ const Intro = ({
 }) => {
   return (
     <SliderWrapper>
-      {/*** backgroundImage [coming soon] */}
       <View style={[styles.textWrapper, { marginVertical: "auto" }]}>
         <Text style={styles.title}>
           <Text style={styles.bold}>Speed</Text> of Cash
@@ -31,7 +37,7 @@ const Intro = ({
         <RoundBtn style={{ marginTop: 10 }} onPress={onNext} />
       </View>
       <TextBtn
-        style={{ marginTop: "auto", marginBottom: 20 }}
+        style={{ marginTop: "auto", marginBottom: 20, marginLeft: 15 }}
         title="skip"
         onPress={onSkip}
       />
@@ -48,14 +54,13 @@ const Slider = ({
 }: {
   title: string;
   subtext: string;
-  image: string;
+  image: ImageSourcePropType;
   onNext: () => void;
   onSkip: () => void;
 }) => {
   return (
     <SliderWrapper>
-      {/*** image [coming soon] */}
-      <View style={styles.image} />
+      <Image source={image} style={styles.image} />
       <View style={styles.textWrapper}>
         <Text
           style={[
@@ -63,7 +68,6 @@ const Slider = ({
             {
               textAlign: "center",
               textTransform: "uppercase",
-              fontWeight: "500",
               fontSize: 35,
             },
           ]}
@@ -96,15 +100,18 @@ const styles = StyleSheet.create({
   container: {
     width,
     height: "100%",
-    paddingHorizontal: 15,
   },
 
   image: {
-    width: "100%",
+    width: "90%",
     height: "60%",
+    marginHorizontal: "auto",
+    objectFit: "contain",
+    marginTop: "auto",
   },
 
   textWrapper: {
+    paddingHorizontal: 15,
     gap: 2,
   },
   title: {
@@ -112,10 +119,11 @@ const styles = StyleSheet.create({
     fontSize: 40,
     letterSpacing: 0.1,
     wordWrap: "nowrap",
+    fontFamily: "Jakarta-Regular",
   },
   bold: {
     textTransform: "uppercase",
-    fontWeight: "900",
+    fontFamily: "Jakarta-Bold",
     fontSize: 45,
   },
   subtext: {
@@ -123,11 +131,13 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginTop: 10,
     fontSize: 16,
+    fontFamily: "Jakarta-Regular",
   },
   footer: {
     marginTop: "auto",
     flexDirection: "row-reverse",
     alignItems: "center",
+    paddingHorizontal: 15,
     justifyContent: "space-between",
   },
 });

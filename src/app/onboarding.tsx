@@ -60,12 +60,12 @@ const onboarding = () => {
         onMomentumScrollEnd={scrollWatch}
       >
         <Intro onNext={scrollToNext} onSkip={skip} />
-        {SLIDES.map(({ title, subtext, id }) => (
+        {SLIDES.map(({ title, subtext, id, image }) => (
           <Slider
             key={id}
             title={title}
             subtext={subtext}
-            image=""
+            image={image}
             onNext={scrollToNext}
             onSkip={skip}
           />
