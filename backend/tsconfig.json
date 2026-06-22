@@ -9,10 +9,9 @@
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "target": "esnext",
+    "target": "es2022",
+    "lib": ["ES2022"],
     "types": ["node", "cors", "express"],
-    // For nodejs:
-    "lib": ["esnext"],
 
     // Other Outputs
     "sourceMap": true,
@@ -36,7 +35,6 @@
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
