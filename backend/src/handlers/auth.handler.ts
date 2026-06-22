@@ -1,5 +1,9 @@
 import type { Request, Response } from "express";
 import { prisma } from "../config/db.js";
+import UnauthorizedError from "../errors/unauthorized.js";
+import InternalServerError from "../errors/internal-server.js";
+import { sendSuccess } from "../utils/response-formatter.js";
+import { normalizeGhanaianPhoneNumber } from "../utils/phone-formatter.js";
 
 export async function syncUserSession(
   req: Request,
@@ -9,12 +13,12 @@ export async function syncUserSession(
     const firebaseUser = req.user;
 
     if (!firebaseUser || !firebaseUser.phone_number) {
-      res.status(400).json({
-        error: "Valid phone number required inside authentication token",
-      });
+      throw new UnauthorizedError("Unauthorized: token payload missing");
       return;
     }
 
+    const messyPhone = firebaseUser.phone_number;
+    const safePhone = normalizeGhanaianPhoneNumber(messyPhone);
     // Atomically fetch the user or create a completely fresh profile with an empty wallet
     let user = await prisma.user.findUnique({
       where: { firebaseUid: firebaseUser.uid },
@@ -24,26 +28,28 @@ export async function syncUserSession(
       user = await prisma.user.create({
         data: {
           firebaseUid: firebaseUser.uid,
-          phoneNumber: firebaseUser.phone_number,
+          phoneNumber: safePhone,
         },
       });
     }
 
-    res.status(200).json({
-      message: "Account authentication synchronization complete",
-      user: {
+    sendSuccess(
+      res,
+      {
         id: user.id,
         phoneNumber: user.phoneNumber,
         status: user.status,
       },
-    });
+      "Account authentication synchronization complete",
+      200,
+    );
   } catch (error) {
     console.error(
       "❌ Database processing error during session synchronization:",
       error,
     );
-    res
-      .status(500)
-      .json({ error: "Internal processing failure during session sync" });
+    throw new InternalServerError(
+      "Internal processing failure during session sync",
+    );
   }
 }
