@@ -20,8 +20,7 @@ const ScanSFC = ({ goBack }: { goBack: () => void }) => {
     });
 
     return unsubscribe;
-  }, []);
-
+  }, [navigation, goBack]);
   return (
     <Animated.View
       entering={SlideInRight}

@@ -62,8 +62,6 @@ const styles = StyleSheet.create({
 
   contentWrapper: {
     flex: 1,
-    position: "absolute",
-    inset: 0,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -81,7 +79,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -20,
     bottom: -20,
-    marginHorizontal: "auto",
+    alignSelf: "center",
     width: "75%",
     backgroundColor: "#090d13",
   },
@@ -90,7 +88,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -20,
     bottom: -20,
-    marginHorizontal: "auto",
+    alignSelf: "center",
     width: "75%",
     backgroundColor: "#090d13",
     transform: [{ rotate: "90deg" }],

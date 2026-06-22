@@ -42,7 +42,7 @@ const SendMoney = () => {
   >("main");
 
   const updateAmount = (value: string) => {
-    if ((amount + value).length === 0) {
+    if (value.length === 0) {
       setCtaDisabled(true);
     } else {
       setCtaDisabled(false);
@@ -50,7 +50,6 @@ const SendMoney = () => {
 
     setAmount(value);
   };
-
   const ctaAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -79,8 +78,9 @@ const SendMoney = () => {
   });
 
   const AmountKeyUpdate = (value: number) => {
-    let amnt = Number(amount) || 0;
-    setAmount(String(amnt + value));
+    const newAmount = String((Number(amount) || 0) + value);
+    setAmount(newAmount);
+    setCtaDisabled(newAmount.length === 0);
   };
 
   return (
@@ -208,25 +208,25 @@ const SendMoney = () => {
           style={[
             styles.cta,
             {
-              backgroundColor: !amount ? "#090b11bc" : "#491c77",
+              backgroundColor: ctaDisabled ? "#090b11bc" : "#491c77",
               borderWidth: 0,
             },
           ]}
-          disabled={!amount}
+          disabled={ctaDisabled}
           onPress={() => setCurrentScreen("sfc")}
         >
           <Text style={[styles.ctaText]}>Scan sfc</Text>
         </Pressable>
         <Pressable
           style={[styles.cta]}
-          disabled={!amount}
+          disabled={ctaDisabled}
           onPress={() => setCurrentScreen("qrcode")}
         >
           <Text style={[styles.ctaText]}>scan QR Code</Text>
         </Pressable>
         <Pressable
           style={[styles.cta]}
-          disabled={!amount}
+          disabled={ctaDisabled}
           onPress={() => setShowManualMode(true)}
         >
           <Text style={[styles.ctaText]}>Enter number manually</Text>

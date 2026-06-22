@@ -11,20 +11,20 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.sfc.sfc",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "NSFaceIDUsageDescription": "Allow sfc to protect your wallet data with Face ID biometric authentication."
       }
     },
     "android": {
       "package": "com.sfc.sfc",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#000000",
         "foregroundImage": "./assets/images/logo/logo.png"
       },
       "predictiveBackGestureEnabled": false,
-      "permissions": [
-        "android.permission.NFC"
-      ]
+      "permissions": ["android.permission.NFC"]
     },
     "web": {
       "output": "static",
@@ -46,7 +46,7 @@
       [
         "react-native-nfc-manager",
         {
-          "nfcPermission": "Allow KudiTap to scan your contactless bank or mobile money card."
+          "nfcPermission": "Allow sfc to scan your contactless bank or mobile money card."
         }
       ],
       "expo-secure-store"

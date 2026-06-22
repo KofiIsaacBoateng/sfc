@@ -32,7 +32,37 @@ const AccountData = ({
     });
 
     return unsubscribe;
-  }, []);
+  }, [navigation, goBack]);
+
+  const processPayment = async () => {
+    setLoading(true);
+    setStatus("sending");
+    let completed = false;
+
+    try {
+      const response = await fetch("https://example.com/api/process-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount, phoneNumber }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Payment request failed");
+      }
+
+      completed = true;
+    } catch (error) {
+      console.error("Payment processing error:", error);
+      setStatus("confirm");
+    } finally {
+      setLoading(false);
+      if (completed) {
+        goBack();
+      }
+    }
+  };
 
   return (
     <Animated.View
@@ -57,10 +87,10 @@ const AccountData = ({
         {/*** first layer details */}
         <Animated.View style={[styles.outlier, styles.details]}>
           <Animated.Text style={[styles.detail, styles.name]}>
-            Kofi Boateng
+            {phoneNumber || "Recipient"}
           </Animated.Text>
           <Animated.Text style={[styles.detail, styles.amount]}>
-            GHS 400.00
+            {amount ? `GHS ${amount}` : "GHS 0.00"}
           </Animated.Text>
         </Animated.View>
 
@@ -82,7 +112,10 @@ const AccountData = ({
           <Pressable onPress={goBack} style={[styles.btn, styles.cancel]}>
             <Text style={[styles.btnText, styles.cancelText]}>Cancel</Text>
           </Pressable>
-          <Pressable onPress={goBack} style={[styles.btn, styles.confirm]}>
+          <Pressable
+            onPress={processPayment}
+            style={[styles.btn, styles.confirm]}
+          >
             <Text style={[styles.btnText]}>Confirm</Text>
           </Pressable>
         </View>

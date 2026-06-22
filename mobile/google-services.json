@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1027446854582",
+    "project_id": "sfcnfcsfc",
+    "storage_bucket": "sfcnfcsfc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027446854582:android:c4b953f6c8e53cf1fb6717",
+        "android_client_info": {
+          "package_name": "com.sfc.sfc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk2oc6EEJSBnsslacfdZrZA8YM15aD0to"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
