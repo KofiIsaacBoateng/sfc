@@ -1,7 +1,13 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { router, useNavigation, useRouter } from "expo-router";
+import {
+  router,
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+} from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Pressable,
   StyleSheet,
   Text,
@@ -12,34 +18,53 @@ import {
 import Animated, { SlideInRight } from "react-native-reanimated";
 import { RoundBtn } from "@/components/onboarding/buttons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { usePhoneAuth } from "@/hooks/usePhoneAuth";
+import { apiClient } from "@/services/api";
 
 const OTP_LENGTH = 6;
 const Verify = () => {
   const { top, bottom } = useSafeAreaInsets();
-  const router = useRouter();
+  const { phone } = useLocalSearchParams<{ phone: string }>();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [disabled, setDisabled] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(false);
   const [currentInput, setCurrentInput] = useState(0);
   const [isValidOtp, setIsValidOtp] = useState<boolean | undefined>(undefined);
   const inputRefs = useRef<Array<TextInput | null>>([]);
-  const navigation = useNavigation();
-  const phoneNumber = "0503422723";
+  const { verifyOtpCode, loading } = usePhoneAuth();
 
-  const handleSubmit = () => {
-    setLoading(true);
-    setTimeout(() => {
-      let valid = Math.random() > 0.2;
-      setIsValidOtp(valid);
-      setLoading(false);
-      if (valid) {
-        setTimeout(() => router.navigate("/userrole"), 500);
-        return;
+  const handleSubmit = async () => {
+    const firebaseUser = await verifyOtpCode(otp.join(""));
+
+    if (firebaseUser) {
+      try {
+        console.log(
+          "🔗 Firebase Local Session Active. Syncing parameters with backend API...",
+        );
+
+        const response = await apiClient.post("/auth/sync");
+        setIsValidOtp(true);
+        console.log(
+          "✅ PostgreSQL Sync Complete! Server Payload:",
+          response.data,
+        );
+
+        // Success! Break out of the auth flow completely and enter the main app dashboard space
+        router.replace("/home");
+      } catch (error: any) {
+        setIsValidOtp(false);
+        console.error(
+          "❌ Sync registration route failed:",
+          error.response?.data || error.message,
+        );
+        Alert.alert(
+          "Server Sync Failed",
+          "Your phone code passed, but our backend server ledger could not process the registration.",
+        );
       }
+    }
 
-      inputRefs?.current[OTP_LENGTH - 1]?.focus();
-    }, 1000);
+    inputRefs?.current[OTP_LENGTH - 1]?.focus();
   };
 
   const handleChange = (text: string, index: number) => {
@@ -117,7 +142,7 @@ const Verify = () => {
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>Verify Identity</Text>
         <Text style={styles.subtitle}>
-          Enter the 6-digit code sent via SMS to *******{phoneNumber.slice(-3)}
+          Enter the 6-digit code sent via SMS to *******{phone.slice(-3)}
         </Text>
       </View>
 

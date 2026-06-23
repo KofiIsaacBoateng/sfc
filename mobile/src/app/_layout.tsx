@@ -1,3 +1,4 @@
+import { apiClient } from "@/services/api";
 import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
@@ -5,33 +6,77 @@ import {
   useFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  FirebaseAuthTypes,
+  onAuthStateChanged,
+  getAuth,
+} from "@react-native-firebase/auth";
 import "react-native-reanimated";
 
-SplashScreen.preventAutoHideAsync().catch(() => {});
 function RootLayoutNav() {
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
   const [fontsLoaded, fontError] = useFonts({
     "Jakarta-Regular": PlusJakartaSans_400Regular,
     "Jakarta-SemiBold": PlusJakartaSans_600SemiBold,
     "Jakarta-Bold": PlusJakartaSans_700Bold,
   });
 
+  // Monitors the hardware application interface state loop
   useEffect(() => {
-    // Hide splash screen only when fonts are loaded or if an error occurs
-    if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync().catch(() => {});
-    }
-  }, [fontsLoaded, fontError]);
+    const authInstance = getAuth();
+    const unsubscribe = onAuthStateChanged(
+      authInstance,
+      async (firebaseUser) => {
+        setUser(firebaseUser);
 
-  // Render an empty black canvas while fonts are loading
-  if (!fontsLoaded && !fontError) {
-    return <View style={styles.loadingContainer} />;
+        if (firebaseUser) {
+          try {
+            // Fire backend connection sync instantly upon successful local validation match
+            const response = await apiClient.post("/auth/sync");
+            console.log("✅ Backend Sync Matrix Complete:", response.data);
+
+            // Route the authenticated user directly into their application interface dashboard
+            router.replace("/home");
+          } catch (error) {
+            console.error(
+              "❌ Synchronous Backend Gateway Registration Failure:",
+              error,
+            );
+            authInstance.signOut(); // Gracefully purge local storage states if gateway communication breaches
+          }
+        }
+
+        if (initializing) setInitializing(false);
+      },
+    );
+
+    return unsubscribe;
+  }, [initializing]);
+
+  const isAppLoading = initializing || (!fontsLoaded && !fontError);
+
+  if (isAppLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#000000",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
+    );
   }
+
   return (
     <ThemeProvider value={DefaultTheme}>
       <GestureHandlerRootView style={styles.container}>
@@ -67,5 +112,7 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     backgroundColor: "#000000",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

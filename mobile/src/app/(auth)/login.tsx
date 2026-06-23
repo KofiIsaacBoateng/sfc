@@ -6,12 +6,13 @@ import NetworkDetector from "@/components/global/networkDetector";
 import { RoundBtn } from "@/components/onboarding/buttons";
 import { router, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { usePhoneAuth } from "@/hooks/usePhoneAuth";
 
 const Login = () => {
   const router = useRouter();
   const { top, bottom } = useSafeAreaInsets();
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const { loading, sendOtpCode } = usePhoneAuth();
   const [disabled, setDisabled] = useState(true);
   const [focused, setFocused] = useState(false);
   const [firstTimeFocus, setFirstTimeFocus] = useState(true);
@@ -84,11 +85,11 @@ const Login = () => {
       return;
     }
 
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      router.navigate("/verify");
-    }, 1000);
+    const cleanNumber = phoneNumber.startsWith("0")
+      ? `+233${phoneNumber.substring(1)}`
+      : `+233${phoneNumber}`;
+
+    sendOtpCode(cleanNumber);
   };
 
   useEffect(() => {
