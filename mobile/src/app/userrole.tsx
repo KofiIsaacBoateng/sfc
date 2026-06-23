@@ -93,7 +93,7 @@ const UserRole = () => {
       {/**** ctx */}
       <RoundBtn
         style={{ marginLeft: "auto", marginTop: 30 }}
-        onPress={() => router.navigate("/authentication")}
+        onPress={() => router.navigate("/linking")}
       />
     </View>
   );

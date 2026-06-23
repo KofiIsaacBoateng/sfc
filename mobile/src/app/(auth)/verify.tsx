@@ -1,5 +1,5 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { router, useNavigation } from "expo-router";
+import { router, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Pressable,
@@ -10,18 +10,13 @@ import {
   View,
 } from "react-native";
 import Animated, { SlideInRight } from "react-native-reanimated";
-import { RoundBtn } from "../onboarding/buttons";
+import { RoundBtn } from "@/components/onboarding/buttons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const OTP_LENGTH = 6;
-const OTP = ({
-  handleVerifyOtp,
-  phoneNumber,
-  goBack,
-}: {
-  handleVerifyOtp: (input: string) => boolean;
-  phoneNumber: string;
-  goBack: () => void;
-}) => {
+const Verify = () => {
+  const { top, bottom } = useSafeAreaInsets();
+  const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -30,15 +25,16 @@ const OTP = ({
   const [isValidOtp, setIsValidOtp] = useState<boolean | undefined>(undefined);
   const inputRefs = useRef<Array<TextInput | null>>([]);
   const navigation = useNavigation();
+  const phoneNumber = "0503422723";
 
   const handleSubmit = () => {
     setLoading(true);
     setTimeout(() => {
-      let valid = handleVerifyOtp(otp.join(""));
+      let valid = Math.random() > 0.2;
       setIsValidOtp(valid);
       setLoading(false);
       if (valid) {
-        setTimeout(() => router.navigate("/linking"), 500);
+        setTimeout(() => router.navigate("/userrole"), 500);
         return;
       }
 
@@ -105,19 +101,15 @@ const OTP = ({
     return () => clearTimeout(timeout);
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-      e.preventDefault();
-      goBack();
-    });
-
-    return unsubscribe;
-  }, []);
-
   return (
-    <Animated.View entering={SlideInRight.delay(300)} style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { paddingTop: top + 30, paddingBottom: bottom + 10 },
+      ]}
+    >
       <Pressable
-        onPress={goBack}
+        onPress={() => router.back()}
         style={{ marginRight: "auto", marginBottom: 10 }}
       >
         <FontAwesome6 name="angle-left" size={22} color="#ffffff87" />
@@ -172,15 +164,16 @@ const OTP = ({
         disabled={disabled}
         onPress={handleSubmit}
       />
-    </Animated.View>
+    </View>
   );
 };
 
-export default OTP;
+export default Verify;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 15,
   },
 
   titleWrapper: {

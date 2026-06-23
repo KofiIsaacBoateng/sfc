@@ -40,7 +40,7 @@ const onboarding = () => {
   };
 
   const skip = () => {
-    router.navigate("/userrole");
+    router.navigate("/login");
   };
 
   return (

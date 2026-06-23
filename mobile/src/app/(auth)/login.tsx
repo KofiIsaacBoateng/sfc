@@ -2,17 +2,15 @@ import { NETWORK_CODES } from "@/constants/constants";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import Animated, { SlideOutLeft } from "react-native-reanimated";
-import NetworkDetector from "../global/networkDetector";
-import { RoundBtn } from "../onboarding/buttons";
+import NetworkDetector from "@/components/global/networkDetector";
+import { RoundBtn } from "@/components/onboarding/buttons";
+import { router, useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const Number = ({
-  handleSendOtp,
-  number,
-}: {
-  handleSendOtp: (input: string) => void;
-  number: string;
-}) => {
-  const [phoneNumber, setPhoneNumber] = useState<string>(number);
+const Login = () => {
+  const router = useRouter();
+  const { top, bottom } = useSafeAreaInsets();
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [focused, setFocused] = useState(false);
@@ -89,19 +87,24 @@ const Number = ({
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      handleSendOtp(phoneNumber);
+      router.navigate("/verify");
     }, 1000);
   };
 
   useEffect(() => {
-    if (number) {
+    if (phoneNumber) {
       validateInput();
       setDisabled(false);
     }
   }, []);
 
   return (
-    <Animated.View exiting={SlideOutLeft} style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { paddingBottom: bottom + 10, paddingTop: top + 30 },
+      ]}
+    >
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>Enter your MoMo Number</Text>
         <Text style={styles.subtitle}>
@@ -115,7 +118,7 @@ const Number = ({
           borderColor={
             errors
               ? "#be1010"
-              : !firstTimeFocus || number
+              : !firstTimeFocus
                 ? "#10be10"
                 : focused
                   ? "#ffffff"
@@ -129,14 +132,14 @@ const Number = ({
             {
               borderColor: errors
                 ? "#be1010"
-                : !firstTimeFocus || number
+                : !firstTimeFocus
                   ? "#10be10"
                   : focused
                     ? "#ffffff"
                     : "#ffffff87",
               color: errors
                 ? "#be1010"
-                : !firstTimeFocus || number
+                : !firstTimeFocus
                   ? "#10be10"
                   : "#ffffff",
             },
@@ -178,16 +181,16 @@ const Number = ({
         disabled={disabled || Boolean(errors)}
         onPress={handleSubmit}
       />
-    </Animated.View>
+    </View>
   );
 };
 
-export default Number;
+export default Login;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
+    paddingHorizontal: 15,
   },
 
   titleWrapper: {
