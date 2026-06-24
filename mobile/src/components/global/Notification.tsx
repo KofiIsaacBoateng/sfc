@@ -51,7 +51,7 @@ const ToastNotification = ({
         style={{
           color: "#ffffffcc",
           fontSize: 16,
-          fontWeight: "300",
+          fontFamily: "Jakarta-Regular",
           lineHeight: 25,
         }}
       >

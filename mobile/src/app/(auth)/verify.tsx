@@ -1,10 +1,8 @@
+import { RoundBtn } from "@/components/onboarding/buttons";
+import { usePhoneAuth } from "@/hooks/usePhoneAuth";
+import { apiClient } from "@/services/api";
 import { FontAwesome6 } from "@expo/vector-icons";
-import {
-  router,
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
-} from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -15,11 +13,7 @@ import {
   TextInputKeyPressEvent,
   View,
 } from "react-native";
-import Animated, { SlideInRight } from "react-native-reanimated";
-import { RoundBtn } from "@/components/onboarding/buttons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePhoneAuth } from "@/hooks/usePhoneAuth";
-import { apiClient } from "@/services/api";
 
 const OTP_LENGTH = 6;
 const Verify = () => {
@@ -50,7 +44,7 @@ const Verify = () => {
         );
 
         // Success! Break out of the auth flow completely and enter the main app dashboard space
-        router.replace("/home");
+        router.replace("/userrole");
       } catch (error: any) {
         setIsValidOtp(false);
         console.error(

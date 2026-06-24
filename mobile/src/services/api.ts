@@ -4,7 +4,7 @@ import axios, {
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from "axios";
-import auth from "@react-native-firebase/auth";
+import { getAuth, getIdToken } from "@react-native-firebase/auth";
 
 // Point this directly to your local computer running network IP address
 // Avoid using localhost/127.0.0.1 since mobile emulators treat that as their own internal loop
@@ -20,9 +20,19 @@ export const apiClient = axios.create({
 // Interceptor to inject the cryptographically secure Firebase JWT token on every request
 apiClient.interceptors.request.use(
   async (config: any) => {
-    const currentUser = auth().currentUser;
+    // Escape hatch: Only inject tokens into your specific backend server URL
+    if (
+      config.url &&
+      !config.url.startsWith("http://192.168.43.14:5000") &&
+      !config.url.startsWith("/")
+    ) {
+      return config;
+    }
+
+    const authInstance = getAuth();
+    const currentUser = authInstance.currentUser;
     if (currentUser) {
-      const token = await currentUser.getIdToken(true); // Grabs active cryptographic token
+      const token = await getIdToken(currentUser, false); // Grabs active cryptographic token
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

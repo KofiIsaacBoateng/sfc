@@ -5,19 +5,21 @@ import {
   PlusJakartaSans_700Bold,
   useFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import {
+  FirebaseAuthTypes,
+  getAuth,
+  onAuthStateChanged,
+} from "@react-native-firebase/auth";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { router, Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  FirebaseAuthTypes,
-  onAuthStateChanged,
-  getAuth,
-} from "@react-native-firebase/auth";
 import "react-native-reanimated";
+
+let isNetworkSyncInProgress = false;
+let currentSyncedFirebaseUid: string | null = null;
 
 function RootLayoutNav() {
   const [initializing, setInitializing] = useState(true);
@@ -28,37 +30,67 @@ function RootLayoutNav() {
     "Jakarta-Bold": PlusJakartaSans_700Bold,
   });
 
-  // Monitors the hardware application interface state loop
   useEffect(() => {
     const authInstance = getAuth();
+
     const unsubscribe = onAuthStateChanged(
       authInstance,
       async (firebaseUser) => {
-        setUser(firebaseUser);
-
-        if (firebaseUser) {
-          try {
-            // Fire backend connection sync instantly upon successful local validation match
-            const response = await apiClient.post("/auth/sync");
-            console.log("✅ Backend Sync Matrix Complete:", response.data);
-
-            // Route the authenticated user directly into their application interface dashboard
-            router.replace("/home");
-          } catch (error) {
-            console.error(
-              "❌ Synchronous Backend Gateway Registration Failure:",
-              error,
-            );
-            authInstance.signOut(); // Gracefully purge local storage states if gateway communication breaches
-          }
+        if (!firebaseUser) {
+          currentSyncedFirebaseUid = null;
+          isNetworkSyncInProgress = false;
+          setInitializing(false);
+          router.replace("/onboarding");
+          return;
         }
 
-        if (initializing) setInitializing(false);
+        if (currentSyncedFirebaseUid === firebaseUser.uid) {
+          setInitializing(false);
+          return;
+        }
+
+        if (isNetworkSyncInProgress) {
+          return;
+        }
+
+        try {
+          console.log(
+            "📡 [AUTH ENGINE]: Firing unique profile sync request to Node server...",
+          );
+          isNetworkSyncInProgress = true;
+
+          const response = await apiClient.post("/auth/sync");
+          const serverUser = response.data.data;
+
+          console.log(
+            "📊 [AUTH ENGINE]: Server Checklist Received:",
+            serverUser,
+          );
+
+          currentSyncedFirebaseUid = firebaseUser.uid;
+          isNetworkSyncInProgress = false;
+          setInitializing(false);
+
+          if (serverUser.status === "PENDING_ONBOARDING") {
+            router.replace("/userrole");
+          } else if (serverUser.status === "ACTIVE") {
+            router.replace("/home");
+          }
+        } catch (error) {
+          console.error("❌ [AUTH ENGINE]: Sync processing failure:", error);
+
+          isNetworkSyncInProgress = false;
+          currentSyncedFirebaseUid = null;
+          setInitializing(false);
+
+          authInstance.signOut();
+          router.replace("/onboarding");
+        }
       },
     );
 
     return unsubscribe;
-  }, [initializing]);
+  }, []);
 
   const isAppLoading = initializing || (!fontsLoaded && !fontError);
 

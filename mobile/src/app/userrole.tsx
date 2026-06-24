@@ -5,14 +5,40 @@ import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("screen");
+
+type Role = "user" | "merchant";
+interface RoleData {
+  title: string;
+  subtitle: string;
+  role: Role;
+}
+
+const roleData: RoleData[] = [
+  {
+    role: "user",
+    title: "Daily Cruise",
+    subtitle:
+      " I want a quick, secure way to pay for my daily transit, shopping, and retail spends.",
+  },
+
+  {
+    role: "merchant",
+    title: "Business Boost",
+    subtitle:
+      "I want a frictionless, pocket-sized POS to collect instant cashless payments from clients.",
+  },
+];
+
 const UserRole = () => {
   const { bottom, top } = useSafeAreaInsets();
-  const [selected, setSelected] = useState<undefined | "user" | "merchant">(
-    undefined,
-  );
+  const [selected, setSelected] = useState<undefined | Role>(undefined);
 
-  const handleSelected = (option: undefined | "user" | "merchant") => {
+  const handleSelected = (option: undefined | Role) => {
     setSelected(option);
+  };
+
+  const handleNext = () => {
+    router.replace("/linking");
   };
 
   return (
@@ -30,72 +56,66 @@ const UserRole = () => {
       </View>
 
       <View style={styles.cards}>
-        <Pressable
-          onPress={() => setSelected("user")}
-          style={[
-            styles.card,
-            { borderColor: selected === "user" ? "#ffffffcc" : "#ffffff44" },
-          ]}
-        >
-          <View style={styles.image} />
-          <View style={styles.content}>
-            <Text style={styles.contentTitle}>Daily Cruise</Text>
-            <Text style={styles.contentSubtext}>
-              I want a quick, secure way to pay for my daily transit, shopping,
-              and retail spends.
-            </Text>
-          </View>
-          <View
-            style={[
-              styles.activeIndicator,
-              {
-                backgroundColor:
-                  selected === "user" ? "#ffffffcc" : "transparent",
-              },
-            ]}
-          >
-            <View style={styles.innerCircle} />
-          </View>
-        </Pressable>
-
-        <Pressable
-          onPress={() => setSelected("merchant")}
-          style={[
-            styles.card,
-            {
-              borderColor: selected === "merchant" ? "#ffffffcc" : "#ffffff44",
-            },
-          ]}
-        >
-          <View style={styles.image} />
-          <View style={styles.content}>
-            <Text style={styles.contentTitle}>Business Boost</Text>
-            <Text style={styles.contentSubtext}>
-              I want a frictionless, pocket-sized POS to collect instant
-              cashless payments from clients.
-            </Text>
-          </View>
-
-          <View
-            style={[
-              styles.activeIndicator,
-              {
-                backgroundColor:
-                  selected === "merchant" ? "#ffffff" : "transparent",
-              },
-            ]}
-          >
-            <View style={styles.innerCircle} />
-          </View>
-        </Pressable>
+        {roleData.map((role, index) => (
+          <RoleCard
+            key={index}
+            {...role}
+            isSelected={role.role === selected}
+            select={() => setSelected(role.role)}
+          />
+        ))}
       </View>
 
       {/**** ctx */}
       <RoundBtn
         style={{ marginLeft: "auto", marginTop: 30 }}
-        onPress={() => router.navigate("/linking")}
+        onPress={handleNext}
+        disabled={!selected}
       />
     </View>
+  );
+};
+
+const RoleCard = ({
+  isSelected,
+  title,
+  subtitle,
+  role,
+  select,
+}: {
+  isSelected: boolean;
+  title: string;
+  subtitle: string;
+  role: string;
+  select: (role: string) => void;
+}) => {
+  return (
+    <Pressable
+      onPress={() => select("merchant")}
+      style={[
+        styles.card,
+        {
+          borderColor: isSelected ? "#ffffffcc" : "#ffffff44",
+        },
+      ]}
+    >
+      <View style={styles.image} />
+      <View style={styles.content}>
+        <Text style={styles.contentTitle}>{title}</Text>
+        <Text style={styles.contentSubtext}>{subtitle}</Text>
+      </View>
+
+      <View
+        style={[
+          styles.activeIndicator,
+          {
+            backgroundColor: isSelected ? "#ffffff" : "transparent",
+          },
+        ]}
+      >
+        <View style={styles.innerCircle} />
+      </View>
+    </Pressable>
   );
 };
 
@@ -105,7 +125,7 @@ const styles = StyleSheet.create({
   container: {
     width,
     height,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     backgroundColor: "#000000",
   },
   header: {
@@ -113,16 +133,16 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     textAlign: "center",
-    fontSize: 30,
-    fontWeight: "700",
+    fontSize: 28,
     letterSpacing: 0.1,
     color: "#ffffffcc",
+    fontFamily: "Jakarta-Bold",
   },
   headerSubtext: {
     textAlign: "center",
     fontSize: 16,
     color: "#ffffff",
-    fontWeight: "300",
+    fontFamily: "Jakarta-Regular",
     marginTop: 5,
   },
   cards: {
@@ -156,14 +176,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 1,
     color: "#ffffffcc",
-    fontWeight: "900",
+    fontFamily: "Jakarta-Bold",
+
     textTransform: "uppercase",
   },
   contentSubtext: {
     fontSize: 15,
-    color: "#ffffff",
-    fontWeight: "300",
+    color: "#ffffffcc",
     lineHeight: 25,
+    fontFamily: "Jakarta-Regular",
   },
 
   activeIndicator: {

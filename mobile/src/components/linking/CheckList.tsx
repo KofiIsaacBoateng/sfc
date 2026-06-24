@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import Lottie from "lottie-react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -68,6 +68,14 @@ const CheckList = ({
   ctas: (() => void)[];
 }) => {
   const { bottom, top } = useSafeAreaInsets();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      ctas[0]();
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <Animated.View
       entering={FadeIn.delay(500)}
@@ -203,15 +211,14 @@ const styles = StyleSheet.create({
   title: {
     color: "#ffffffcc",
     fontSize: 25,
-    fontWeight: "900",
-    letterSpacing: 1,
+    fontFamily: "Jakarta-Regular",
   },
 
   subtext: {
-    color: "#ffffffcc",
+    color: "#ffffffaa",
     fontSize: 15,
     lineHeight: 22,
-    fontWeight: "300",
+    fontFamily: "Jakarta-Regular",
   },
 
   list: {
@@ -221,8 +228,8 @@ const styles = StyleSheet.create({
   status: {
     color: "#ffffffcc",
     fontSize: 20,
-    letterSpacing: 1,
     marginTop: 10,
+    fontFamily: "Jakarta-SemiBold",
   },
 
   item: {
@@ -246,6 +253,7 @@ const styles = StyleSheet.create({
 
   message: {
     fontSize: 18,
+    fontFamily: "Jakarta-Regular",
   },
 
   cta: {
@@ -258,7 +266,7 @@ const styles = StyleSheet.create({
   ctaText: {
     color: "#ffffffcc",
     fontSize: 16,
-    fontWeight: "700",
     textTransform: "uppercase",
+    fontFamily: "Jakarta-SemiBold",
   },
 });

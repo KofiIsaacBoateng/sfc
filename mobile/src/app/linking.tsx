@@ -1,12 +1,14 @@
 import Intro from "@/components/global/Intro";
-import {
-  ModalNotification,
-  ToastNotification,
-} from "@/components/global/Notification";
+import { ToastNotification } from "@/components/global/Notification";
 import CheckList from "@/components/linking/CheckList";
 import ValidateProduct from "@/components/linking/ValidateProduct";
-import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useNfcPermissionLifecycle } from "@/hooks/useNFCPermissions";
+import {
+  checkNFCHardwareSupport,
+  verifyAndEnableNfcAntenna,
+} from "@/utils/nfc";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 interface Status {
   supported: boolean | undefined;
@@ -20,8 +22,7 @@ const linking = () => {
   const [toast, setToast] = useState<
     { type: "error" | "info" | "success"; message: string } | undefined
   >(undefined);
-  const [isCheckingSupport, setIsCheckingSupport] = useState(false);
-  const [isEnabling, setIsEnabling] = useState(false);
+  const { isNfcActive, checking } = useNfcPermissionLifecycle();
   const [isValidating, setIsValidating] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<Status>({
@@ -31,52 +32,49 @@ const linking = () => {
     linked: undefined,
   });
 
-  const checkSupport = () => {
+  // check if device has hardware nfc support
+  const checkSupport = async () => {
     // support logic with react-native-nfc goes here
-
-    // simulating check
     setLoading(true);
-    setIsCheckingSupport(true);
-    const isSupported = Math.random() <= 0.5;
-    setTimeout(() => {
-      setIsCheckingSupport(false);
-      setLoading(false);
-      if (isSupported) {
-        setCurrentStage((prev) => prev + 1);
-        setStatus((prev) => ({ ...prev, supported: true }));
-      } else {
-        setToast({
-          type: "error",
-          message: "You device does not support NFC.",
-        });
-        setStatus((prev) => ({ ...prev, supported: false }));
-      }
-    }, 3000);
+
+    const supported = await checkNFCHardwareSupport();
+
+    setStatus((prev) => ({ ...prev, supported }));
+    if (supported) {
+      setCurrentStage(1);
+      enableNFC();
+    }
+
+    setLoading(false);
   };
 
-  const enableNFC = () => {
-    // check if nfc is on
-    // if not redirect user to device settings to turn on nfc
-
-    // simulating wait
+  // turn of nfc cycle
+  const enableNFC = async () => {
     setLoading(true);
-    setIsEnabling(true);
-    const isEnabled = Math.random() <= 0.5;
-    setTimeout(() => {
-      setIsEnabling(false);
+    if (!isNfcActive) {
+      // If it is off, execute our alert from item 2 to redirect them back to settings
+      await verifyAndEnableNfcAntenna();
       setLoading(false);
-      if (isEnabled) {
-        setCurrentStage((prev) => prev + 1);
-        setStatus((prev) => ({ ...prev, enabled: true }));
-      } else {
-        setToast({
-          type: "error",
-          message: "NFC is still offline.",
-        });
-        setStatus((prev) => ({ ...prev, enabled: false }));
-      }
-    }, 3000);
+      return;
+    }
+
+    setStatus((prev) => ({ ...prev, enabled: isNfcActive }));
+    setCurrentStage(2);
+    validateProduct(true);
+    setLoading(false);
   };
+
+  useEffect(() => {
+    if (currentStage === 1) {
+      enableNFC();
+      return;
+    }
+
+    // if user turns off while on stage 3, return back to stage 2
+    if (currentStage > 1 && !isNfcActive) {
+      setCurrentStage(1);
+    }
+  }, [isNfcActive, currentStage]);
 
   const initiateValidation = () => {
     // slide up validation screen
@@ -95,7 +93,8 @@ const linking = () => {
       return;
     }
 
-    setCurrentStage((prev) => prev + 1);
+    setCurrentStage(3);
+    registerDevice();
   };
 
   const registerDevice = () => {
@@ -110,13 +109,13 @@ const linking = () => {
           <Text
             style={{
               fontSize: 30,
-              fontWeight: "900",
+              fontFamily: "Jakarta-Bold",
               color: "#ffffffcc",
               textAlign: "center",
             }}
           >
             Link{" "}
-            <Text style={{ fontWeight: "300" }}>
+            <Text style={{ fontFamily: "Jakarta-Regular" }}>
               your product to your account
             </Text>
           </Text>
@@ -131,49 +130,6 @@ const linking = () => {
       )}
 
       {/***** NOTIFICATION ZONE */}
-      {/**** checking support modal */}
-      <ModalNotification
-        visible={isCheckingSupport}
-        close={() => {
-          setIsCheckingSupport(false);
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 20,
-          }}
-        >
-          <ActivityIndicator size={70} color="#ffffff" />
-          <Text style={{ color: "#ffffffcc", fontSize: 18 }}>
-            Checking device support...
-          </Text>
-        </View>
-      </ModalNotification>
-
-      {/*** NFC online or offline modal */}
-      <ModalNotification
-        visible={isEnabling}
-        close={() => {
-          setIsEnabling(false);
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 20,
-          }}
-        >
-          <ActivityIndicator size={70} color="#ffffff" />
-          <Text style={{ color: "#ffffffcc", fontSize: 18 }}>
-            Waiting for NFC to come online
-          </Text>
-        </View>
-      </ModalNotification>
 
       {/****** validate nfc */}
       {isValidating && <ValidateProduct validate={validateProduct} />}
