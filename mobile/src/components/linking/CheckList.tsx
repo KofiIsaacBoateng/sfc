@@ -128,7 +128,7 @@ const CheckList = ({
         </Pressable>
       ) : (
         <RoundBtn
-          onPress={() => router.navigate("/(tabs)/home")}
+          onPress={() => router.replace("/home")}
           style={{ marginLeft: "auto", marginTop: "auto" }}
         />
       )}

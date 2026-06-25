@@ -1,5 +1,5 @@
 import { Alert, Platform } from "react-native";
-import NFCManager from "react-native-nfc-manager";
+import NFCManager, { NfcTech } from "react-native-nfc-manager";
 
 export const checkNFCHardwareSupport = async (): Promise<boolean> => {
   try {
@@ -62,3 +62,58 @@ export async function verifyAndEnableNfcAntenna(): Promise<boolean> {
     return false;
   }
 }
+
+export const readSFCPayload = async (): Promise<string | null> => {
+  console.log("[DEVICE SCANNER]: Activating antenna for SFC Hardware.");
+
+  try {
+    // Force radio to strictly look Ndef or NfcA formated hardwares
+    await NFCManager.requestTechnology([NfcTech.Ndef, NfcTech.NfcA]);
+
+    // capture the hardwares tag configuration
+    const tag = await NFCManager.getTag();
+
+    if (!tag) {
+      console.error(
+        "[DEVICE SCANNER]: Hardware removed from scanning zone too quickly!",
+      );
+      return null;
+    }
+
+    console.log(
+      "[DEVICE SCANNER]: Verified custom Hardware signature: ",
+      tag.id,
+    );
+
+    const hardwareSecureToken = tag.id;
+
+    if (!hardwareSecureToken) {
+      console.error(
+        "[DEVICE SCANNER]: Scanned Hardware does not match SFC manufacturing standards!",
+      );
+
+      return null;
+    }
+
+    return hardwareSecureToken;
+  } catch (error: any) {
+    console.warn(
+      "[DEVICE SCANNER]: Interaction interrupted: ",
+      error.message || error,
+    );
+
+    if (error !== "User cancel" && error?.message !== "User cancel") {
+      Alert.alert(
+        "Scan Failed",
+        "Hold your Hardware steady against the back of your phone.",
+      );
+    }
+    return null;
+  } finally {
+    await NFCManager.cancelTechnologyRequest()
+      .then(() => {
+        console.log("[DEVICE SCANNER]: Cancelling antenna.");
+      })
+      .catch(() => {});
+  }
+};

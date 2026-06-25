@@ -1,10 +1,10 @@
 import Intro from "@/components/global/Intro";
 import { ToastNotification } from "@/components/global/Notification";
 import CheckList from "@/components/linking/CheckList";
-import ValidateProduct from "@/components/linking/ValidateProduct";
 import { useNfcPermissionLifecycle } from "@/hooks/useNFCPermissions";
 import {
   checkNFCHardwareSupport,
+  readSFCPayload,
   verifyAndEnableNfcAntenna,
 } from "@/utils/nfc";
 import React, { useEffect, useState } from "react";
@@ -25,6 +25,7 @@ const linking = () => {
   const { isNfcActive, checking } = useNfcPermissionLifecycle();
   const [isValidating, setIsValidating] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [secureToken, setSecureToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({
     supported: undefined,
     enabled: undefined,
@@ -60,7 +61,7 @@ const linking = () => {
 
     setStatus((prev) => ({ ...prev, enabled: isNfcActive }));
     setCurrentStage(2);
-    validateProduct(true);
+    validateProduct();
     setLoading(false);
   };
 
@@ -76,28 +77,43 @@ const linking = () => {
     }
   }, [isNfcActive, currentStage]);
 
+  // verify sfc hardware
   const initiateValidation = () => {
     // slide up validation screen
     setIsValidating(true);
   };
 
-  const validateProduct = (value: boolean) => {
-    // update checklist status
-    setIsValidating(false);
-    setStatus((prev) => ({ ...prev, validated: value }));
-    if (!value) {
-      setToast({
-        type: "error",
-        message: "NFC is invalid and is probably not secure!",
-      });
-      return;
-    }
+  const validateProduct = async () => {
+    setLoading(true);
 
-    setCurrentStage(3);
-    registerDevice();
+    try {
+      // Triggers the active radio loop
+      const securedCardToken = await readSFCPayload();
+
+      if (securedCardToken) {
+        console.log(
+          "🚀 [NFC METRICS]: Card Payload Extracted:",
+          securedCardToken,
+        );
+
+        // 🎯 SUCCESS: Pass the payload instantly into Item 4 (Registering the card on the database server)
+        setSecureToken(securedCardToken);
+        registerHardware(securedCardToken);
+        setStatus((prev) => ({ ...prev, validated: true }));
+        setCurrentStage(3);
+        return;
+      }
+
+      setStatus((prev) => ({ ...prev, validated: false }));
+    } catch (error) {
+      console.error("Scan execution error: ", error);
+      setStatus((prev) => ({ ...prev, validated: false }));
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const registerDevice = () => {
+  const registerHardware = (token: string | null) => {
     setStatus((prev) => ({ ...prev, linked: true }));
   };
 
@@ -124,7 +140,12 @@ const linking = () => {
         <CheckList
           stage={currentStage}
           status={status}
-          ctas={[checkSupport, enableNFC, initiateValidation, registerDevice]}
+          ctas={[
+            checkSupport,
+            enableNFC,
+            validateProduct,
+            () => registerHardware(secureToken),
+          ]}
           loading={loading}
         />
       )}
@@ -132,7 +153,7 @@ const linking = () => {
       {/***** NOTIFICATION ZONE */}
 
       {/****** validate nfc */}
-      {isValidating && <ValidateProduct validate={validateProduct} />}
+      {/* {isValidating && <ValidateProduct validate={validateProduct} />} */}
 
       {toast && (
         <ToastNotification

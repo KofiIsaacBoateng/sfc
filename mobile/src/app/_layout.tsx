@@ -1,19 +1,14 @@
-import { apiClient } from "@/services/api";
 import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
   useFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import {
-  FirebaseAuthTypes,
-  getAuth,
-  onAuthStateChanged,
-} from "@react-native-firebase/auth";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
@@ -30,69 +25,70 @@ function RootLayoutNav() {
     "Jakarta-Bold": PlusJakartaSans_700Bold,
   });
 
-  useEffect(() => {
-    const authInstance = getAuth();
+  // useEffect(() => {
+  //   const authInstance = getAuth();
 
-    const unsubscribe = onAuthStateChanged(
-      authInstance,
-      async (firebaseUser) => {
-        if (!firebaseUser) {
-          currentSyncedFirebaseUid = null;
-          isNetworkSyncInProgress = false;
-          setInitializing(false);
-          router.replace("/onboarding");
-          return;
-        }
+  //   const unsubscribe = onAuthStateChanged(
+  //     authInstance,
+  //     async (firebaseUser) => {
+  //       if (!firebaseUser) {
+  //         currentSyncedFirebaseUid = null;
+  //         isNetworkSyncInProgress = false;
+  //         setInitializing(false);
+  //         router.replace("/onboarding");
+  //         return;
+  //       }
 
-        if (currentSyncedFirebaseUid === firebaseUser.uid) {
-          setInitializing(false);
-          return;
-        }
+  //       if (currentSyncedFirebaseUid === firebaseUser.uid) {
+  //         setInitializing(false);
+  //         return;
+  //       }
 
-        if (isNetworkSyncInProgress) {
-          return;
-        }
+  //       if (isNetworkSyncInProgress) {
+  //         return;
+  //       }
 
-        try {
-          console.log(
-            "📡 [AUTH ENGINE]: Firing unique profile sync request to Node server...",
-          );
-          isNetworkSyncInProgress = true;
+  //       try {
+  //         console.log(
+  //           "📡 [AUTH ENGINE]: Firing unique profile sync request to Node server...",
+  //         );
+  //         isNetworkSyncInProgress = true;
 
-          const response = await apiClient.post("/auth/sync");
-          const serverUser = response.data.data;
+  //         const response = await apiClient.post("/auth/sync");
+  //         const serverUser = response.data.data;
 
-          console.log(
-            "📊 [AUTH ENGINE]: Server Checklist Received:",
-            serverUser,
-          );
+  //         console.log(
+  //           "📊 [AUTH ENGINE]: Server Checklist Received:",
+  //           serverUser,
+  //         );
 
-          currentSyncedFirebaseUid = firebaseUser.uid;
-          isNetworkSyncInProgress = false;
-          setInitializing(false);
+  //         currentSyncedFirebaseUid = firebaseUser.uid;
+  //         isNetworkSyncInProgress = false;
+  //         setInitializing(false);
 
-          if (serverUser.status === "PENDING_ONBOARDING") {
-            router.replace("/userrole");
-          } else if (serverUser.status === "ACTIVE") {
-            router.replace("/home");
-          }
-        } catch (error) {
-          console.error("❌ [AUTH ENGINE]: Sync processing failure:", error);
+  //         if (serverUser.status === "PENDING_ONBOARDING") {
+  //           router.replace("/userrole");
+  //         } else if (serverUser.status === "ACTIVE") {
+  //           router.replace("/home");
+  //         }
+  //       } catch (error) {
+  //         console.error("❌ [AUTH ENGINE]: Sync processing failure:", error);
 
-          isNetworkSyncInProgress = false;
-          currentSyncedFirebaseUid = null;
-          setInitializing(false);
+  //         isNetworkSyncInProgress = false;
+  //         currentSyncedFirebaseUid = null;
+  //         setInitializing(false);
 
-          authInstance.signOut();
-          router.replace("/onboarding");
-        }
-      },
-    );
+  //         authInstance.signOut();
+  //         router.replace("/onboarding");
+  //       }
+  //     },
+  //   );
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
-  const isAppLoading = initializing || (!fontsLoaded && !fontError);
+  const isAppLoading = !fontsLoaded && !fontError;
+  // const isAppLoading = initializing || (!fontsLoaded && !fontError);
 
   if (isAppLoading) {
     return (

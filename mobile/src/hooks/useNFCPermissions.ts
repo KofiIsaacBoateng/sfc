@@ -7,14 +7,8 @@ export function useNfcPermissionLifecycle() {
   const [checking, setChecking] = useState(true);
 
   // Standalone verification function that checks both physical metrics sequentially
-  const runHardwareAudit = async () => {
+  const checkNFCEnabled = async () => {
     try {
-      const supported = await NfcManager.isSupported();
-      if (!supported) {
-        setIsNfcActive(false);
-        return;
-      }
-
       const enabled = await NfcManager.isEnabled();
       setIsNfcActive(enabled);
     } catch (error) {
@@ -25,10 +19,8 @@ export function useNfcPermissionLifecycle() {
   };
 
   useEffect(() => {
-    // ⚡ 1. Run the audit instantly the absolute moment the screen mounts
-    runHardwareAudit();
+    checkNFCEnabled();
 
-    // ⚡ 2. Bind the native operating system app state change background thread listener
     const subscription = AppState.addEventListener(
       "change",
       (nextAppState: AppStateStatus) => {
@@ -36,17 +28,17 @@ export function useNfcPermissionLifecycle() {
         if (nextAppState === "active") {
           setChecking(true);
           console.log(
-            "🔄 [NFC LIFECYCLE]: App foregrounded. Re-auditing antenna states...",
+            "[NFC LIFECYCLE]: App foregrounded. Re-auditing antenna states...",
           );
-          runHardwareAudit();
+          checkNFCEnabled();
         }
       },
     );
 
     return () => {
-      subscription.remove(); // Clean up thread hooks when screen unmounts
+      subscription.remove();
     };
   }, []);
 
-  return { isNfcActive, checking, reCheck: runHardwareAudit };
+  return { isNfcActive, checking, reCheck: checkNFCEnabled };
 }
