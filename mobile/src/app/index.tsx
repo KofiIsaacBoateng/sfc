@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 export default function EntryPoint() {
   return (
     <View style={styles.container}>
-      <Redirect href="/userrole" />
+      <Redirect href="/onboarding" />
     </View>
   );
 }
