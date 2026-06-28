@@ -9,6 +9,7 @@ import {
   FirebaseAuthTypes,
   getAuth,
   onAuthStateChanged,
+  signOut,
 } from "@react-native-firebase/auth";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { router, Stack } from "expo-router";
@@ -55,7 +56,8 @@ function RootLayoutNav() {
 
         try {
           console.log(
-            "📡 [AUTH ENGINE]: Firing unique profile sync request to Node server...",
+            "📡 [GLOBAL GATEKEEPER]: Singular sync initialized for user ID:",
+            firebaseUser.uid,
           );
           isNetworkSyncInProgress = true;
 
@@ -63,7 +65,7 @@ function RootLayoutNav() {
           const serverUser = response.data.data;
 
           console.log(
-            "📊 [AUTH ENGINE]: Server Checklist Received:",
+            "📊 [GLOBAL GATEKEEPER]: Server Checklist Result:",
             serverUser,
           );
 
@@ -72,18 +74,21 @@ function RootLayoutNav() {
           setInitializing(false);
 
           if (serverUser.status === "PENDING_ONBOARDING") {
-            router.navigate("/userrole");
+            router.replace("/userrole");
           } else if (serverUser.status === "ACTIVE") {
-            router.navigate("/home");
+            router.replace("/home");
           }
         } catch (error) {
-          console.error("❌ [AUTH ENGINE]: Sync processing failure:", error);
+          console.error(
+            "❌ [GLOBAL GATEKEEPER]: Sync pipeline cracked:",
+            error,
+          );
 
           isNetworkSyncInProgress = false;
           currentSyncedFirebaseUid = null;
           setInitializing(false);
 
-          authInstance.signOut();
+          signOut(authInstance);
           router.replace("/onboarding");
         }
       },

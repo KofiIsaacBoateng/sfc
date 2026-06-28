@@ -31,31 +31,11 @@ const Verify = () => {
     const firebaseUser = await verifyOtpCode(otp.join(""));
 
     if (firebaseUser) {
-      try {
-        console.log(
-          "🔗 Firebase Local Session Active. Syncing parameters with backend API...",
-        );
+      console.log(
+        "🔥 [FRONTEND]: OTP match verified locally. Halting screen operations...",
+      );
 
-        const response = await apiClient.post("/auth/sync");
-        setIsValidOtp(true);
-        console.log(
-          "✅ PostgreSQL Sync Complete! Server Payload:",
-          response.data,
-        );
-
-        // Success! Break out of the auth flow completely and enter the main app dashboard space
-        router.replace("/userrole");
-      } catch (error: any) {
-        setIsValidOtp(false);
-        console.error(
-          "❌ Sync registration route failed:",
-          error.response?.data || error.message,
-        );
-        Alert.alert(
-          "Server Sync Failed",
-          "Your phone code passed, but our backend server ledger could not process the registration.",
-        );
-      }
+      setIsValidOtp(true);
     }
 
     inputRefs?.current[OTP_LENGTH - 1]?.focus();
