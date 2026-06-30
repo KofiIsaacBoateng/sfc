@@ -36,6 +36,8 @@ const Verify = () => {
       );
 
       setIsValidOtp(true);
+      router.replace("/userrole");
+      return;
     }
 
     inputRefs?.current[OTP_LENGTH - 1]?.focus();

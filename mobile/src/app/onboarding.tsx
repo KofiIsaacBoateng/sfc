@@ -45,8 +45,8 @@ const onboarding = () => {
     router.replace("/login");
   };
 
+  // disables global nfc for this screen
   useEffect(() => {
-    // disables global nfc for this screen
     registerScreenInterceptor(true);
 
     return () => {

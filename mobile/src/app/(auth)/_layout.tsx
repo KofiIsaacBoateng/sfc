@@ -1,6 +1,19 @@
+import { useGlobalNFC } from "@/context/NFCContext";
 import { Stack } from "expo-router";
+import { useEffect } from "react";
 
 export default function AuthLayout() {
+  const { registerScreenInterceptor } = useGlobalNFC();
+
+  // disables global nfc for the screens of this layout
+  useEffect(() => {
+    registerScreenInterceptor(true);
+
+    return () => {
+      registerScreenInterceptor(false);
+    };
+  }, []);
+
   return (
     <Stack
       screenOptions={{

@@ -1,6 +1,7 @@
 import { RoundBtn } from "@/components/onboarding/buttons";
+import { useGlobalNFC } from "@/context/NFCContext";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -32,6 +33,7 @@ const roleData: RoleData[] = [
 const UserRole = () => {
   const { bottom, top } = useSafeAreaInsets();
   const [selected, setSelected] = useState<undefined | Role>(undefined);
+  const { registerScreenInterceptor } = useGlobalNFC();
 
   const handleSelected = (option: undefined | Role) => {
     setSelected(option);
@@ -40,6 +42,15 @@ const UserRole = () => {
   const handleNext = () => {
     router.push("/linking");
   };
+
+  // disables global nfc for this screen
+  useEffect(() => {
+    registerScreenInterceptor(true);
+
+    return () => {
+      registerScreenInterceptor(false);
+    };
+  }, []);
 
   return (
     <View
