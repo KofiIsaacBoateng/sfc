@@ -1,6 +1,7 @@
 import Intro from "@/components/global/Intro";
 import { ToastNotification } from "@/components/global/Notification";
 import CheckList from "@/components/linking/CheckList";
+import { useGlobalNFC } from "@/context/NFCContext";
 import { useNfcPermissionLifecycle } from "@/hooks/useNFCPermissions";
 import {
   checkNFCHardwareSupport,
@@ -32,6 +33,8 @@ const linking = () => {
     validated: undefined,
     linked: undefined,
   });
+  const { scanState } = useGlobalNFC();
+  console.log(scanState);
 
   // check if device has hardware nfc support
   const checkSupport = async () => {

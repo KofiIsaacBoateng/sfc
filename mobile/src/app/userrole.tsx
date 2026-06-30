@@ -38,7 +38,7 @@ const UserRole = () => {
   };
 
   const handleNext = () => {
-    router.replace("/linking");
+    router.push("/linking");
   };
 
   return (

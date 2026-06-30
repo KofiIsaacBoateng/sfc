@@ -1,3 +1,4 @@
+import NFCProvider from "@/context/NFCContext";
 import { apiClient } from "@/services/api";
 import {
   PlusJakartaSans_400Regular,
@@ -118,19 +119,21 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={DefaultTheme}>
       <GestureHandlerRootView style={styles.container}>
-        <Stack
-          initialRouteName="onboarding"
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="onboarding" />
-          <Stack.Screen name="userrole" />
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="linking" />
-          <Stack.Screen name="merchant" />
-          <Stack.Screen name="send-m" />
-          <Stack.Screen name="myqr" />
-          <Stack.Screen name="(tabs)" />
-        </Stack>
+        <NFCProvider>
+          <Stack
+            initialRouteName="onboarding"
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="onboarding" />
+            <Stack.Screen name="userrole" />
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="linking" />
+            <Stack.Screen name="merchant" />
+            <Stack.Screen name="send-m" />
+            <Stack.Screen name="myqr" />
+            <Stack.Screen name="(tabs)" />
+          </Stack>
+        </NFCProvider>
       </GestureHandlerRootView>
       <StatusBar style="light" backgroundColor="transparent" />
     </ThemeProvider>
