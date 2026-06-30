@@ -91,7 +91,16 @@ const ModalNotification = ({
       <View style={[styles.modalNotification, { paddingBottom: bottom + 5 }]}>
         <Pressable
           onPress={close}
-          style={{ position: "absolute", top: 15, right: 15 }}
+          style={{
+            position: "absolute",
+            top: 5,
+            right: 15,
+            width: 40,
+            aspectRatio: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+          }}
         >
           <Ionicons name="close" size={24} color="#ffffff87" />
         </Pressable>
@@ -125,10 +134,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: height * 0.3,
-    backgroundColor: "#0d0d0a",
+    height: height * 0.4,
+    backgroundColor: "#000000",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     zIndex: 100,
+    elevation: 10,
+    paddingHorizontal: 15,
+    paddingTop: 20,
   },
 });
