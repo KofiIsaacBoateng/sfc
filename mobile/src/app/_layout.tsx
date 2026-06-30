@@ -1,4 +1,5 @@
-import NFCProvider from "@/context/NFCContext";
+import SmartResponseModal from "@/components/nfc/SmartResponseModal";
+import NFCProvider, { useGlobalNFC } from "@/context/NFCContext";
 import { apiClient } from "@/services/api";
 import {
   PlusJakartaSans_400Regular,
@@ -26,6 +27,8 @@ let currentSyncedFirebaseUid: string | null = null;
 function RootLayoutNav() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const { resetGlobalScanner, registerScreenInterceptor, scanResults } =
+    useGlobalNFC();
   const [fontsLoaded, fontError] = useFonts({
     "Jakarta-Regular": PlusJakartaSans_400Regular,
     "Jakarta-SemiBold": PlusJakartaSans_600SemiBold,
@@ -119,21 +122,27 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={DefaultTheme}>
       <GestureHandlerRootView style={styles.container}>
-        <NFCProvider>
-          <Stack
-            initialRouteName="onboarding"
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="onboarding" />
-            <Stack.Screen name="userrole" />
-            <Stack.Screen name="(auth)" />
-            <Stack.Screen name="linking" />
-            <Stack.Screen name="merchant" />
-            <Stack.Screen name="send-m" />
-            <Stack.Screen name="myqr" />
-            <Stack.Screen name="(tabs)" />
-          </Stack>
-        </NFCProvider>
+        <Stack
+          initialRouteName="onboarding"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="onboarding" />
+          <Stack.Screen name="userrole" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="linking" />
+          <Stack.Screen name="merchant" />
+          <Stack.Screen name="send-m" />
+          <Stack.Screen name="myqr" />
+          <Stack.Screen name="(tabs)" />
+        </Stack>
+
+        {scanResults && (
+          <SmartResponseModal
+            visible={scanResults !== null}
+            scanResults={scanResults}
+            onClose={resetGlobalScanner}
+          />
+        )}
       </GestureHandlerRootView>
       <StatusBar style="light" backgroundColor="transparent" />
     </ThemeProvider>
@@ -141,7 +150,11 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
-  return <RootLayoutNav />;
+  return (
+    <NFCProvider>
+      <RootLayoutNav />
+    </NFCProvider>
+  );
 }
 
 const styles = StyleSheet.create({

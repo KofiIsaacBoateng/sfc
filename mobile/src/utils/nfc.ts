@@ -1,3 +1,4 @@
+import { RefObject } from "react";
 import { Alert, Platform } from "react-native";
 import NFCManager, { NfcTech } from "react-native-nfc-manager";
 
@@ -63,25 +64,29 @@ export async function verifyAndEnableNfcAntenna(): Promise<boolean> {
   }
 }
 
-export const readSFCPayload = async (): Promise<string | null> => {
-  console.log("[DEVICE SCANNER]: Activating antenna for SFC Hardware.");
+export const readSFCPayload = async (
+  isScreenActive: RefObject<boolean>,
+): Promise<string | null> => {
+  console.log("[LOCAL SCREEN SCANNER]: Activating antenna for SFC Hardware.");
 
   try {
     // Force radio to strictly look Ndef or NfcA formated hardwares
     await NFCManager.requestTechnology([NfcTech.Ndef, NfcTech.NfcA]);
+
+    if (!isScreenActive.current) return null;
 
     // capture the hardwares tag configuration
     const tag = await NFCManager.getTag();
 
     if (!tag) {
       console.error(
-        "[DEVICE SCANNER]: Hardware removed from scanning zone too quickly!",
+        "[LOCAL SCREEN SCANNER]: Hardware removed from scanning zone too quickly!",
       );
       return null;
     }
 
     console.log(
-      "[DEVICE SCANNER]: Verified custom Hardware signature: ",
+      "[LOCAL SCREEN SCANNER]: Verified custom Hardware signature: ",
       tag.id,
     );
 
@@ -89,7 +94,7 @@ export const readSFCPayload = async (): Promise<string | null> => {
 
     if (!hardwareSecureToken) {
       console.error(
-        "[DEVICE SCANNER]: Scanned Hardware does not match SFC manufacturing standards!",
+        "[LOCAL SCREEN SCANNER]: Scanned Hardware does not match SFC manufacturing standards!",
       );
 
       return null;
@@ -97,23 +102,27 @@ export const readSFCPayload = async (): Promise<string | null> => {
 
     return hardwareSecureToken;
   } catch (error: any) {
-    console.warn(
-      "[DEVICE SCANNER]: Interaction interrupted: ",
-      error.message || error,
-    );
+    console.warn("[LOCAL SCREEN SCANNER]: Interaction interrupted: ", error);
 
-    if (error !== "User cancel" && error?.message !== "User cancel") {
-      Alert.alert(
-        "Scan Failed",
-        "Hold your Hardware steady against the back of your phone.",
-      );
+    if (
+      !isScreenActive.current ||
+      error === "User cancel" ||
+      error?.message === "User cancel"
+    ) {
+      return null;
     }
+    Alert.alert(
+      "Scan Failed",
+      "Hold your Hardware steady against the back of your phone.",
+    );
     return null;
   } finally {
-    await NFCManager.cancelTechnologyRequest()
-      .then(() => {
-        console.log("[DEVICE SCANNER]: Cancelling antenna.");
-      })
-      .catch(() => {});
+    if (isScreenActive) {
+      await NFCManager.cancelTechnologyRequest()
+        .then(() => {
+          console.log("[LOCAL SCREEN SCANNER]: Cancelling antenna.");
+        })
+        .catch(() => {});
+    }
   }
 };

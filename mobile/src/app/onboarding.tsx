@@ -1,7 +1,8 @@
 import { Intro, Slider } from "@/components/onboarding/slider";
 import { SLIDES } from "@/constants/constants";
+import { useGlobalNFC } from "@/context/NFCContext";
 import { router } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   NativeScrollEvent,
@@ -18,6 +19,7 @@ const onboarding = () => {
   const { bottom } = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { registerScreenInterceptor } = useGlobalNFC();
 
   const scrollToNext = () => {
     const nextIndex = currentIndex + 1;
@@ -42,6 +44,15 @@ const onboarding = () => {
   const skip = () => {
     router.replace("/login");
   };
+
+  useEffect(() => {
+    // disables global nfc for this screen
+    registerScreenInterceptor(true);
+
+    return () => {
+      registerScreenInterceptor(false);
+    };
+  }, []);
 
   return (
     <View

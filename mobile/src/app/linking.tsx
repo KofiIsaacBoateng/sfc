@@ -8,8 +8,9 @@ import {
   readSFCPayload,
   verifyAndEnableNfcAntenna,
 } from "@/utils/nfc";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import nfcManager from "react-native-nfc-manager";
 
 interface Status {
   supported: boolean | undefined;
@@ -26,15 +27,29 @@ const linking = () => {
   const { isNfcActive, checking } = useNfcPermissionLifecycle();
   const [isValidating, setIsValidating] = useState(false);
   const [loading, setLoading] = useState(false);
+  const isScreenActive = useRef(true);
   const [secureToken, setSecureToken] = useState<string | null>(null);
+  const { registerScreenInterceptor } = useGlobalNFC();
   const [status, setStatus] = useState<Status>({
     supported: undefined,
     enabled: undefined,
     validated: undefined,
     linked: undefined,
   });
-  const { scanState } = useGlobalNFC();
-  console.log(scanState);
+  // const { scanState } = useGlobalNFC();
+  useEffect(() => {
+    // Turn on intercept mode the microsecond this screen mounts!
+    // This blocks the global quick-actions popup from interrupting this process.
+    isScreenActive.current = true;
+    registerScreenInterceptor(true);
+
+    return () => {
+      // Release control back to the global engine when the user exits this screen
+      isScreenActive.current = false;
+      registerScreenInterceptor(false);
+      nfcManager.cancelTechnologyRequest().catch(() => {}); // Force-close the radio wave thread silently
+    };
+  }, []);
 
   // check if device has hardware nfc support
   const checkSupport = async () => {
@@ -46,7 +61,9 @@ const linking = () => {
     setStatus((prev) => ({ ...prev, supported }));
     if (supported) {
       setCurrentStage(1);
+      setLoading(false);
       enableNFC();
+      return;
     }
 
     setLoading(false);
@@ -64,8 +81,8 @@ const linking = () => {
 
     setStatus((prev) => ({ ...prev, enabled: isNfcActive }));
     setCurrentStage(2);
-    validateProduct();
     setLoading(false);
+    validateProduct();
   };
 
   useEffect(() => {
@@ -91,7 +108,7 @@ const linking = () => {
 
     try {
       // Triggers the active radio loop
-      const securedCardToken = await readSFCPayload();
+      const securedCardToken = await readSFCPayload(isScreenActive);
 
       if (securedCardToken) {
         console.log(
