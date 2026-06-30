@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: "#64748B",
     fontSize: 14,
-    fontWeight: "700",
+    fontFamily: "Jakarta-SemiBold",
     textTransform: "uppercase",
     letterSpacing: 0.5,
     marginBottom: 12,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     borderColor: "#616e83b0",
   },
   limitInfo: { gap: 4 },
-  limitSub: { color: "#94A3B8", fontSize: 13, fontWeight: "500" },
+  limitSub: { color: "#94A3B8", fontSize: 13, fontFamily: "Jakarta-Regular" },
   limitValue: { color: "#FFFFFF", fontSize: 16, fontWeight: "700" },
   editBtn: {
     backgroundColor: "#1E293B",

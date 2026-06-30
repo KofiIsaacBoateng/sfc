@@ -2,7 +2,11 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
+import Animated, {
+  SlideInRight,
+  SlideOutLeft,
+  SlideOutRight,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const ScanQR = ({ goBack }: { goBack: () => void }) => {
@@ -21,7 +25,7 @@ const ScanQR = ({ goBack }: { goBack: () => void }) => {
   return (
     <Animated.View
       entering={SlideInRight}
-      exiting={SlideOutLeft}
+      exiting={SlideOutRight}
       style={[styles.container, { paddingTop: top + 30 }]}
     >
       {/* Header */}

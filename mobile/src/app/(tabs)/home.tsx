@@ -71,7 +71,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#090d13",
+    backgroundColor: "#000000",
   },
 
   /*** action rows */
@@ -100,6 +100,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  actionIcon: { color: "#a5bbdf", fontSize: 22, fontWeight: "600" },
-  actionLabel: { color: "#94A3B8", fontSize: 16, fontWeight: "600" },
+  actionIcon: {
+    color: "#a5bbdf",
+    fontSize: 20,
+    fontFamily: "Jakarta-SemiBold",
+  },
+  actionLabel: {
+    color: "#94A3B8",
+    fontSize: 16,
+    fontFamily: "Jakarta-SemiBold",
+  },
 });

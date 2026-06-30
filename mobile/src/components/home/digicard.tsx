@@ -48,7 +48,7 @@ export default DigiCard;
 
 const styles = StyleSheet.create({
   walletCard: {
-    backgroundColor: "#080c11",
+    backgroundColor: "#050505",
     borderRadius: 15,
     padding: 24,
     height: 200,
@@ -66,8 +66,8 @@ const styles = StyleSheet.create({
   },
   cardBrand: {
     color: "#64748B",
-    fontSize: 25,
-    fontWeight: "300",
+    fontSize: 20,
+    fontFamily: "Jakarta-Regular",
     letterSpacing: 1,
   },
   badge: {
@@ -76,14 +76,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 8,
   },
-  badgeText: { color: "#00A896", fontSize: 10, fontWeight: "800" },
+  badgeText: { color: "#00A896", fontSize: 10, fontFamily: "Jakarta-Bold" },
 
   balanceWrapper: {},
-  balanceLabel: { color: "#94A3B8", fontSize: 13, fontWeight: "500" },
+  balanceLabel: {
+    color: "#94A3B8",
+    fontSize: 13,
+    fontFamily: "Jakarta-Regular",
+  },
   balanceAmount: {
-    color: "#ffffffcc",
+    color: "#ffffffaa",
     fontSize: 22,
-    fontWeight: "600",
+    fontFamily: "Jakarta-Bold",
     letterSpacing: 0.5,
   },
 
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: "auto",
   },
-  cardIdText: { color: "#64748B", fontSize: 22, fontWeight: "300" },
+  cardIdText: { color: "#64748B", fontSize: 22 },
   freezeControl: { flexDirection: "row", alignItems: "center", gap: 8 },
-  freezeText: { color: "#94A3B8", fontSize: 12, fontWeight: "600" },
+  freezeText: { color: "#94A3B8", fontSize: 12, fontFamily: "Jakarta-Regular" },
 });

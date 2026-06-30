@@ -42,7 +42,7 @@ export default myqr;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#090d13",
+    backgroundColor: "#000000",
     paddingHorizontal: 15,
   },
 
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     bottom: -20,
     alignSelf: "center",
     width: "75%",
-    backgroundColor: "#090d13",
+    backgroundColor: "#000000",
   },
 
   crossh: {
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     bottom: -20,
     alignSelf: "center",
     width: "75%",
-    backgroundColor: "#090d13",
+    backgroundColor: "#000000",
     transform: [{ rotate: "90deg" }],
   },
 });

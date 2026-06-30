@@ -258,7 +258,7 @@ export default SendMoney;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#090d13",
+    backgroundColor: "#000000",
     paddingHorizontal: 20,
   },
 
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     color: "#ffffffcc",
     marginHorizontal: "auto",
     fontSize: 18,
-    fontWeight: "300",
+    fontFamily: "Jakarta-SemiBold",
     letterSpacing: 1.5,
   },
 
@@ -290,12 +290,14 @@ const styles = StyleSheet.create({
     color: "#ffffffcc",
     fontSize: 16,
     letterSpacing: 0.5,
+    fontFamily: "Jakarta-Regular",
   },
 
   amountInput: {
     flex: 1,
     textAlign: "right",
     color: "#ffffffcc",
+    fontFamily: "Jakarta-Regular",
   },
 
   amountKeys: {
@@ -321,7 +323,8 @@ const styles = StyleSheet.create({
 
   amountKeyText: {
     color: "#ffffffac",
-    // fontSize: 16,
+    fontFamily: "Jakarta-Regular",
+    fontSize: 12,
   },
 
   manual: {
@@ -352,7 +355,7 @@ const styles = StyleSheet.create({
   ctas: {
     gap: 15,
     marginTop: 50,
-    backgroundColor: "#090d13",
+    backgroundColor: "#000000",
   },
   cta: {
     alignItems: "center",
@@ -364,5 +367,6 @@ const styles = StyleSheet.create({
   },
   ctaText: {
     color: "#ffffffac",
+    fontFamily: "Jakarta-SemiBold",
   },
 });

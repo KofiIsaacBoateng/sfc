@@ -207,11 +207,15 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   resultRow: { flexDirection: "row", alignItems: "baseline", gap: 6 },
-  currencyLabel: { color: "#7d99c0", fontSize: 24, fontWeight: "800" },
+  currencyLabel: {
+    color: "#7d99c0",
+    fontSize: 24,
+    fontFamily: "Jakarta-SemiBold",
+  },
   resultText: {
     color: "#FFFFFF",
     fontSize: 52,
-    fontWeight: "800",
+    fontFamily: "Jakarta-SemiBold",
     letterSpacing: -1,
   },
   grid: {
@@ -228,8 +232,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   operatorBtn: { backgroundColor: "#1E293B" },
-  chargeBtn: { backgroundColor: "#be10ac" },
-  btnText: { color: "#ffffff", fontSize: 25, fontWeight: "900" },
-  operatorText: { color: "#ee94e5" },
-  chargeText: { color: "#ffffff" },
+  chargeBtn: { backgroundColor: "#491c77" },
+  btnText: { color: "#ffffff", fontSize: 25, fontFamily: "Jakarta-Regular" },
+  operatorText: {
+    color: "#976fbe",
+    fontSize: 25,
+    fontFamily: "Jakarta-SemiBold",
+  },
+  chargeText: { color: "#ffffff", fontFamily: "Jakarta-SemiBold" },
 });

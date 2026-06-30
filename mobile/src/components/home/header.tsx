@@ -25,7 +25,7 @@ const Header = () => {
   });
 
   return (
-    <View style={[styles.headerwrapper, { paddingTop: top + 5 }]}>
+    <View style={[styles.headerwrapper, { paddingTop: top + 20 }]}>
       {/* left */}
       <View style={styles.left}>
         <Text style={styles.greeting}>Hello, Kofi</Text>
@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#0c1118",
+    backgroundColor: "#000000",
     paddingHorizontal: 15,
-    paddingBottom: 10,
+    paddingBottom: 20,
     marginBottom: 10,
   },
   left: {
@@ -72,9 +72,9 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
-    color: "#ffffff",
-    fontSize: 22,
-    fontWeight: "700",
+    color: "#ffffffcc",
+    fontSize: 18,
+    fontFamily: "Jakarta-SemiBold",
     letterSpacing: 1,
   },
 
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
 
   merchantModeText: {
     fontSize: 18,
-    fontWeight: "700",
+    fontFamily: "Jakarta-Regular",
     color: "#ffffffcc",
   },
 });

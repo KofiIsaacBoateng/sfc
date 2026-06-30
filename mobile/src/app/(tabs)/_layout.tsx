@@ -8,10 +8,10 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#ffffff",
-        tabBarInactiveTintColor: "#ffffff87",
+        tabBarActiveTintColor: "#a5bbdf",
+        tabBarInactiveTintColor: "#ffffff88",
         tabBarStyle: {
-          backgroundColor: "#10161f",
+          backgroundColor: "#020202",
           borderTopWidth: StyleSheet.hairlineWidth,
           borderTopColor: "#ffffff44",
         },
@@ -27,7 +27,7 @@ export default function TabLayout() {
             <Feather
               name="home"
               size={20}
-              color={focused ? "#ffffff" : "#ffffff87"}
+              color={focused ? "#a5bbdf" : "#ffffff88"}
             />
           ),
         }}
@@ -40,7 +40,7 @@ export default function TabLayout() {
             <FontAwesome6
               name="nfc-symbol"
               size={18}
-              color={focused ? "#ffffff" : "#ffffff87"}
+              color={focused ? "#a5bbdf" : "#ffffff88"}
             />
           ),
         }}
@@ -53,7 +53,7 @@ export default function TabLayout() {
             <Ionicons
               name="person-outline"
               size={16}
-              color={focused ? "#ffffff" : "#ffffff87"}
+              color={focused ? "#a5bbdf" : "#ffffff88"}
             />
           ),
         }}

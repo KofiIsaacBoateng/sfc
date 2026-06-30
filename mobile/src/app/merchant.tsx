@@ -26,7 +26,7 @@ const Merchant = () => {
         <Intro exit={() => setShowIntro(false)}>
           <Text
             style={{
-              fontWeight: "300",
+              fontFamily: "Jakarta-Regular",
               fontSize: 25,
               color: "#ffffffcc",
               textAlign: "center",
@@ -37,7 +37,7 @@ const Merchant = () => {
           <Text
             style={{
               fontSize: 30,
-              fontWeight: "900",
+              fontFamily: "Jakarta-Bold",
               color: "#ffffff",
               textAlign: "center",
             }}
