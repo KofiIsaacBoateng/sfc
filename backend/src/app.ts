@@ -2,7 +2,8 @@ import express from "express";
 import type { Application, Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.route.js"; // Import our new auth endpoints
+import authRoutes from "./routes/auth.route.js";
+import sfcRoutes from "./routes/sfc.routes.js";
 import { notFoundHandler } from "./middleware/not-found.middleware.js";
 import { globalErrorHandler } from "./middleware/error.middleware.js";
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/sfc", sfcRoutes);
 
 // Baseline Health Status Route
 app.get("/health", (_: Request, res: Response) => {
