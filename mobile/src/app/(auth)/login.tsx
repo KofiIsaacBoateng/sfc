@@ -179,7 +179,7 @@ const Login = () => {
       <RoundBtn
         style={{ marginLeft: "auto", marginTop: 20 }}
         loading={loading}
-        disabled={disabled || Boolean(errors)}
+        disabled={disabled || Boolean(errors) || loading}
         onPress={handleSubmit}
       />
     </View>

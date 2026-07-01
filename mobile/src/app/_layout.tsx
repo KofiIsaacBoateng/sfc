@@ -83,10 +83,7 @@ function RootLayoutNav() {
             router.replace("/home");
           }
         } catch (error) {
-          console.error(
-            "❌ [GLOBAL GATEKEEPER]: Sync pipeline cracked:",
-            error,
-          );
+          console.warn("❌ [GLOBAL GATEKEEPER]: Sync pipeline cracked:", error);
 
           isNetworkSyncInProgress = false;
           currentSyncedFirebaseUid = null;

@@ -162,7 +162,7 @@ const Verify = () => {
       <RoundBtn
         style={{ marginLeft: "auto", marginTop: 20 }}
         loading={loading}
-        disabled={disabled}
+        disabled={disabled || loading}
         onPress={handleSubmit}
       />
     </View>

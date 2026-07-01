@@ -1,6 +1,8 @@
+import { ScanResults } from "@/context/NFCContext";
 import { RefObject } from "react";
 import { Alert, Platform } from "react-native";
 import NFCManager, { NfcTech } from "react-native-nfc-manager";
+import { identifyNfcChipArchitecture } from "./nfcIdentifier";
 
 export const checkNFCHardwareSupport = async (): Promise<boolean> => {
   try {
@@ -66,7 +68,7 @@ export async function verifyAndEnableNfcAntenna(): Promise<boolean> {
 
 export const readSFCPayload = async (
   isScreenActive: RefObject<boolean>,
-): Promise<string | null> => {
+): Promise<ScanResults | null> => {
   console.log("[LOCAL SCREEN SCANNER]: Activating antenna for SFC Hardware.");
 
   try {
@@ -91,8 +93,9 @@ export const readSFCPayload = async (
     );
 
     const hardwareSecureToken = tag.id;
+    const chipType = identifyNfcChipArchitecture(tag);
 
-    if (!hardwareSecureToken) {
+    if (!hardwareSecureToken || chipType === "UNKNOWN_TAG") {
       console.error(
         "[LOCAL SCREEN SCANNER]: Scanned Hardware does not match SFC manufacturing standards!",
       );
@@ -100,7 +103,7 @@ export const readSFCPayload = async (
       return null;
     }
 
-    return hardwareSecureToken;
+    return { token: hardwareSecureToken, chipType };
   } catch (error: any) {
     console.warn("[LOCAL SCREEN SCANNER]: Interaction interrupted: ", error);
 

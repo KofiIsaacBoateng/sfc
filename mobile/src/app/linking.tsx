@@ -1,8 +1,9 @@
 import Intro from "@/components/global/Intro";
 import { ToastNotification } from "@/components/global/Notification";
 import CheckList from "@/components/linking/CheckList";
-import { useGlobalNFC } from "@/context/NFCContext";
+import { ScanResults, useGlobalNFC } from "@/context/NFCContext";
 import { useNfcPermissionLifecycle } from "@/hooks/useNFCPermissions";
+import { apiClient } from "@/services/api";
 import {
   checkNFCHardwareSupport,
   readSFCPayload,
@@ -31,7 +32,7 @@ const linking = () => {
   const [isValidating, setIsValidating] = useState(false);
   const [loading, setLoading] = useState(false);
   const isScreenActive = useRef(true);
-  const [secureToken, setSecureToken] = useState<string | null>(null);
+  const [tag, setTag] = useState<ScanResults | null>(null);
   const { registerScreenInterceptor } = useGlobalNFC();
   const [status, setStatus] = useState<Status>({
     supported: undefined,
@@ -39,7 +40,6 @@ const linking = () => {
     validated: undefined,
     linked: undefined,
   });
-  // const { scanState } = useGlobalNFC();
 
   useEffect(() => {
     // Turn on intercept mode the microsecond this screen mounts!
@@ -112,33 +112,51 @@ const linking = () => {
 
     try {
       // Triggers the active radio loop
-      const securedCardToken = await readSFCPayload(isScreenActive);
+      const payload = await readSFCPayload(isScreenActive);
 
-      if (securedCardToken) {
-        console.log(
-          "🚀 [NFC METRICS]: Card Payload Extracted:",
-          securedCardToken,
-        );
+      if (payload) {
+        console.log("🚀 [NFC METRICS]: Card Payload Extracted:", payload);
 
         // 🎯 SUCCESS: Pass the payload instantly into Item 4 (Registering the card on the database server)
-        setSecureToken(securedCardToken);
-        registerHardware(securedCardToken);
+        setTag(payload);
         setStatus((prev) => ({ ...prev, validated: true }));
+        setLoading(false);
         setCurrentStage(3);
+        linkHardwareToProduct(payload);
         return;
       }
 
       setStatus((prev) => ({ ...prev, validated: false }));
+      setLoading(false);
     } catch (error) {
       console.error("Scan execution error: ", error);
       setStatus((prev) => ({ ...prev, validated: false }));
-    } finally {
       setLoading(false);
     }
   };
 
-  const registerHardware = (token: string | null) => {
-    setStatus((prev) => ({ ...prev, linked: true }));
+  const linkHardwareToProduct = async (tagPayload: ScanResults) => {
+    setLoading(true);
+
+    const data: ScanResults & { role?: string } = { ...tagPayload };
+
+    if (role) {
+      data.role = role;
+    }
+
+    try {
+      const response = await apiClient.post("/auth/link-device", data);
+
+      if (response.data.data.success) {
+        console.log("[LINK PRODUCT] Product liked successfully");
+        setStatus((prev) => ({ ...prev, linked: true }));
+      }
+    } catch (error) {
+      console.warn("[LINK PRODUCT] server linking failed: ", error);
+      setStatus((prev) => ({ ...prev, linked: false }));
+    } finally {
+      setLoading(false);
+    }
   };
 
   {
@@ -171,7 +189,7 @@ const linking = () => {
             }}
           >
             Link{" "}
-            <Text style={{ fontFamily: "Jakarta-Regular" }}>
+            <Text style={{ fontFamily: "Jakarta-Regular", fontSize: 25 }}>
               your product to your account
             </Text>
           </Text>
@@ -184,7 +202,7 @@ const linking = () => {
             checkSupport,
             enableNFC,
             validateProduct,
-            () => registerHardware(secureToken),
+            () => linkHardwareToProduct(tag!),
           ]}
           loading={loading}
         />

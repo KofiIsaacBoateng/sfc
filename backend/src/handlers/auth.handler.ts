@@ -39,12 +39,13 @@ export async function syncUserSession(
     sendSuccess(
       res,
       {
+        success: true,
         id: user.id,
         phoneNumber: user.phoneNumber,
         status: user.status,
       },
       "Account authentication synchronization complete",
-      200,
+      StatusCodes.OK,
     );
   } catch (error) {
     console.error(
@@ -58,11 +59,11 @@ export async function syncUserSession(
 }
 
 export const linkSFCDevice = async (
-  req: Request,
+  req: Request<{}, {}, { token: string; chipType: string; role?: string }>,
   res: Response,
 ): Promise<void> => {
   const firebaseUser = req.user;
-  const { sfcToken, chipType, role } = req.body;
+  const { token: sfcToken, chipType, role } = req.body;
 
   if (!firebaseUser)
     throw new UnauthorizedError("You have to sign in to continue!");
@@ -86,7 +87,7 @@ export const linkSFCDevice = async (
     if (deviceInUse.userId === user.id) {
       sendSuccess(
         res,
-        { success: "ok" },
+        { success: true },
         "This SFC device is already liked to your account!",
         StatusCodes.OK,
       );
@@ -97,45 +98,50 @@ export const linkSFCDevice = async (
   }
 
   // ATOMIC TRANSACTION MAPPING: Executes both steps or fails completely
-  await prisma.$transaction(async (tx) => {
-    // Deactivate any currently active sfc device under the name of this account.
-    await tx.sfcDevice.updateMany({
-      where: {
-        userId: user.id,
-        status: "ACTIVE",
-      },
+  await prisma.$transaction(
+    async (tx) => {
+      // Deactivate any currently active sfc device under the name of this account.
+      await tx.sfcDevice.updateMany({
+        where: {
+          userId: user.id,
+          status: "ACTIVE",
+        },
 
-      data: {
-        status: "DEACTIVATED",
-      },
-    });
-
-    // If the partial index constraint is broken, PostgreSQL stops the query here
-    await tx.sfcDevice.create({
-      data: {
-        userId: user.id,
-        hardwareToken: sfcToken,
-        chipType,
-        status: "ACTIVE",
-      },
-    });
-
-    // If the user was stuck in PENDING_ONBOARDING, we upgrate their status to ACTIVE
-    if (user.status === "PENDING_ONBOARDING") {
-      const data: any = { status: "ACTIVE" };
-      if (role) {
-        data.role = role;
-      }
-      await tx.user.update({
-        where: { id: user.id },
-        data,
+        data: {
+          status: "DEACTIVATED",
+        },
       });
-    }
-  });
+
+      // If the partial index constraint is broken, PostgreSQL stops the query here
+      await tx.sfcDevice.create({
+        data: {
+          userId: user.id,
+          hardwareToken: sfcToken,
+          chipType,
+          status: "ACTIVE",
+        },
+      });
+
+      // If the user was stuck in PENDING_ONBOARDING, we upgrate their status to ACTIVE
+      if (user.status === "PENDING_ONBOARDING") {
+        const data: any = { status: "ACTIVE" };
+        if (role) {
+          data.role = role.toUpperCase();
+        }
+        await tx.user.update({
+          where: { id: user.id },
+          data,
+        });
+      }
+
+      console.log("execution completed");
+    },
+    { timeout: 10000 },
+  );
 
   sendSuccess(
     res,
-    { success: "ok" },
+    { success: true },
     "SFC device liked to your account successfully!",
     StatusCodes.CREATED,
   );
