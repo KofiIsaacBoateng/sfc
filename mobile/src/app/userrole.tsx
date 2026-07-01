@@ -40,7 +40,7 @@ const UserRole = () => {
   };
 
   const handleNext = () => {
-    router.push("/linking");
+    router.replace({ pathname: "/linking", params: { role: selected } });
   };
 
   // disables global nfc for this screen

@@ -8,6 +8,7 @@ import {
   readSFCPayload,
   verifyAndEnableNfcAntenna,
 } from "@/utils/nfc";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import nfcManager from "react-native-nfc-manager";
@@ -19,6 +20,8 @@ interface Status {
   linked: boolean | undefined;
 }
 const linking = () => {
+  const navigation = useNavigation();
+  const { role } = useLocalSearchParams<{ role: string }>();
   const [currentStage, setCurrentStage] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
   const [toast, setToast] = useState<
@@ -37,6 +40,7 @@ const linking = () => {
     linked: undefined,
   });
   // const { scanState } = useGlobalNFC();
+
   useEffect(() => {
     // Turn on intercept mode the microsecond this screen mounts!
     // This blocks the global quick-actions popup from interrupting this process.
@@ -136,6 +140,20 @@ const linking = () => {
   const registerHardware = (token: string | null) => {
     setStatus((prev) => ({ ...prev, linked: true }));
   };
+
+  {
+    /*** Hijack the hardware back button */
+  }
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      // Block the standard back/remove action
+      e.preventDefault();
+
+      router.replace("/userrole");
+    });
+
+    return unsubscribe;
+  }, [navigation, router]);
 
   return (
     <View style={styles.container}>
