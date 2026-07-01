@@ -62,7 +62,7 @@ export const linkSFCDevice = async (
   res: Response,
 ): Promise<void> => {
   const firebaseUser = req.user;
-  const { sfcToken, chipType } = req.body;
+  const { sfcToken, chipType, role } = req.body;
 
   if (!firebaseUser)
     throw new UnauthorizedError("You have to sign in to continue!");
@@ -122,9 +122,13 @@ export const linkSFCDevice = async (
 
     // If the user was stuck in PENDING_ONBOARDING, we upgrate their status to ACTIVE
     if (user.status === "PENDING_ONBOARDING") {
+      const data: any = { status: "ACTIVE" };
+      if (role) {
+        data.role = role;
+      }
       await tx.user.update({
         where: { id: user.id },
-        data: { status: "ACTIVE" },
+        data,
       });
     }
   });

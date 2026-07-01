@@ -146,14 +146,16 @@ const linking = () => {
   }
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-      // Block the standard back/remove action
-      e.preventDefault();
+      const actionType = e.data?.action?.type;
 
-      router.replace("/userrole");
+      if (actionType === "GO_BACK" || actionType === "POP") {
+        e.preventDefault();
+        router.replace("/userrole");
+      }
     });
 
     return unsubscribe;
-  }, [navigation, router]);
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
