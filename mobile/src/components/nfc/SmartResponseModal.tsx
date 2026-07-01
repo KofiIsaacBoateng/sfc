@@ -1,5 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { ScanResults } from "@/context/NFCContext";
 import { SFCChipType } from "@/utils/nfcIdentifier";
 import { ModalNotification } from "../global/Notification";
@@ -8,6 +14,10 @@ import {
   FontAwesome6,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { apiClient } from "@/services/api";
+import { AxiosError } from "axios";
+
+export type OwnershipType = "mine" | "notmine" | "inactive" | "unknown";
 
 const SmartResponseModal = ({
   visible,
@@ -18,8 +28,33 @@ const SmartResponseModal = ({
   onClose: () => void;
   visible: boolean;
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [ownershipType, setOwnershipType] = useState<OwnershipType | undefined>(
+    undefined,
+  );
+
+  const checkOwnership = async () => {
+    setLoading(true);
+    console.log("checking ownership: ", scanResults?.token);
+    try {
+      const response = await apiClient.get(`/sfc/ismine/${scanResults?.token}`);
+      const data = response.data;
+
+      if (data.status === "success") {
+        console.log("[OWNERSHIP CHECK]: check successful: ", data.data);
+        setOwnershipType(data.data.ownership);
+      }
+    } catch (error) {
+      console.log(
+        "[OWNERSHIP CHECK]: ownership check failed with error: ",
+        error,
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    console.log("Scan Results received from global scanner!");
+    checkOwnership();
   }, []);
 
   return (
@@ -27,26 +62,48 @@ const SmartResponseModal = ({
       <Text style={styles.title}>What's up charley?</Text>
 
       {/***** options */}
-      <View style={styles.options}>
-        <Pressable onPress={() => {}} style={styles.item}>
-          <FontAwesome name="send-o" color="#ffffff99" size={22} />
-          <Text style={styles.itemText}>Make a transaction</Text>
-        </Pressable>
+      {loading ? (
+        <View style={styles.contentContainer}>
+          <ActivityIndicator size={"small"} color="#ffffffcc" />
+          <Text style={{ color: "#ffffffcc", fontFamily: "Jakarta-Regular" }}>
+            Just a moment
+          </Text>
+        </View>
+      ) : ownershipType === "notmine" ? (
+        <View style={styles.contentContainer}>
+          <Pressable onPress={() => {}} style={styles.item}>
+            <FontAwesome name="send-o" color="#ffffffcc" size={22} />
+            <Text style={styles.itemText}>Make a transaction</Text>
+          </Pressable>
 
-        <Pressable onPress={() => {}} style={styles.item}>
-          <MaterialCommunityIcons
-            name="badge-account-horizontal-outline"
-            color="#ffffff99"
-            size={22}
-          />
-          <Text style={styles.itemText}>Save contact details</Text>
-        </Pressable>
+          <Pressable onPress={() => {}} style={styles.item}>
+            <MaterialCommunityIcons
+              name="badge-account-horizontal-outline"
+              color="#ffffffcc"
+              size={25}
+            />
+            <Text style={styles.itemText}>Save contact details</Text>
+          </Pressable>
 
-        <Pressable onPress={() => {}} style={styles.item}>
-          <FontAwesome6 name="nfc-symbol" color="#ffffff99" size={22} />
-          <Text style={styles.itemText}>Explore more options</Text>
-        </Pressable>
-      </View>
+          <Pressable onPress={() => {}} style={styles.item}>
+            <FontAwesome6 name="nfc-symbol" color="#ffffffcc" size={22} />
+            <Text style={styles.itemText}>Explore more options</Text>
+          </Pressable>
+        </View>
+      ) : ownershipType === "inactive" || ownershipType === "unknown" ? (
+        <View style={styles.contentContainer}>
+          <Pressable onPress={() => {}} style={styles.item}>
+            <FontAwesome6 name="nfc-symbol" color="#ffffffcc" size={22} />
+            <Text style={styles.itemText}>Link to your account</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <View style={styles.contentContainer}>
+          <Text style={styles.itemText}>
+            This product is linked to your account!
+          </Text>
+        </View>
+      )}
     </ModalNotification>
   );
 };
@@ -55,14 +112,16 @@ export default SmartResponseModal;
 
 const styles = StyleSheet.create({
   title: {
-    color: "#ffffff99",
+    color: "#ffffffcc",
     fontSize: 18,
     fontFamily: "Jakarta-SemiBold",
     letterSpacing: 0.5,
   },
 
-  options: {
+  contentContainer: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     paddingTop: 30,
     gap: 15,
   },
@@ -79,7 +138,7 @@ const styles = StyleSheet.create({
   },
 
   itemText: {
-    color: "#ffffff99",
+    color: "#ffffffcc",
     fontSize: 16,
     fontFamily: "Jakarta-Regular",
   },

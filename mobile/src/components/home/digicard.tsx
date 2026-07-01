@@ -48,7 +48,7 @@ export default DigiCard;
 
 const styles = StyleSheet.create({
   walletCard: {
-    backgroundColor: "#050505",
+    backgroundColor: "#010101",
     borderRadius: 15,
     padding: 24,
     height: 200,

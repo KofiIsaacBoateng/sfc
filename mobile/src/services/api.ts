@@ -33,6 +33,7 @@ apiClient.interceptors.request.use(
     const currentUser = authInstance.currentUser;
     if (currentUser) {
       const token = await getIdToken(currentUser, false); // Grabs active cryptographic token
+      console.log(token);
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

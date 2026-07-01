@@ -18,7 +18,7 @@ export const checkOwnership = async (
     );
   }
 
-  const sfc = await prisma.sfcDevice.findUnique({
+  const sfc = await prisma.sfcDevice.findFirst({
     where: { hardwareToken: token },
   });
 
@@ -31,7 +31,12 @@ export const checkOwnership = async (
 
   if (!sfc || sfc.status === "INACTIVE") {
     data = "unknown";
-    sendSuccess(res, data, "Ownership check complete!", StatusCodes.OK);
+    sendSuccess(
+      res,
+      { ownership: data },
+      "Ownership check complete!",
+      StatusCodes.OK,
+    );
     return;
   }
 
@@ -40,11 +45,19 @@ export const checkOwnership = async (
     where: { firebaseUid: req.user!.uid },
   });
 
-  if (user!.id === sfc.userId) {
+  if (!user) {
+    throw new BadRequestError("Authenticated user not found!");
+  }
+
+  if (user.id === sfc.userId) {
     data = "mine";
   } else {
     data = "notmine";
   }
-
-  sendSuccess(res, data, "Ownership check complete!", StatusCodes.OK);
+  sendSuccess(
+    res,
+    { ownership: data },
+    "Ownership check complete!",
+    StatusCodes.OK,
+  );
 };
