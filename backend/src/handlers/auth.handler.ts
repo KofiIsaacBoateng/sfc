@@ -4,6 +4,9 @@ import UnauthorizedError from "../errors/unauthorized.js";
 import InternalServerError from "../errors/internal-server.js";
 import { sendSuccess } from "../utils/response-formatter.js";
 import { normalizeGhanaianPhoneNumber } from "../utils/phone-formatter.js";
+import BadRequestError from "../errors/bad-request.js";
+import { ConflictError } from "../errors/conflict.js";
+import { StatusCodes } from "http-status-codes";
 
 export async function syncUserSession(
   req: Request,
@@ -53,3 +56,83 @@ export async function syncUserSession(
     );
   }
 }
+
+export const linkSFCDevice = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const firebaseUser = req.user;
+  const { sfcToken, chipType } = req.body;
+
+  if (!firebaseUser)
+    throw new UnauthorizedError("You have to sign in to continue!");
+
+  if (!sfcToken || typeof sfcToken !== "string")
+    throw new BadRequestError("Hardware token string parameter is missing!");
+
+  // find our user
+  const user = await prisma.user.findUnique({
+    where: { firebaseUid: firebaseUser.uid },
+  });
+  if (!user)
+    throw new BadRequestError("User profile is missing! Please sign in first!");
+
+  // Ensure device isn't already in use
+  const deviceInUse = await prisma.sfcDevice.findFirst({
+    where: { id: sfcToken },
+  });
+
+  if (deviceInUse) {
+    if (deviceInUse.userId === user.id) {
+      sendSuccess(
+        res,
+        { success: "ok" },
+        "This SFC device is already liked to your account!",
+        StatusCodes.OK,
+      );
+      return;
+    }
+
+    throw new ConflictError("SFC device is already in use by another account!");
+  }
+
+  // ATOMIC TRANSACTION MAPPING: Executes both steps or fails completely
+  await prisma.$transaction(async (tx) => {
+    // Deactivate any currently active sfc device under the name of this account.
+    await tx.sfcDevice.updateMany({
+      where: {
+        userId: user.id,
+        status: "ACTIVE",
+      },
+
+      data: {
+        status: "DEACTIVATED",
+      },
+    });
+
+    // If the partial index constraint is broken, PostgreSQL stops the query here
+    await tx.sfcDevice.create({
+      data: {
+        userId: user.id,
+        hardwareToken: sfcToken,
+        chipType,
+        status: "ACTIVE",
+      },
+    });
+
+    // If the user was stuck in PENDING_ONBOARDING, we upgrate their status to ACTIVE
+    if (user.status === "PENDING_ONBOARDING") {
+      await tx.user.update({
+        where: { id: user.id },
+        data: { status: "ACTIVE" },
+      });
+    }
+  });
+
+  sendSuccess(
+    res,
+    { success: "ok" },
+    "SFC device liked to your account successfully!",
+    StatusCodes.CREATED,
+  );
+};
