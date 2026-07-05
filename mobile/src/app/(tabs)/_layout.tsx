@@ -1,16 +1,25 @@
 import { Tabs } from "expo-router";
 import React from "react";
 
-import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import {
+  Feather,
+  FontAwesome6,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#ffffffcc",
-        // tabBarActiveTintColor: "#a5bbdf",
-        tabBarInactiveTintColor: "#ffffff55",
+        tabBarActiveTintColor: "#a5bbdfcc",
+        tabBarInactiveTintColor: "#a5bbdf55",
+        tabBarLabelStyle: {
+          fontSize: 11,
+          letterSpacing: 0.5,
+          fontFamily: "Jakarta-Regular",
+        },
         tabBarStyle: {
           backgroundColor: "#000000",
           borderTopWidth: StyleSheet.hairlineWidth,
@@ -29,8 +38,8 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => (
             <Feather
               name="home"
-              size={20}
-              color={focused ? "#ffffffcc" : "#ffffff55"}
+              size={22}
+              color={focused ? "#a5bbdfcc" : "#a5bbdf55"}
             />
           ),
         }}
@@ -42,8 +51,8 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => (
             <FontAwesome6
               name="nfc-symbol"
-              size={18}
-              color={focused ? "#ffffffcc" : "#ffffff55"}
+              size={19}
+              color={focused ? "#a5bbdfcc" : "#a5bbdf55"}
             />
           ),
         }}
@@ -53,10 +62,10 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name="person-outline"
-              size={16}
-              color={focused ? "#ffffffcc" : "#ffffff55"}
+            <MaterialCommunityIcons
+              name="account-cog-outline"
+              size={25}
+              color={focused ? "#a5bbdfcc" : "#a5bbdf55"}
             />
           ),
         }}
