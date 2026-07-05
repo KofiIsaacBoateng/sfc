@@ -42,7 +42,7 @@ const Option = ({
         </Pressable>
       ) : (
         <View style={{ marginLeft: "auto" }}>
-          <CustomSwitch onToggle={cta.action} />
+          <CustomSwitch onToggle={cta.action} value={true} />
         </View>
       )}
     </Pressable>

@@ -26,7 +26,7 @@ const Home = () => {
             <View style={styles.iconCircle}>
               <FontAwesome6
                 name="money-bill-transfer"
-                color="#a5bbdf"
+                color="#a5bbdfac"
                 size={18}
               />
             </View>
@@ -40,7 +40,7 @@ const Home = () => {
             <View style={styles.iconCircle}>
               <MaterialCommunityIcons
                 name="qrcode-scan"
-                color="#a5bbdf"
+                color="#a5bbdfac"
                 size={18}
               />
             </View>
@@ -51,7 +51,7 @@ const Home = () => {
             <View style={[styles.iconCircle, { padding: 8 }]}>
               <MaterialCommunityIcons
                 name="cash-plus"
-                color="#a5bbdf"
+                color="#a5bbdfac"
                 size={30}
               />
             </View>
@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 20,
     aspectRatio: 1 / 1.2,
-    borderWidth: 1,
-    borderColor: "#616e837a",
+    borderWidth: 2,
+    borderColor: "#0c1018",
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -95,18 +95,18 @@ const styles = StyleSheet.create({
   iconCircle: {
     padding: 15,
     alignSelf: "flex-start",
-    backgroundColor: "#292e36",
+    backgroundColor: "#0c1018",
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
   },
   actionIcon: {
-    color: "#a5bbdf",
+    color: "#a5bbdfac",
     fontSize: 20,
     fontFamily: "Jakarta-SemiBold",
   },
   actionLabel: {
-    color: "#94A3B8",
+    color: "#a5bbdfac",
     fontSize: 16,
     fontFamily: "Jakarta-SemiBold",
   },

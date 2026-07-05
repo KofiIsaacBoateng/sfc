@@ -8,11 +8,18 @@ import Animated, {
 } from "react-native-reanimated";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const CustomSwitch = ({ onToggle }: { onToggle: (value: boolean) => void }) => {
-  const [on, setOn] = useState(true);
+const CustomSwitch = ({
+  onToggle,
+  value,
+}: {
+  onToggle: (value?: boolean) => void;
+  value: boolean;
+}) => {
+  const [on, setOn] = useState(value || false);
 
   const toggleSwitch = () => {
     setOn((prev) => !prev);
+    onToggle();
   };
 
   const toggleAnimatedStyle = useAnimatedStyle(() => ({

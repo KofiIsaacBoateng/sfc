@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import { Image, StyleSheet, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import CustomSwitch from "../global/Switch";
 
 const Header = () => {
   const { top } = useSafeAreaInsets();
@@ -28,6 +29,17 @@ const Header = () => {
     <View style={[styles.headerwrapper, { paddingTop: top + 20 }]}>
       {/* left */}
       <View style={styles.left}>
+        <Image
+          source={{
+            uri: "https://api.dicebear.com/10.x/toon-head/png?seed=kofi-boateng",
+          }}
+          style={{
+            width: 40,
+            aspectRatio: 1,
+            borderRadius: 50,
+            marginRight: 5,
+          }}
+        />
         <Text style={styles.greeting}>Hello, Kofi</Text>
         <Ionicons name="shield-checkmark-outline" color="#82a2d1" size={15} />
       </View>
@@ -36,12 +48,7 @@ const Header = () => {
       <View style={styles.right}>
         <View style={styles.merchantMode}>
           <Text style={styles.merchantModeText}>2M</Text>
-          <Switch
-            value={isMerchantMode}
-            onValueChange={toggleMerchantMode}
-            trackColor={{ false: "#151c29", true: "#00A896" }}
-            thumbColor={isMerchantMode ? "#FFFFFF" : "#64748B"}
-          />
+          <CustomSwitch onToggle={toggleMerchantMode} value={isMerchantMode} />
         </View>
       </View>
     </View>
@@ -75,18 +82,18 @@ const styles = StyleSheet.create({
     color: "#ffffffcc",
     fontSize: 18,
     fontFamily: "Jakarta-SemiBold",
-    letterSpacing: 1,
   },
 
   merchantMode: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
+    gap: 10,
   },
 
   merchantModeText: {
     fontSize: 18,
-    fontFamily: "Jakarta-Regular",
+    fontFamily: "Jakarta-SemiBold",
     color: "#ffffffcc",
   },
 });
