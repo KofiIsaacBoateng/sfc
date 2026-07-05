@@ -1,5 +1,11 @@
 import SettingOptions from "@/components/profile/SettingOptions";
-import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  FontAwesome6,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import React, { useSyncExternalStore } from "react";
 import {
   Image,
@@ -47,6 +53,7 @@ const Profile = () => {
         <SettingOptions />
         {/**** logout */}
         <Pressable style={styles.logout} onPress={() => {}}>
+          <MaterialIcons name="logout" size={18} color="#ac4545" />
           <Text style={styles.logoutText}>Logout</Text>
         </Pressable>
       </ScrollView>
@@ -117,6 +124,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  logout: {},
-  logoutText: {},
+  logout: {
+    marginTop: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 10,
+    paddingVertical: 10,
+  },
+
+  logoutText: {
+    fontFamily: "Jakarta-SemiBold",
+    fontSize: 15,
+    textTransform: "uppercase",
+    color: "#ac4545",
+  },
 });

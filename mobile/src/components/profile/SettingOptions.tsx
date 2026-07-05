@@ -3,6 +3,7 @@ import React from "react";
 import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { DynamicIconProp, SETTINGS } from "@/constants/constants";
 import { DynamicIcon } from "../global/DynamicIcon";
+import CustomSwitch from "../global/Switch";
 
 const SettingOptions = () => {
   return SETTINGS.map((setting, i) => (
@@ -22,14 +23,28 @@ const SettingOptions = () => {
   ));
 };
 
-const Option = ({ label, icon }: { label: string; icon: DynamicIconProp }) => {
+const Option = ({
+  label,
+  icon,
+  cta,
+}: {
+  label: string;
+  icon: DynamicIconProp;
+  cta: { type: "switch" | "button"; action: (value?: any) => void };
+}) => {
   return (
     <Pressable onPress={() => {}} style={styles.option}>
       <DynamicIcon iconData={icon} size={18} color="#ffffffcc" />
       <Text style={styles.optionTitle}>{label}</Text>
-      <View style={styles.optionCta}>
-        <FontAwesome5 name="angle-right" size={18} color="#ffffffcc" />
-      </View>
+      {cta.type === "button" ? (
+        <Pressable onPress={cta.action} style={styles.optionCta}>
+          <FontAwesome5 name="angle-right" size={18} color="#ffffffcc" />
+        </Pressable>
+      ) : (
+        <View style={{ marginLeft: "auto" }}>
+          <CustomSwitch onToggle={cta.action} />
+        </View>
+      )}
     </Pressable>
   );
 };

@@ -76,6 +76,10 @@ export type DynamicIconProp =
 type SettingType = {
   label: string;
   icon: DynamicIconProp;
+  cta: {
+    type: "button" | "switch";
+    action: (val?: any) => void;
+  };
 };
 
 interface SETTINGS_TYPE {
@@ -87,21 +91,38 @@ export const SETTINGS: SETTINGS_TYPE[] = [
   {
     category: "Appearance",
     settings: [
-      { label: "Dark Mode", icon: { lib: "ionic", name: "moon-outline" } },
+      {
+        label: "Dark Mode",
+        icon: { lib: "ionic", name: "moon-outline" },
+        cta: { type: "switch", action: () => {} },
+      },
     ],
   },
   {
     category: "General",
     settings: [
-      { label: "My Account", icon: { lib: "ionic", name: "person-outline" } },
+      {
+        label: "My Account",
+        icon: {
+          lib: "ionic",
+          name: "person-outline",
+        },
+        cta: { type: "button", action: () => {} },
+      },
       {
         label: "Notifications",
         icon: { lib: "ionic", name: "notifications-outline" },
+        cta: { type: "button", action: () => {} },
       },
-      { label: "Toggle Features", icon: { lib: "fa6", name: "nfc-symbol" } },
+      {
+        label: "Toggle Features",
+        icon: { lib: "fa6", name: "nfc-symbol" },
+        cta: { type: "button", action: () => {} },
+      },
       {
         label: "Privacy and Security",
         icon: { lib: "material", name: "security" },
+        cta: { type: "button", action: () => {} },
       },
     ],
   },
@@ -111,14 +132,17 @@ export const SETTINGS: SETTINGS_TYPE[] = [
       {
         label: "Report an Issue",
         icon: { lib: "fa", name: "question-circle-o" },
+        cta: { type: "button", action: () => {} },
       },
       {
         label: "FAQ",
         icon: { lib: "fet", name: "alert-triangle" },
+        cta: { type: "button", action: () => {} },
       },
       {
         label: "Rate Us",
         icon: { lib: "materialC", name: "star-circle-outline" },
+        cta: { type: "button", action: () => {} },
       },
     ],
   },
