@@ -1,12 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router, useFocusEffect } from "expo-router";
-import React, { useState } from "react";
+import { router, useFocusEffect, useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CustomSwitch from "../global/Switch";
 
 const Header = () => {
   const { top } = useSafeAreaInsets();
+  const navigation = useNavigation();
   const [isMerchantMode, setIsMerchantMode] = useState(false);
 
   const toggleMerchantMode = () => {

@@ -12,23 +12,20 @@ const CustomSwitch = ({
   onToggle,
   value,
 }: {
-  onToggle: (value?: boolean) => void;
+  onToggle: (value: boolean) => void;
   value: boolean;
 }) => {
-  const [on, setOn] = useState(value || false);
-
   const toggleSwitch = () => {
-    setOn((prev) => !prev);
-    onToggle();
+    onToggle(!value);
   };
 
   const toggleAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: withTiming(on ? 25 : 0, { duration: 500 }) }],
+    transform: [{ translateX: withTiming(value ? 25 : 0, { duration: 500 }) }],
   }));
 
   const animatedBackgroundColor = useAnimatedStyle(() => ({
     backgroundColor: withTiming(
-      interpolateColor(on ? 1 : 0, [0, 1], ["#192030", "#491c77"]),
+      interpolateColor(value ? 1 : 0, [0, 1], ["#192030", "#491c77"]),
       { duration: 500 },
     ),
   }));

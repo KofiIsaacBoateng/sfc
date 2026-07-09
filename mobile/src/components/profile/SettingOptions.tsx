@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { DynamicIconProp, SETTINGS } from "@/constants/constants";
 import { DynamicIcon } from "../global/DynamicIcon";
@@ -32,6 +32,8 @@ const Option = ({
   icon: DynamicIconProp;
   cta: { type: "switch" | "button"; action: (value?: any) => void };
 }) => {
+  const [toggleSwitch, setToggleSwitch] = useState(true);
+
   return (
     <Pressable onPress={() => {}} style={styles.option}>
       <DynamicIcon iconData={icon} size={18} color="#ffffffcc" />
@@ -42,7 +44,7 @@ const Option = ({
         </Pressable>
       ) : (
         <View style={{ marginLeft: "auto" }}>
-          <CustomSwitch onToggle={cta.action} value={true} />
+          <CustomSwitch onToggle={setToggleSwitch} value={toggleSwitch} />
         </View>
       )}
     </Pressable>
