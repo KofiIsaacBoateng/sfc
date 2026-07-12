@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { auth } from "../config/firebase.js";
+import { auth } from "../shared/config/firebase.js";
 import * as admin from "firebase-admin";
 
 declare global {

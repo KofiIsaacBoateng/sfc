@@ -1,0 +1,94 @@
+// Represents a user's entire identity while on the platform
+
+enum AccountStatus {
+
+  PENDING_ONBOARDING
+
+  ACTIVE
+
+  SUSPENDED
+
+}
+
+enum Role {
+
+  USER
+
+  BUSINESS
+
+  ADMIN
+
+}
+
+// account
+model User {
+  id              String          @id @unique @default(uuid())
+
+  firebaseUid     String          @unique
+  phoneNumber     String          @unique
+  pinHash         String?
+  
+  status          AccountStatus   @default(PENDING_ONBOARDING)
+  role            Role            @default(USER)
+
+  profile         Profile?
+  business        BusinessProfile?
+
+  wallet          Wallet?
+
+  sfcDevices      SfcDevice[]
+
+  notifications   Notification[]
+
+  transactions    Transaction[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+
+  @@index([phoneNumber])
+  @@index([firebaseUid])
+  @@index([createdAt])
+  @@map("users")
+}
+
+// user account profile
+model Profile {
+  id              String          @id @unique @default(uuid())
+
+  userId          String          @unique
+
+  firstName       String?
+  lastName        String?
+  avatarUrl       String?
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  user            User            @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("profiles")
+}
+
+// business profile 
+model BusinessProfile {
+  id              String        @id @unique @default(uuid())
+
+  userId          String        @unique
+
+  businessName    String
+  category        String?
+
+  description     String?
+  logoUrl         String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user            User          @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("business_profiles")
+}
+

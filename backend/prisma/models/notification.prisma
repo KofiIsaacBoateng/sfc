@@ -1,0 +1,45 @@
+enum NotificationType {
+
+  PAYMENT_RECEIVED
+  PAYMENT_SENT
+
+  PAYMENT_FAILED
+  PAYMENT_REVERSED
+  PAYMENT_REFUNDED
+
+  DEVICE_LINKED
+  DEVICE_UNLINKED
+
+  LOW_BALANCE
+
+  ACCOUNT_CREATED
+
+  SECURITY_ALERT
+
+  BUSINESS_PAYMENT_RECEIVED
+
+  SYSTEM
+
+}
+
+model Notification {
+  id           String      @id @unique @default(uuid())
+
+  userId       String
+
+  title        String
+  message      String
+
+  data         Json?
+
+  type         NotificationType
+
+  isRead       Boolean      @default(false)
+
+  createdAt    DateTime     @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("notifications")
+}

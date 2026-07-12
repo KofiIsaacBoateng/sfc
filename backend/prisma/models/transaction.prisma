@@ -1,0 +1,53 @@
+// Represents every kind of transaction that sfc processes
+
+enum TransactionType {
+
+  PAYMENT
+
+  DEPOSIT
+
+  WITHDRAWAL
+  
+  REFUND
+
+  REVERSAL
+
+}
+
+enum TransactionStatus {
+
+  PENDING
+
+  COMPLETED
+
+  FAILED
+
+  REVERSED
+
+}
+
+model Transaction {
+  id            String          @id @unique @default(uuid())
+
+  reference     String          @unique
+
+  type          TransactionType
+  status        TransactionStatus
+
+  amount        BigInt
+
+  currency      Currency
+
+  initiatedBy   String
+
+  ledgerEntries LedgerEntry[]
+
+  createdAt     DateTime        @default(now())
+
+
+  user          User            @relation(fields: [initiatedBy], references: [id])
+
+  @@index([reference])
+  @@index([initiatedBy])
+  @@map("transactions")
+}
