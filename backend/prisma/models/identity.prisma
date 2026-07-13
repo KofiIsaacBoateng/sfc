@@ -12,11 +12,9 @@ enum AccountStatus {
 
 enum Role {
 
-  USER
+  INDIVIDUAL
 
   BUSINESS
-
-  ADMIN
 
 }
 
@@ -28,8 +26,8 @@ model User {
   phoneNumber     String          @unique
   pinHash         String?
   
-  status          AccountStatus   @default(PENDING_ONBOARDING)
-  role            Role            @default(USER)
+  status          AccountStatus
+  role            Role
 
   profile         Profile?
   business        BusinessProfile?

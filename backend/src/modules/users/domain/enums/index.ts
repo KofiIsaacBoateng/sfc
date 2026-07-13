@@ -1,0 +1,10 @@
+export enum UserRole {
+  INDIVIDUAL = "INDIVIDUAL",
+  BUSINESS = "BUSINESS",
+}
+
+export enum UserStatus {
+  PENDING_ONBOARDING = "PENDING_ONBOARDING",
+  ACTIVE = "ACTIVE",
+  SUSPENDED = "SUSPENDED",
+}

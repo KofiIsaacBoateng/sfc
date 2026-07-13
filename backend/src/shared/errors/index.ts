@@ -6,6 +6,12 @@ import InternalServerError from "./internal-server.js";
 import NotFoundError from "./not-found.js";
 import UnauthorizedError from "./unauthorized.js";
 
+class InvalidPhoneNumber extends BadRequestError {
+  constructor() {
+    super(ErrorCode.INVALID_PHONE_NUMBER, "Invalid phone number!");
+  }
+}
+
 export {
   BadRequestError,
   ConflictError,
@@ -14,4 +20,7 @@ export {
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
+
+  // domain errors
+  InvalidPhoneNumber,
 };
