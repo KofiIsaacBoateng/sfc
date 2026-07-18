@@ -1,10 +1,13 @@
-import type { User as PrismaUser } from "@/src/generated/client/client.js";
-import { User } from "@/src/modules/users/domain/entities/user.entity.js";
-import { PhoneNumber } from "@/src/shared/domain/value-objects/phone-number.vo.js";
 import type {
+  User as PrismaUser,
+  Prisma,
+} from "@/src/generated/client/client.js";
+import {
+  User,
   UserRole,
   UserStatus,
-} from "@/src/modules/users/domain/enums/index.js";
+} from "@/src/modules/users/domain/entities/user.entity.js";
+import { PhoneNumber } from "@/src/shared/domain/value-objects/phone-number.vo.js";
 
 export class UserMapper {
   static toDomain(raw: PrismaUser): User {
@@ -19,15 +22,13 @@ export class UserMapper {
     });
   }
 
-  static toPersistence(user: User) {
+  static toPersistence(user: User): Prisma.UserUncheckedCreateInput {
     return {
       id: user.id,
       firebaseUid: user.firebaseUid,
       phoneNumber: user.phoneNumber.value,
       status: user.status,
       role: user.role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
     };
   }
 }

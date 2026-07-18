@@ -1,5 +1,15 @@
 import type { PhoneNumber } from "@/src/shared/domain/value-objects/phone-number.vo.js";
-import { UserRole, UserStatus } from "../enums/index.js";
+
+export enum UserRole {
+  INDIVIDUAL = "INDIVIDUAL",
+  BUSINESS = "BUSINESS",
+}
+
+export enum UserStatus {
+  PENDING_ONBOARDING = "PENDING_ONBOARDING",
+  ACTIVE = "ACTIVE",
+  SUSPENDED = "SUSPENDED",
+}
 
 interface CreateUserProps {
   id: string;

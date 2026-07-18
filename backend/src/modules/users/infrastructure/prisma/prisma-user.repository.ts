@@ -1,7 +1,10 @@
-import type { User as PrismaUser } from "@/src/generated/client/client.js";
-import type { Prisma, PrismaClient } from "@prisma/client";
+import type {
+  User as PrismaUser,
+  Prisma,
+  PrismaClient,
+} from "@/src/generated/client/client.js";
 import type { UserRepository } from "../../domain/repositories/user.repository.js";
-import type { User } from "../../domain/entities/user.entity.js";
+import { User } from "../../domain/entities/user.entity.js";
 import { UserMapper } from "./user.mapper.js";
 
 type PrismaExecuter = PrismaClient | Prisma.TransactionClient;
