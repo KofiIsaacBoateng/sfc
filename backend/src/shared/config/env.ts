@@ -7,7 +7,10 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
-  JWT_SECRET: z
+  JWT_ACCESS_SECRET: z
+    .string()
+    .min(5, { error: "Please make sure jwt_s is at least 5 characters!" }),
+  JWT_REFRESH_SECRET: z
     .string()
     .min(5, { error: "Please make sure jwt_s is at least 5 characters!" }),
 });

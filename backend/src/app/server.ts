@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import app from "./app.js";
+import buildApp from "./app.js";
 import http from "http";
 import env from "../shared/config/env.js"; // configured with environment validation
 import { logger } from "../shared/logger/logger.js";
@@ -8,6 +8,7 @@ import { logger } from "../shared/logger/logger.js";
 dotenv.config();
 
 // initiate server
+const app = buildApp();
 const server = http.createServer(app);
 
 const startServer = () => {

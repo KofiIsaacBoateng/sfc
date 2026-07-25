@@ -4,7 +4,7 @@ import type ErrorCode from "./error-codes.js";
 
 export default class NotFoundError extends AppError {
   constructor(
-    code: keyof typeof ErrorCode,
+    code: keyof typeof ErrorCode = "NOTFOUND",
     message = "Requested resource could not be found",
   ) {
     super(StatusCodes.NOT_FOUND, code, message);

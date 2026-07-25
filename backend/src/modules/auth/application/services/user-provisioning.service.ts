@@ -15,7 +15,7 @@ export class UserProvisioningService {
     private readonly walletProvisioningService: WalletProvisioningService,
   ) {}
 
-  async create(input: ProvisionUserInput): Promise<User> {
+  async provision(input: ProvisionUserInput): Promise<User> {
     return this.unitOfWork.execute(async (repos): Promise<User> => {
       const existing = await repos.users.findByFirebaseUid(input.firebaseUid);
 
@@ -29,9 +29,12 @@ export class UserProvisioningService {
       const createdUser = await repos.users.create(user);
 
       // wallet provisioning - default wallet and ledger account for each user
-      await this.walletProvisioningService.createDefaultWallet(repos, {
-        userId: createdUser.id,
-      });
+      await this.walletProvisioningService.createDefaultWallet(
+        { wallets: repos.wallets, ledger: repos.ledger },
+        {
+          userId: createdUser.id,
+        },
+      );
 
       return createdUser;
     });

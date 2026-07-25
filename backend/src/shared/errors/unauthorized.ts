@@ -4,7 +4,7 @@ import type ErrorCode from "./error-codes.js";
 
 export default class UnauthorizedError extends AppError {
   constructor(
-    code: keyof typeof ErrorCode,
+    code: keyof typeof ErrorCode = "UNAUTHORIZED",
     message = "Unauthorized: Access token is invalid or expired",
   ) {
     super(StatusCodes.UNAUTHORIZED, code, message);

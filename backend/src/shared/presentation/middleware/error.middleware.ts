@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
-import AppError from "../errors/app-error.js";
-import env from "../config/env.js";
-import ErrorCode from "../errors/error-codes.js";
+import AppError from "../../errors/app-error.js";
+import env from "../../config/env.js";
+import ErrorCode from "../../errors/error-codes.js";
 
 export function globalErrorHandler(
   err: Error,
