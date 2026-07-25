@@ -1,5 +1,5 @@
-import UnauthorizedError from "@/src/shared/errors/unauthorized.js";
-import { sendSuccess } from "@/src/shared/utils/response-formatter.js";
+import UnauthorizedError from "@/shared/errors/unauthorized.js";
+import { sendSuccess } from "@/shared/utils/response-formatter.js";
 import type { Request, Response } from "express";
 
 export class UsersController {

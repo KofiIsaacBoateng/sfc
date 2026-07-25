@@ -1,7 +1,7 @@
 import type {
   LedgerAccount as PrismaLedgerAccount,
   Prisma,
-} from "@/src/generated/client/client.js";
+} from "@/generated/client/client.js";
 import { LedgerAccount } from "../../domain/entities/ledger-account.entity.js";
 
 export class LedgerAccountMapper {

@@ -1,9 +1,10 @@
 import "../shared/config/loadEnv.js";
 import request from "supertest";
 import { describe, expect, it } from "vitest";
-import app from "../app/app.js";
+import buildApp from "../app/app.js";
 
 describe("Health Endpoint", () => {
+  const app = buildApp();
   it("should return 200 OK", async () => {
     const response = await request(app).get("/api/v1/health");
 

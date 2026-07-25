@@ -1,14 +1,14 @@
 import type {
   User,
   UserRole,
-} from "@/src/modules/users/domain/entities/user.entity.js";
+} from "@/modules/users/domain/entities/user.entity.js";
 import type { FirebaseAuthProvider } from "../ports/firebase-auth.provider.js";
 import type { UserProvisioningService } from "../services/user-provisioning.service.js";
 import type { JwtService, TokenPair } from "../ports/jwt.service.js";
-import { PhoneNumber } from "@/src/shared/domain/value-objects/phone-number.vo.js";
+import { PhoneNumber } from "../../../../shared/domain/value-objects/phone-number.vo.js";
 
 export interface LoginInput {
-  firebaseUid: string;
+  firebaseToken: string;
   role: UserRole;
 }
 
@@ -23,10 +23,10 @@ export class LoginUseCase {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(input: LoginInput): Promise<LoginResult> {
+  async execute(input: LoginInput): Promise<LoginResult> {
     // verify firebase token
     const identity = await this.firebaseAuthProvider.verifyIdToken(
-      input.firebaseUid,
+      input.firebaseToken,
     );
 
     const phoneNumber = PhoneNumber.create(identity.phoneNumber);

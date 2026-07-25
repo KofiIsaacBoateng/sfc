@@ -2,7 +2,7 @@ import type {
   Wallet as PrismaWallet,
   Prisma,
   PrismaClient,
-} from "@/src/generated/client/client.js";
+} from "@/generated/client/client.js";
 import type { WalletRepository } from "../../domain/repositories/wallets.repository.js";
 import type { Wallet } from "../../domain/entities/wallet.entity.js";
 import { WalletMapper } from "./wallet.mapper.js";

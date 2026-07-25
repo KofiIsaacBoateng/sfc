@@ -1,4 +1,4 @@
-import type { PhoneNumber } from "@/src/shared/domain/value-objects/phone-number.vo.js";
+import type { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
 
 export enum UserRole {
   INDIVIDUAL = "INDIVIDUAL",

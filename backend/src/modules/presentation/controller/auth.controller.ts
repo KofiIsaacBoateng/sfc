@@ -2,11 +2,11 @@ import z from "zod";
 import { UserRole } from "../../users/domain/entities/user.entity.js";
 import type { Request, Response, NextFunction } from "express";
 import type { LoginUseCase } from "../../auth/application/use-cases/login.usecase.js";
-import BadRequestError from "@/src/shared/errors/bad-request.js";
-import { sendSuccess } from "@/src/shared/utils/response-formatter.js";
+import { BadRequestError } from "@/shared/errors/index.js";
+import { sendSuccess } from "@/shared/utils/response-formatter.js";
 
 const loginSchema = z.object({
-  firebaseUid: z.string().min(1),
+  firebaseToken: z.string().min(1),
   role: z.enum(UserRole),
 });
 
@@ -20,7 +20,7 @@ export class AuthController {
       throw new BadRequestError("VALIDATION_ERROR", "Invalid login payload");
     }
 
-    const { accessToken, refreshToken, user } = await this.loginUseCase.create(
+    const { accessToken, refreshToken, user } = await this.loginUseCase.execute(
       parsed.data,
     );
 

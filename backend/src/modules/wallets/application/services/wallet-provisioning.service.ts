@@ -1,7 +1,7 @@
 import { Currency, Wallet } from "../../domain/entities/wallet.entity.js";
-import { LedgerAccount } from "@/src/modules/ledger/domain/entities/ledger-account.entity.js";
+import { LedgerAccount } from "@/modules/ledger/domain/entities/ledger-account.entity.js";
 import type { WalletRepository } from "../../domain/repositories/wallets.repository.js";
-import type { LedgerAccountRepository } from "@/src/modules/ledger/domain/repositories/ledger-account.repository.js";
+import type { LedgerAccountRepository } from "@/modules/ledger/domain/repositories/ledger-account.repository.js";
 
 interface DefaultWalletInput {
   userId: string;

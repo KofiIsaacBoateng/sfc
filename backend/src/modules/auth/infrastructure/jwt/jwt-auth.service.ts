@@ -1,4 +1,4 @@
-import type { User } from "@/src/modules/users/domain/entities/user.entity.js";
+import type { User } from "@/modules/users/domain/entities/user.entity.js";
 import type {
   JwtService,
   TokenPair,

@@ -1,7 +1,7 @@
 import type {
   UserRole,
   UserStatus,
-} from "@/src/modules/users/domain/entities/user.entity.ts";
+} from "@/modules/users/domain/entities/user.entity.ts";
 import * as admin from "firebase-admin";
 
 declare global {

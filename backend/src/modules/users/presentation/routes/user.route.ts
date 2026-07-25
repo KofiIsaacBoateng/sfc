@@ -1,6 +1,6 @@
 import { Router } from "express";
 import type { UsersController } from "../controllers/user.controller.js";
-import { requireAuth } from "@/src/shared/presentation/middleware/require-auth.middleware.js";
+import { requireAuth } from "@/shared/presentation/middleware/require-auth.middleware.js";
 
 export const buildUserRoutes = (
   usersController: UsersController,

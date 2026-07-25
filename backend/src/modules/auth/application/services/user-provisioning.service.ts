@@ -1,6 +1,6 @@
-import type { UnitOfWork } from "@/src/shared/application/unit-of-work/unit-of-work.js";
+import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.js";
 import { User, UserRole } from "../../../users/domain/entities/user.entity.js";
-import type { PhoneNumber } from "@/src/shared/domain/value-objects/phone-number.vo.js";
+import type { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
 import { WalletProvisioningService } from "../../../wallets/application/services/wallet-provisioning.service.js";
 
 interface ProvisionUserInput {

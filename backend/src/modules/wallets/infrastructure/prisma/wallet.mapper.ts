@@ -1,12 +1,12 @@
 import {
   type Wallet as PrismaWallet,
   Prisma,
-} from "@/src/generated/client/client.js";
+} from "@/generated/client/client.js";
 import {
   Currency,
   Wallet,
   WalletStatus,
-} from "@/src/modules/wallets/domain/entities/wallet.entity.js";
+} from "@/modules/wallets/domain/entities/wallet.entity.js";
 
 export class WalletMapper {
   static toDomain(raw: PrismaWallet): Wallet {

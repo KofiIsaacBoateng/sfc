@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 import type {
   UserRole,
   UserStatus,
-} from "@/src/modules/users/domain/entities/user.entity.js";
+} from "@/modules/users/domain/entities/user.entity.js";
 import UnauthorizedError from "../../errors/unauthorized.js";
 import jwt from "jsonwebtoken";
 

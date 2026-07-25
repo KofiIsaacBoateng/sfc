@@ -1,13 +1,10 @@
-import type {
-  User as PrismaUser,
-  Prisma,
-} from "@/src/generated/client/client.js";
+import type { User as PrismaUser, Prisma } from "@/generated/client/client.js";
 import {
   User,
   UserRole,
   UserStatus,
-} from "@/src/modules/users/domain/entities/user.entity.js";
-import { PhoneNumber } from "@/src/shared/domain/value-objects/phone-number.vo.js";
+} from "@/modules/users/domain/entities/user.entity.js";
+import { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
 
 export class UserMapper {
   static toDomain(raw: PrismaUser): User {
