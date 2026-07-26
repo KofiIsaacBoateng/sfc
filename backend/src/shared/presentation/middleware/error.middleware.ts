@@ -20,7 +20,9 @@ export function globalErrorHandler(
     error: {
       message,
       code,
-      stack: env.NODE_ENV === "development" ? err.stack : undefined,
+      // TODO: uncomment below
+      // stack: env.NODE_ENV === "development" ? err.stack : undefined,
+      stack: undefined,
     },
   });
 }
