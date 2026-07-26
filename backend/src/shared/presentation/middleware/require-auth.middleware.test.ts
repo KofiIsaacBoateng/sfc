@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { requireAuth } from "./require-auth.middleware.js";
 import type { Request, Response, NextFunction } from "express";
-import UnauthorizedError from "@/shared/errors/unauthorized.js";
 import {
   UserRole,
   UserStatus,
@@ -21,30 +20,35 @@ describe("Require auth middleware", () => {
     res = {};
   });
 
-  it("should throw UnauthorizedError for missing or invalid authorization", () => {
-    const reqMissing = {
-      headers: {},
-    };
-
-    const reqInvalid = {
+  it("should throw UnauthorizedError for missing or malformed header structure", () => {
+    const reqMissing = { headers: {} };
+    const reqInvalidPrefix = {
       headers: { authorization: "invalid-bearer-token" },
     };
 
     expect(() => {
       middleware(reqMissing as Request, res as Response, next as NextFunction);
-    }).toThrow(UnauthorizedError);
-
-    expect(() => {
-      middleware(reqMissing as Request, res as Response, next as NextFunction);
     }).toThrow("Missing bearer token!");
 
     expect(() => {
-      middleware(reqInvalid as Request, res as Response, next as NextFunction);
-    }).toThrow(UnauthorizedError);
+      middleware(
+        reqInvalidPrefix as Request,
+        res as Response,
+        next as NextFunction,
+      );
+    }).toThrow("Missing bearer token!");
+
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it("should throw UnauthorizedError if token signature is invalid or expired", () => {
+    const reqBadToken = {
+      headers: { authorization: "Bearer completely-bogus-token" },
+    };
 
     expect(() => {
-      middleware(reqInvalid as Request, res as Response, next as NextFunction);
-    }).toThrow("Missing bearer token!");
+      middleware(reqBadToken as Request, res as Response, next as NextFunction);
+    }).toThrow("Invalid or expired token");
 
     expect(next).not.toHaveBeenCalled();
   });
@@ -72,6 +76,6 @@ describe("Require auth middleware", () => {
       role: UserRole.BUSINESS,
       status: UserStatus.ACTIVE,
     });
-    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
   });
 });
