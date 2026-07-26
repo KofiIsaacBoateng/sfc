@@ -8,7 +8,7 @@ import UnauthorizedError from "../../errors/unauthorized.js";
 import jwt from "jsonwebtoken";
 
 type AccessTokenPayload = {
-  uid: string;
+  sub: string;
   firebaseUid: admin.auth.DecodedIdToken;
   phoneNumber: string;
   role: UserRole;
@@ -32,7 +32,7 @@ export const requireAuth = (secret: string) => {
       const payload = jwt.verify(token, secret) as AccessTokenPayload;
 
       req.authUser = {
-        userId: payload.uid,
+        userId: payload.sub,
         firebaseUid: payload.firebaseUid,
         phoneNumber: payload.phoneNumber,
         role: payload.role,
