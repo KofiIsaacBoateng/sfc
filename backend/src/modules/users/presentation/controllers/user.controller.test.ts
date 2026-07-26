@@ -32,6 +32,8 @@ describe("Users controller", () => {
     expect(() => {
       usersController.me(req as Request, res as Response);
     }).toThrow("Unauthorized user.");
+
+    expect(sendSuccess).not.toHaveBeenCalled();
   });
 
   it("should return a filtered user data when req.authUser exists", () => {

@@ -5,7 +5,7 @@ import { notFoundHandler } from "../shared/presentation/middleware/not-found.mid
 import { globalErrorHandler } from "../shared/presentation/middleware/error.middleware.js";
 import { httpLogger } from "../shared/logger/httpLogger.js";
 import { setupSwagger } from "../docs/swagger.js";
-import { buildAuthRoutes } from "../modules/presentation/routes/auth.route.js";
+import { buildAuthRoutes } from "../modules/auth/presentation/routes/auth.route.js";
 import { buildUserRoutes } from "../modules/users/presentation/routes/user.route.js";
 import { authController, usersController } from "./container.js";
 import env from "../shared/config/env.js";

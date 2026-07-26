@@ -2,7 +2,7 @@ import { UserProvisioningService } from "../modules/auth/application/services/us
 import { LoginUseCase } from "../modules/auth/application/use-cases/login.usecase.js";
 import { FirebaseAdminAuthProvider } from "../modules/auth/infrastructure/firebase/firebase-admin-auth.provider.js";
 import { JwtTokenService } from "../modules/auth/infrastructure/jwt/jwt-auth.service.js";
-import { AuthController } from "../modules/presentation/controller/auth.controller.js";
+import { AuthController } from "../modules/auth/presentation/controllers/auth.controller.js";
 import { UsersController } from "../modules/users/presentation/controllers/user.controller.js";
 import { WalletProvisioningService } from "../modules/wallets/application/services/wallet-provisioning.service.js";
 import env from "../shared/config/env.js";
