@@ -45,7 +45,7 @@ function RootLayoutNav() {
           currentSyncedFirebaseUid = null;
           isNetworkSyncInProgress = false;
           setInitializing(false);
-          router.navigate("/onboarding");
+          router.navigate("/home");
           return;
         }
 
