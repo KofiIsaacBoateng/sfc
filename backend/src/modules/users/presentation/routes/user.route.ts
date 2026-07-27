@@ -8,7 +8,25 @@ export const buildUserRoutes = (
 ) => {
   const router = Router();
 
-  router.post("/me", requireAuth(jwtSecret), usersController.me);
+  /**
+   * @openapi
+   * /api/v1/users/me:
+   *   get:
+   *     tags:
+   *       - Users
+   *     summary: Get current authenticated user
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Current user
+   *       401:
+   *         description: Unauthorized
+   *       500:
+   *         description: Server error
+   */
+
+  router.get("/me", requireAuth(jwtSecret), usersController.me);
 
   return router;
 };
