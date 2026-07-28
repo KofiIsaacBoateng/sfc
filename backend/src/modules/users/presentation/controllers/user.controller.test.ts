@@ -2,7 +2,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { UsersController } from "./user.controller.js";
 import type { Request, Response } from "express";
 import UnauthorizedError from "@/shared/errors/unauthorized.js";
-import { sendSuccess } from "@/shared/utils/response-formatter.js";
+import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
 import { UserRole, UserStatus } from "../../domain/entities/user.entity.js";
 import * as admin from "firebase-admin";
 

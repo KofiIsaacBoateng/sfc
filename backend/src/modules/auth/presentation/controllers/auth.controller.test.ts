@@ -9,7 +9,7 @@ import {
   UserStatus,
 } from "@/modules/users/domain/entities/user.entity.js";
 import { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
-import { sendSuccess } from "@/shared/utils/response-formatter.js";
+import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
 
 vi.mock("@/shared/utils/response-formatter.js", () => ({
   sendSuccess: vi.fn(),

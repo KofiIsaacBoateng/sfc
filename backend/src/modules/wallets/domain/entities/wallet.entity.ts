@@ -14,6 +14,7 @@ interface WalletProps {
   id: string;
   userId: string;
   status: WalletStatus;
+  balanceMinor: number;
   currency: Currency;
   updatedAt: Date;
   createdAt: Date;
@@ -28,6 +29,7 @@ export class Wallet {
       userId,
       currency,
       status: WalletStatus.ACTIVE,
+      balanceMinor: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -47,6 +49,10 @@ export class Wallet {
 
   get currency(): Currency {
     return this.props.currency;
+  }
+
+  get balanceMinor(): number {
+    return this.props.balanceMinor;
   }
 
   get status(): WalletStatus {

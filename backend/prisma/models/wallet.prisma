@@ -18,9 +18,11 @@ enum WalletStatus {
 model Wallet {
   id            String          @id @unique @default(uuid())
 
-  userId        String            @unique
+  userId        String          @unique
 
   currency      Currency
+
+  balanceMinor  Int            @default(0)
 
   status        WalletStatus
 

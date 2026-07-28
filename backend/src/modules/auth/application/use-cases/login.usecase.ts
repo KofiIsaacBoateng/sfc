@@ -29,6 +29,7 @@ export class LoginUseCase {
       input.firebaseToken,
     );
 
+    // convert string to domain level vo
     const phoneNumber = PhoneNumber.create(identity.phoneNumber);
 
     // provision our user

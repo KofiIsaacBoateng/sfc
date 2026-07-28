@@ -3,7 +3,7 @@ import { UserRole } from "../../../users/domain/entities/user.entity.js";
 import type { Request, Response } from "express";
 import type { LoginUseCase } from "../../application/use-cases/login.usecase.js";
 import { BadRequestError } from "@/shared/errors/index.js";
-import { sendSuccess } from "@/shared/utils/response-formatter.js";
+import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
 
 const loginSchema = z.object({
   firebaseToken: z.string().min(1),
