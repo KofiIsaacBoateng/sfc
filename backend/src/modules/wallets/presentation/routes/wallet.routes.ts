@@ -10,7 +10,7 @@ export const buildWalletRoutes = (
 
   /**
    * @openapi
-   * /wallet:
+   * /api/v1/wallet:
    *   get:
    *     summary: Get authenticated user's wallet
    *     tags:

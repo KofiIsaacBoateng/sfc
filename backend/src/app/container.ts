@@ -1,3 +1,4 @@
+import { PrismaWalletRepository } from "@/modules/wallets/infrastructure/prisma/prisma-wallet.repository.js";
 import { UserProvisioningService } from "../modules/auth/application/services/user-provisioning.service.js";
 import { LoginUseCase } from "../modules/auth/application/use-cases/login.usecase.js";
 import { FirebaseAdminAuthProvider } from "../modules/auth/infrastructure/firebase/firebase-admin-auth.provider.js";
@@ -9,6 +10,8 @@ import env from "../shared/config/env.js";
 import { PrismaRepositoryFactory } from "../shared/infrastructure/prisma/prisma-repository-factory.js";
 import { PrismaUnitOfWork } from "../shared/infrastructure/prisma/prisma-unit-of-work.js";
 import { prisma } from "../shared/infrastructure/prisma/prisma.js";
+import { GetMyWalletUseCase } from "@/modules/wallets/application/use-case/get-my-wallet.usecase.js";
+import { WalletController } from "@/modules/wallets/presentation/controllers/wallet.controller.js";
 
 const repositoryFactory = new PrismaRepositoryFactory();
 const unitOfWork = new PrismaUnitOfWork(prisma, repositoryFactory);
@@ -35,3 +38,10 @@ const loginUseCase = new LoginUseCase(
 export const authController = new AuthController(loginUseCase);
 export const usersController = new UsersController();
 export { unitOfWork };
+
+// wallet dependency instantiation
+const walletRepository = new PrismaWalletRepository(prisma);
+
+const getMyWalletUseCase = new GetMyWalletUseCase(walletRepository);
+
+export const getMyWalletController = new WalletController(getMyWalletUseCase);
