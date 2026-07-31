@@ -2,23 +2,22 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { UsersController } from "./user.controller.js";
 import type { Request, Response } from "express";
 import UnauthorizedError from "@/shared/errors/unauthorized.js";
-import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
+import * as responseFormatter from "@/shared/presentation/utils/response-formatter.js";
 import { UserRole, UserStatus } from "../../domain/entities/user.entity.js";
 import * as admin from "firebase-admin";
 
-// mock response formatter utility
-vi.mock("@/shared/utils/response-formatter.js", () => ({
-  sendSuccess: vi.fn(),
-}));
-
 describe("Users controller", () => {
+  const sendSuccess = vi.spyOn(responseFormatter, "sendSuccess");
   let usersController: UsersController;
   let req: Partial<Request>;
   let res: Partial<Response>;
 
   beforeEach(() => {
     usersController = new UsersController();
-    res = {};
+    res = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn(),
+    };
     vi.clearAllMocks();
   });
 

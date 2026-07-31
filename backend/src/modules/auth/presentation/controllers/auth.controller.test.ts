@@ -9,12 +9,10 @@ import {
   UserStatus,
 } from "@/modules/users/domain/entities/user.entity.js";
 import { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
-import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
+import * as responseFormatter from "@/shared/presentation/utils/response-formatter.js";
 
-vi.mock("@/shared/utils/response-formatter.js", () => ({
-  sendSuccess: vi.fn(),
-}));
 describe("Auth controller", () => {
+  const sendSuccess = vi.spyOn(responseFormatter, "sendSuccess");
   let loginUseCase: LoginUseCase;
   let authController: AuthController;
   let req: Partial<Request>;
@@ -22,7 +20,10 @@ describe("Auth controller", () => {
 
   beforeEach(() => {
     req = { body: {} };
-    res = {};
+    res = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn(),
+    };
     loginUseCase = {
       execute: vi.fn(),
     } as unknown as LoginUseCase;

@@ -14,7 +14,6 @@ import {
 } from "./container.js";
 import env from "../shared/config/env.js";
 import { buildWalletRoutes } from "@/modules/wallets/presentation/routes/wallet.routes.js";
-import { WalletController } from "@/modules/wallets/presentation/controllers/wallet.controller.js";
 
 export const buildApp = () => {
   const app: Express = express();
