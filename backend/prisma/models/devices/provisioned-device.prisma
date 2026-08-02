@@ -47,7 +47,7 @@ model ProvisionedDevice {
 
     status                  ProvisionedDeviceStatus         @default(AVAILABLE)
 
-    claimedAt               DateTime
+    claimedAt               DateTime?
 
     createdAt               DateTime                        @default(now())
     updatedAt               DateTime                        @updatedAt

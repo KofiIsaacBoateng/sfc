@@ -71,7 +71,7 @@ export class Wallet {
     return this.props.status === WalletStatus.ACTIVE;
   }
 
-  activate(): WalletProps {
+  activate(): Wallet {
     return new Wallet({
       ...this.props,
       status: WalletStatus.ACTIVE,
@@ -79,7 +79,7 @@ export class Wallet {
     });
   }
 
-  lock(): WalletProps {
+  lock(): Wallet {
     return new Wallet({
       ...this.props,
       status: WalletStatus.LOCKED,
@@ -87,7 +87,7 @@ export class Wallet {
     });
   }
 
-  close(): WalletProps {
+  close(): Wallet {
     return new Wallet({
       ...this.props,
       status: WalletStatus.CLOSED,
