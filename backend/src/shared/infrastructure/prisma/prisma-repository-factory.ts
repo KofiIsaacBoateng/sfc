@@ -10,6 +10,8 @@ export class PrismaRepositoryFactory {
       users: new PrismaUserRepository(prisma),
       wallets: new PrismaWalletRepository(prisma),
       ledger: new PrismaLedgerAccountRepository(prisma),
+      device: new PrismaDeviceRepository(prisma),
+      provisionedDevice: new PrismaProvisionedRepository(prisma),
     };
   }
 }
