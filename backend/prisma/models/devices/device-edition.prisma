@@ -1,0 +1,20 @@
+model DeviceEdition {
+    id                  String                  @id @default(cuid())
+
+    code                String                  @unique
+    name                String
+
+    description         String?
+
+    isLimited           Boolean                 @default(false)
+
+    maxDevices          Int?
+
+    createdAt           DateTime                @default(now())
+    updatedAt           DateTime                @updatedAt
+
+    provisionedDevices  ProvisionedDevice[]
+
+
+    @@map("device_editions")  
+}
