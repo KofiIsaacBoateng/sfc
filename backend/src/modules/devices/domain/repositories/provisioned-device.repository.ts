@@ -4,9 +4,23 @@ export interface ProvisionedDeviceRepository {
   /**
    * Retrieved provisioned sfc device by activation code
    * @param hash
-   * Returns null if device isn't from our inventory
+   * Returns null if device doesn't exist our inventory
    */
   findByActivationCodeHash(hash: string): Promise<ProvisionedDevice | null>;
+
+  /**
+   * Find provisioned sfc device by serial number
+   * @param serialNumber
+   * Returns null if device doesn't exist in our inventory
+   */
+  findBySerialNumber(serialNumber: string): Promise<ProvisionedDevice | null>;
+
+  /**
+   * Persist created provisioned sfc device
+   * @param device
+   * Returns an updated device entity
+   */
+  create(device: ProvisionedDevice): Promise<ProvisionedDevice>;
 
   /**
    * Updates provisioned device in our inventory

@@ -13,12 +13,28 @@ export interface DeviceRepository {
    * @param tagUid
    * Returns a new device
    */
-  findByTagUid(tagUid: string): Promise<SfcDevice>;
+  findByTagUid(tagUid: string): Promise<SfcDevice | null>;
 
   /**
    * Finds a device by the userId
    * @param userId
    * Returns a new device
    */
-  findByUserId(userId: string): Promise<SfcDevice>;
+  findByUserId(userId: string): Promise<SfcDevice[]>;
+
+  /**
+   * Persists changes made to a device
+   * @param device
+   * Returns a device
+   */
+  update(device: SfcDevice): Promise<SfcDevice>;
+
+  /**
+   * Finds a device by the provisioned id
+   * @param provisionedDeviceId
+   * Returns a device
+   */
+  findByProvisionedDeviceId(
+    provisionedDeviceId: string,
+  ): Promise<SfcDevice | null>;
 }

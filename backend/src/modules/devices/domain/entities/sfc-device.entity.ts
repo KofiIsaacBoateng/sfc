@@ -19,7 +19,7 @@ export interface SfcDeviceProps {
 }
 
 export class SfcDevice {
-  private constructor(private readonly props: SfcDeviceProps) {}
+  private constructor(private props: SfcDeviceProps) {}
 
   static create(input: {
     userId: string;
@@ -40,20 +40,29 @@ export class SfcDevice {
     return new SfcDevice(input);
   }
 
-  markAsSeen(): SfcDevice {
-    return new SfcDevice({
-      ...this.props,
-      lastSeenAt: new Date(),
-      updatedAt: new Date(),
-    });
+  markAsSeen() {
+    this.props.lastSeenAt = new Date();
+    this.props.updatedAt = new Date();
   }
 
-  block(): SfcDevice {
-    return new SfcDevice({
-      ...this.props,
-      status: DeviceStatus.BLOCKED,
-      updatedAt: new Date(),
-    });
+  block() {
+    this.props.status = DeviceStatus.BLOCKED;
+    this.props.updatedAt = new Date();
+  }
+
+  activate() {
+    this.props.status = DeviceStatus.ACTIVE;
+    this.props.updatedAt = new Date();
+  }
+
+  markLost() {
+    this.props.status = DeviceStatus.LOST;
+    this.props.updatedAt = new Date();
+  }
+
+  revoke() {
+    this.props.status = DeviceStatus.REVOKED;
+    this.props.updatedAt = new Date();
   }
 
   get id(): string {

@@ -12,7 +12,7 @@ interface DeviceEditionProps {
 }
 
 export class DeviceEdition {
-  private constructor(private readonly props: DeviceEditionProps) {}
+  private constructor(private props: DeviceEditionProps) {}
 
   static create(input: {
     code: string;

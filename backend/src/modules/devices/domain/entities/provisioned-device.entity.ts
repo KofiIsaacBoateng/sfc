@@ -58,18 +58,29 @@ export class ProvisionedDevice {
     return new ProvisionedDevice(input);
   }
 
-  claim = () => {
-    if (this.props.status === "AVAILABLE") {
+  claim() {
+    if (!this.isAvailable()) {
       throw new BadRequestError(undefined, "Device cannot be claimed");
     }
 
-    return new ProvisionedDevice({
-      ...this.props,
-      status: ProvisionedDeviceStatus.AVAILABLE,
-      claimedAt: new Date(),
-      updatedAt: new Date(),
-    });
-  };
+    this.props.status = ProvisionedDeviceStatus.AVAILABLE;
+    this.props.claimedAt = new Date();
+    this.props.updatedAt = new Date();
+  }
+
+  isAvailable(): boolean {
+    return this.props.status === ProvisionedDeviceStatus.AVAILABLE;
+  }
+
+  revoke() {
+    this.props.status = ProvisionedDeviceStatus.REVOKED;
+    this.props.updatedAt = new Date();
+  }
+
+  retire() {
+    this.props.status = ProvisionedDeviceStatus.RETIRED;
+    this.props.updatedAt = new Date();
+  }
 
   get id(): string {
     return this.props.id;
