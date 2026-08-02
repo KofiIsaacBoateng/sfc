@@ -13,6 +13,9 @@ const envSchema = z.object({
   JWT_REFRESH_SECRET: z
     .string()
     .min(5, { error: "Please make sure jwt_s is at least 5 characters!" }),
+  ACTIVATION_CODE_SECRET: z.string().min(5, {
+    error: "Please make sure activation_code_secret is at least 5 characters!",
+  }),
 });
 
 // parse process.env against schema

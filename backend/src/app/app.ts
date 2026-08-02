@@ -5,15 +5,10 @@ import { notFoundHandler } from "../shared/presentation/middleware/not-found.mid
 import { globalErrorHandler } from "../shared/presentation/middleware/error.middleware.js";
 import { httpLogger } from "../shared/logger/httpLogger.js";
 import { setupSwagger } from "../docs/swagger.js";
-import { buildAuthRoutes } from "../modules/auth/presentation/routes/auth.route.js";
-import { buildUserRoutes } from "../modules/users/presentation/routes/user.route.js";
-import {
-  authController,
-  getMyWalletController,
-  usersController,
-} from "./container.js";
-import env from "../shared/config/env.js";
-import { buildWalletRoutes } from "@/modules/wallets/presentation/routes/wallet.routes.js";
+import { deviceRoutes } from "@/modules/devices/container.js";
+import { walletRoutes } from "@/modules/wallets/container.js";
+import { authRoutes } from "@/modules/auth/container.js";
+import { userRoutes } from "@/modules/users/container.js";
 
 export const buildApp = () => {
   const app: Express = express();
@@ -40,15 +35,10 @@ export const buildApp = () => {
   });
 
   // app routes
-  app.use("/api/v1/auth", buildAuthRoutes(authController));
-  app.use(
-    "/api/v1/users",
-    buildUserRoutes(usersController, env.JWT_ACCESS_SECRET),
-  );
-  app.use(
-    "/api/v1/wallet",
-    buildWalletRoutes(getMyWalletController, env.JWT_ACCESS_SECRET),
-  );
+  app.use("/api/v1/auth", authRoutes);
+  app.use("/api/v1/users", userRoutes);
+  app.use("/api/v1/wallet", walletRoutes);
+  app.use("/api/v1/devices", deviceRoutes);
 
   // Route not found Catchment Layer
   app.use(notFoundHandler);
