@@ -1,6 +1,6 @@
 import type { LoginUseCase } from "@/modules/auth/application/use-cases/login.usecase.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AuthController } from "./auth.controller.js";
+import { AuthController } from "../presentation/controllers/auth.controller.js";
 import type { Request, Response } from "express";
 import BadRequestError from "@/shared/errors/bad-request.js";
 import {

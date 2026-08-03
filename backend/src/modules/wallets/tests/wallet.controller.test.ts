@@ -3,9 +3,9 @@ import {
   Currency,
   WalletStatus,
   Wallet,
-} from "../../domain/entities/wallet.entity.js";
-import { WalletController } from "./wallet.controller.js";
-import type { GetMyWalletUseCase } from "../../application/use-case/get-my-wallet.usecase.js";
+} from "@/modules/wallets/domain/entities/wallet.entity.js";
+import { WalletController } from "@/modules/wallets/presentation/controllers/wallet.controller.js";
+import type { GetMyWalletUseCase } from "@/modules/wallets/application/use-case/get-my-wallet.usecase.js";
 import type { Request, Response } from "express";
 import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
 

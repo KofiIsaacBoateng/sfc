@@ -45,7 +45,7 @@ export class RegisterDeviceUseCase {
         const existingDevice = await repos.device.findByTagUid(dto.tagUid);
 
         if (existingDevice) {
-          throw new ConflictError(undefined, "Tag is already registered.");
+          throw new ConflictError(undefined, "Device is already registered.");
         }
 
         const device = SfcDevice.create({
@@ -56,15 +56,15 @@ export class RegisterDeviceUseCase {
 
         provisionedDevice.claim();
 
-        await repos.device.create(device);
+        const results = await repos.device.create(device);
         await repos.provisionedDevice.update(provisionedDevice);
 
         return {
-          id: device.id,
-          tagUid: device.tagUid,
-          status: device.status,
-          createdAt: device.createdAt,
-          updatedAt: device.updatedAt,
+          id: results.id,
+          tagUid: results.tagUid,
+          status: results.status,
+          createdAt: results.createdAt,
+          updatedAt: results.updatedAt,
         };
       },
     );

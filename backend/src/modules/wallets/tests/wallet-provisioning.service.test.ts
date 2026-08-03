@@ -1,10 +1,13 @@
 import { describe, expect, vi, it } from "vitest";
-import { Currency, Wallet } from "../../domain/entities/wallet.entity.js";
+import {
+  Currency,
+  Wallet,
+} from "@/modules/wallets/domain/entities/wallet.entity.js";
 import {
   WalletProvisioningService,
   type WalletProvisioningRepositories,
-} from "./wallet-provisioning.service.js";
-import type { WalletRepository } from "../../domain/repositories/wallets.repository.js";
+} from "@/modules/wallets/application/services/wallet-provisioning.service.js";
+import type { WalletRepository } from "@/modules/wallets/domain/repositories/wallets.repository.js";
 import type { LedgerAccountRepository } from "@/modules/ledger/domain/repositories/ledger-account.repository.js";
 import { LedgerAccount } from "@/modules/ledger/domain/entities/ledger-account.entity.js";
 
@@ -15,6 +18,7 @@ describe("Wallet provisioning service", () => {
       id: "wallet-123",
       userId: wallet.userId,
       currency: Currency.GHS,
+      balanceMinor: 2500,
       status: wallet.status,
       createdAt: wallet.createdAt,
       updatedAt: wallet.updatedAt,

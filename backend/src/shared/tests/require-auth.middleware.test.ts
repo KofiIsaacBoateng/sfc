@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { requireAuth } from "./require-auth.middleware.js";
+import { requireAuth } from "../presentation/middleware/require-auth.middleware.js";
 import type { Request, Response, NextFunction } from "express";
 import {
   UserRole,

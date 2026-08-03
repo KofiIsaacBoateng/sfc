@@ -63,7 +63,7 @@ export class ProvisionedDevice {
       throw new BadRequestError(undefined, "Device cannot be claimed");
     }
 
-    this.props.status = ProvisionedDeviceStatus.AVAILABLE;
+    this.props.status = ProvisionedDeviceStatus.CLAIMED;
     this.props.claimedAt = new Date();
     this.props.updatedAt = new Date();
   }
