@@ -7,7 +7,7 @@ interface LedgerAccountProps {
 }
 
 export class LedgerAccount {
-  private constructor(private readonly props: LedgerAccountProps) {}
+  private constructor(private props: LedgerAccountProps) {}
 
   static create(walletId: string): LedgerAccount {
     return new LedgerAccount({

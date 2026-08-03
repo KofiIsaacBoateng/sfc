@@ -11,7 +11,7 @@ export class PrismaUnitOfWork implements UnitOfWork {
 
   execute<T>(work: (repos: Repositories) => Promise<T>): Promise<T> {
     return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const repos: Repositories = this.repositoryFactory.create(tx);
+      const repos = this.repositoryFactory.create(tx);
 
       return work(repos);
     });

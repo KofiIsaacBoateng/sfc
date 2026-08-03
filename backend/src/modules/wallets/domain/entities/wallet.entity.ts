@@ -21,7 +21,7 @@ interface WalletProps {
 }
 
 export class Wallet {
-  private constructor(private readonly props: WalletProps) {}
+  private constructor(private props: WalletProps) {}
 
   static create(userId: string, currency: Currency = Currency.GHS): Wallet {
     return new Wallet({
@@ -71,27 +71,18 @@ export class Wallet {
     return this.props.status === WalletStatus.ACTIVE;
   }
 
-  activate(): WalletProps {
-    return new Wallet({
-      ...this.props,
-      status: WalletStatus.ACTIVE,
-      updatedAt: new Date(),
-    });
+  activate() {
+    this.props.status = WalletStatus.ACTIVE;
+    this.props.updatedAt = new Date();
   }
 
-  lock(): WalletProps {
-    return new Wallet({
-      ...this.props,
-      status: WalletStatus.LOCKED,
-      updatedAt: new Date(),
-    });
+  lock() {
+    this.props.status = WalletStatus.LOCKED;
+    this.props.updatedAt = new Date();
   }
 
-  close(): WalletProps {
-    return new Wallet({
-      ...this.props,
-      status: WalletStatus.CLOSED,
-      updatedAt: new Date(),
-    });
+  close() {
+    this.props.status = WalletStatus.CLOSED;
+    this.props.updatedAt = new Date();
   }
 }

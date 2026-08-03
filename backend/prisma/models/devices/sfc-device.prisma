@@ -1,0 +1,35 @@
+// SFC devices identity
+
+enum DeviceStatus {
+
+  ACTIVE
+
+  BLOCKED
+
+  LOST
+
+  REVOKED
+
+}
+
+model SfcDevice {
+  id                            String                @id @unique @default(uuid())
+
+  userId                        String
+  provisionedDeviceId           String                @unique
+
+  tagUid                        String                @unique
+
+  status                        DeviceStatus       @default(ACTIVE)
+
+  lastSeenAt                    DateTime?
+
+  createdAt                     DateTime              @default(now())
+  updatedAt                     DateTime              @updatedAt
+
+  user                          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provisionedDevice             ProvisionedDevice     @relation(fields: [provisionedDeviceId], references: [id])
+
+  @@index([userId])
+  @@map("sfc_devices")
+}
