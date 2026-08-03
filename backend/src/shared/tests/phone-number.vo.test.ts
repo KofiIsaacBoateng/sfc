@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PhoneNumber } from "./phone-number.vo.js";
+import { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
 
 describe("PhoneNumber Value Object", () => {
   it("should create a valid Ghana phone number.", () => {

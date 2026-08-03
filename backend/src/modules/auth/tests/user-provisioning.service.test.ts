@@ -7,13 +7,13 @@ import type { WalletProvisioningService } from "@/modules/wallets/application/se
 import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.js";
 import { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
 import { describe, expect, it, vi } from "vitest";
-import { UserProvisioningService } from "./user-provisioning.service.js";
 import {
   Currency,
   Wallet,
   WalletStatus,
 } from "@/modules/wallets/domain/entities/wallet.entity.js";
 import type { Repositories } from "@/shared/application/unit-of-work/repositories.js";
+import { UserProvisioningService } from "../application/services/user-provisioning.service.js";
 
 describe("UserProvisioningService", () => {
   it("should return existing user if user exists", async () => {
@@ -74,6 +74,7 @@ describe("UserProvisioningService", () => {
       id: "wallet-123",
       userId: "user-123",
       status: WalletStatus.ACTIVE,
+      balanceMinor: 2500,
       currency: Currency.GHS,
       updatedAt: new Date("2026-07-29T10:00:00.000Z"),
       createdAt: new Date("2026-07-29T10:00:00.000Z"),

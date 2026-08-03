@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { FirebaseAuthProvider } from "../ports/firebase-auth.provider.js";
-import type { JwtService } from "../ports/jwt.service.js";
-import type { UserProvisioningService } from "../services/user-provisioning.service.js";
-import { LoginUseCase } from "./login.usecase.js";
 import {
   User,
   UserRole,
   UserStatus,
 } from "@/modules/users/domain/entities/user.entity.js";
 import { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
+import type { FirebaseAuthProvider } from "../application/ports/firebase-auth.provider.js";
+import type { JwtService } from "../application/ports/jwt.service.js";
+import type { UserProvisioningService } from "../application/services/user-provisioning.service.js";
+import { LoginUseCase } from "../application/use-cases/login.usecase.js";
 
 describe("Login use case", () => {
   let firebaseAuthProvider: FirebaseAuthProvider;

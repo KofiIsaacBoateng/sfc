@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { GetMyWalletUseCase } from "./get-my-wallet.usecase.js";
-import type { WalletRepository } from "../../domain/repositories/wallets.repository.js";
+import { GetMyWalletUseCase } from "@/modules/wallets/application/use-case/get-my-wallet.usecase.js";
+import type { WalletRepository } from "@/modules/wallets/domain/repositories/wallets.repository.js";
 import NotFoundError from "@/shared/errors/not-found.js";
 import {
   Currency,
   Wallet,
   WalletStatus,
-} from "../../domain/entities/wallet.entity.js";
+} from "@/modules/wallets/domain/entities/wallet.entity.js";
 
 describe("Get My Wallet Usecase", () => {
   it("should throw NotFoundError when wallet doesn't exist", async () => {
