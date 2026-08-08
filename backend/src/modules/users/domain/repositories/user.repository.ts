@@ -1,3 +1,4 @@
+import type { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
 import { User } from "../entities/user.entity.js";
 
 export interface UserRepository {
@@ -14,6 +15,13 @@ export interface UserRepository {
    * Useful for authenticated requests.
    */
   findById(id: string): Promise<User | null>;
+
+  /**
+   * Finds a a user by their unique ID
+   * @param phoneNumber
+   * Returns null if no user exists
+   */
+  findByPhoneNumber(phoneNumber: PhoneNumber): Promise<User | null>;
 
   /**
    * Persists a new user.

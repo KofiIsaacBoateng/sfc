@@ -9,6 +9,7 @@ import { deviceRoutes } from "@/modules/devices/container.js";
 import { walletRoutes } from "@/modules/wallets/container.js";
 import { authRoutes } from "@/modules/auth/container.js";
 import { userRoutes } from "@/modules/users/container.js";
+import { recipientRoutes } from "@/modules/transfers/container.js";
 
 export const buildApp = () => {
   const app: Express = express();
@@ -39,6 +40,7 @@ export const buildApp = () => {
   app.use("/api/v1/users", userRoutes);
   app.use("/api/v1/wallet", walletRoutes);
   app.use("/api/v1/devices", deviceRoutes);
+  app.use("/api/v1/transfers", recipientRoutes);
 
   // Route not found Catchment Layer
   app.use(notFoundHandler);

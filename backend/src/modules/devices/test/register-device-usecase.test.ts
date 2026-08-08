@@ -22,6 +22,7 @@ import type {
   RegisterDeviceResponseDto,
 } from "../applications/dtos/register-device.dto.js";
 
+/*** TEST BEGINS */
 describe("Rigister Device Usecase", () => {
   let activationCodeHasher: ActivationCodeHasher;
   let unitOfWork: UnitOfWork;

@@ -15,6 +15,7 @@ interface CreateUserProps {
   id: string;
   firebaseUid: string;
   phoneNumber: PhoneNumber;
+  displayName: string;
   role: UserRole;
   status: UserStatus;
   createdAt: Date;
@@ -24,6 +25,7 @@ interface CreateUserProps {
 interface RegisterUserProps {
   firebaseUid: string;
   phoneNumber: PhoneNumber;
+  displayName: string;
   role: UserRole;
 }
 
@@ -35,6 +37,7 @@ export class User {
       id: crypto.randomUUID(),
       firebaseUid: props.firebaseUid,
       phoneNumber: props.phoneNumber,
+      displayName: props.displayName,
       role: props.role,
       status: UserStatus.ACTIVE,
       createdAt: new Date(),
@@ -56,6 +59,10 @@ export class User {
 
   get phoneNumber(): PhoneNumber {
     return this.props.phoneNumber;
+  }
+
+  get displayName(): string {
+    return this.props.displayName;
   }
 
   get role(): UserRole {

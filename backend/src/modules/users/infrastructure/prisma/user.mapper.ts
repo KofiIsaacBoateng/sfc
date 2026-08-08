@@ -12,6 +12,7 @@ export class UserMapper {
       id: raw.id,
       firebaseUid: raw.firebaseUid,
       phoneNumber: PhoneNumber.restore(raw.phoneNumber),
+      displayName: raw.displayName ?? "",
       status: raw.status as UserStatus,
       role: raw.role as UserRole,
       createdAt: raw.createdAt,
@@ -23,6 +24,7 @@ export class UserMapper {
     return {
       id: user.id,
       firebaseUid: user.firebaseUid,
+      displayName: user.displayName,
       phoneNumber: user.phoneNumber.value,
       status: user.status,
       role: user.role,
