@@ -3,6 +3,7 @@ import type { LedgerAccountRepository } from "@/modules/ledger/domain/repositori
 import type { WalletRepository } from "@/modules/wallets/domain/repositories/wallets.repository.js";
 import type { DeviceRepository } from "@/modules/devices/domain/repositories/device.repository.js";
 import type { ProvisionedDeviceRepository } from "@/modules/devices/domain/repositories/provisioned-device.repository.js";
+import type { TransferRepository } from "@/modules/transfers/domain/repositories/transfer.repository.js";
 
 export interface Repositories {
   users: UserRepository;
@@ -10,4 +11,5 @@ export interface Repositories {
   ledger: LedgerAccountRepository;
   device: DeviceRepository;
   provisionedDevice: ProvisionedDeviceRepository;
+  transfers: TransferRepository;
 }
