@@ -4,6 +4,9 @@ const ErrorCode = {
   USER_NOT_FOUND: "USER_NOT_FOUND",
   WALLET_NOT_FOUND: "WALLET_NOT_FOUND",
   WALLET_LOCKED: "WALLET_LOCKED",
+  WALLET_IS_INACTIVE: "WALLET_IS_INACTIVE",
+  DEBIT_FAILED: "DEBIT_FAILED",
+  CREDIT_FAILED: "CREDIT_FAILED",
   DEVICE_NOT_FOUND: "DEVICE_NOT_FOUND", // Device is absent from sfc registry
   DEVICE_IS_ACTIVE: "DEVICE_IS_ACTIVE", // Device is linked to an account
   DEVICE_IS_INACTIVE: "DEVICE_IS_INACTIVE", // Device is sfc registered, but not claimed

@@ -4,8 +4,12 @@ import type {
   PrismaClient,
 } from "@/generated/client/client.js";
 import type { WalletRepository } from "../../domain/repositories/wallets.repository.js";
-import type { Wallet } from "../../domain/entities/wallet.entity.js";
+import {
+  WalletStatus,
+  type Wallet,
+} from "../../domain/entities/wallet.entity.js";
 import { WalletMapper } from "./wallet.mapper.js";
+import BadRequestError from "@/shared/errors/bad-request.js";
 
 type PrismaExecuter = Prisma.TransactionClient | PrismaClient;
 
@@ -43,5 +47,51 @@ export class PrismaWalletRepository implements WalletRepository {
     });
 
     return WalletMapper.toDomain(updated);
+  }
+
+  async debit(walletId: string, amountMinor: number): Promise<void> {
+    const result = await this.prisma.wallet.updateMany({
+      where: {
+        id: walletId,
+        status: WalletStatus.ACTIVE,
+        balanceMinor: {
+          gte: amountMinor,
+        },
+      },
+      data: {
+        balanceMinor: {
+          decrement: amountMinor,
+        },
+      },
+    });
+
+    if (result.count !== 1) {
+      throw new BadRequestError(
+        "DEBIT_FAILED",
+        "Insufficient funds or wallet is unavailable!",
+      );
+    }
+  }
+
+  async credit(walletId: string, amountMinor: number): Promise<void> {
+    const result = await this.prisma.wallet.updateMany({
+      where: {
+        id: walletId,
+        status: WalletStatus.ACTIVE,
+      },
+
+      data: {
+        balanceMinor: {
+          increment: amountMinor,
+        },
+      },
+    });
+
+    if (result.count !== 1) {
+      throw new BadRequestError(
+        "CREDIT_FAILED",
+        "Recipient wallet unavailable!",
+      );
+    }
   }
 }
