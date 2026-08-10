@@ -1,8 +1,4 @@
-import type {
-  Wallet as PrismaWallet,
-  Prisma,
-  PrismaClient,
-} from "@/generated/client/client.js";
+import type { Wallet as PrismaWallet } from "@/generated/client/client.js";
 import type { WalletRepository } from "../../domain/repositories/wallets.repository.js";
 import {
   WalletStatus,
@@ -10,8 +6,7 @@ import {
 } from "../../domain/entities/wallet.entity.js";
 import { WalletMapper } from "./wallet.mapper.js";
 import BadRequestError from "@/shared/errors/bad-request.js";
-
-type PrismaExecuter = Prisma.TransactionClient | PrismaClient;
+import type { PrismaExecuter } from "@/shared/infrastructure/prisma/prisma-executor.js";
 
 export class PrismaWalletRepository implements WalletRepository {
   constructor(private readonly prisma: PrismaExecuter) {}
@@ -49,7 +44,14 @@ export class PrismaWalletRepository implements WalletRepository {
     return WalletMapper.toDomain(updated);
   }
 
-  async debit(walletId: string, amountMinor: number): Promise<void> {
+  async debit(walletId: string, amountMinor: bigint): Promise<void> {
+    if (amountMinor <= 0n) {
+      throw new BadRequestError(
+        "INVALID_AMOUNT",
+        "Debit amount must be greater than zero.",
+      );
+    }
+
     const result = await this.prisma.wallet.updateMany({
       where: {
         id: walletId,
@@ -73,7 +75,14 @@ export class PrismaWalletRepository implements WalletRepository {
     }
   }
 
-  async credit(walletId: string, amountMinor: number): Promise<void> {
+  async credit(walletId: string, amountMinor: bigint): Promise<void> {
+    if (amountMinor <= 0n) {
+      throw new BadRequestError(
+        "INVALID_AMOUNT",
+        "Credit amount must be greater than zero.",
+      );
+    }
+
     const result = await this.prisma.wallet.updateMany({
       where: {
         id: walletId,

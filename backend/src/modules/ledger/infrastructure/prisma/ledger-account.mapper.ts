@@ -1,7 +1,4 @@
-import type {
-  LedgerAccount as PrismaLedgerAccount,
-  Prisma,
-} from "@/generated/client/client.js";
+import type { LedgerAccount as PrismaLedgerAccount } from "@/generated/client/client.js";
 import { LedgerAccount } from "../../domain/entities/ledger-account.entity.js";
 
 export class LedgerAccountMapper {
@@ -13,12 +10,11 @@ export class LedgerAccountMapper {
     });
   }
 
-  static toPersistence(
-    ledgerAccount: LedgerAccount,
-  ): Prisma.LedgerAccountUncheckedCreateInput {
+  static toPersistence(ledgerAccount: LedgerAccount): PrismaLedgerAccount {
     return {
       id: ledgerAccount.id,
       walletId: ledgerAccount.walletId,
+      createdAt: ledgerAccount.createdAt,
     };
   }
 }

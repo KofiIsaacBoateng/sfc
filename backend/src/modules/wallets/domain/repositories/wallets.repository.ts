@@ -32,12 +32,12 @@ export interface WalletRepository {
    * @param walletId
    * @param amountMinor
    */
-  debit(walletId: string, amountMinor: number): Promise<void>;
+  debit(walletId: string, amountMinor: bigint): Promise<void>;
 
   /**
    * Persists credit operation to wallet balance minor
    * @param walletId
    * @param amountMinor
    */
-  credit(walletId: string, amountMinor: number): Promise<void>;
+  credit(walletId: string, amountMinor: bigint): Promise<void>;
 }
