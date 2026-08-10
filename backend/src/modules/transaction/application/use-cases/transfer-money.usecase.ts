@@ -56,6 +56,20 @@ export class TransferMoneyUseCase {
           );
         }
 
+        /** verify that wallets are active */
+        if (!senderWallet.isActive()) {
+          throw new BadRequestError(
+            "WALLET_IS_INACTIVE",
+            "Sender wallet is inactive.",
+          );
+        }
+        if (!recipientWallet.isActive()) {
+          throw new BadRequestError(
+            "WALLET_IS_INACTIVE",
+            "Recipient wallet is inactive.",
+          );
+        }
+
         /*** check for currency mismatch */
         if (senderWallet.currency !== dto.currency) {
           throw new BadRequestError(
