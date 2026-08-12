@@ -23,7 +23,7 @@ export class TransferMoneyUseCase {
     if (amount <= 0) {
       throw new BadRequestError(
         "INVALID_AMOUNT",
-        "Transfer amount must be greater than zero",
+        "Transfer amount must be greater than zero.",
       );
     }
     return this.unitOfWork.execute(
@@ -119,7 +119,7 @@ export class TransferMoneyUseCase {
         });
         await repos.transaction.create(transaction);
 
-        /** create sender ledger entry */
+        /** create sender debit ledger entry */
         await repos.ledgerEntries.create({
           transactionId: transaction.id,
 
@@ -130,7 +130,7 @@ export class TransferMoneyUseCase {
           amount,
         });
 
-        /** create recipient ledger entry */
+        /** create recipient credit ledger entry */
         await repos.ledgerEntries.create({
           transactionId: transaction.id,
 
