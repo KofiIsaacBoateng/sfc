@@ -18,7 +18,7 @@ describe("Wallet provisioning service", () => {
       id: "wallet-123",
       userId: wallet.userId,
       currency: Currency.GHS,
-      balanceMinor: 2500,
+      balanceMinor: 25_000n,
       status: wallet.status,
       createdAt: wallet.createdAt,
       updatedAt: wallet.updatedAt,

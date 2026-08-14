@@ -5,15 +5,19 @@ import { PrismaWalletRepository } from "@/modules/wallets/infrastructure/prisma/
 import { PrismaLedgerAccountRepository } from "@/modules/ledger/infrastructure/prisma/prisma-ledger-account.repository.js";
 import { PrismaDeviceRepository } from "@/modules/devices/infrastructure/prisma/prisma-device.repository.js";
 import { PrismaProvisionedDeviceRepository } from "@/modules/devices/infrastructure/prisma/prisma-provisioned-device.repository.js";
+import { PrismaLedgerEntryRepository } from "@/modules/ledger/infrastructure/prisma/prisma-ledger-entry.repository.js";
+import { PrismaTransactionRepository } from "@/modules/transaction/infrastructure/prisma/prisma-transaction.repository.js";
 
 export class PrismaRepositoryFactory {
-  create(prisma: PrismaExecuter): Repositories {
+  create(tx: PrismaExecuter): Repositories {
     return {
-      users: new PrismaUserRepository(prisma),
-      wallets: new PrismaWalletRepository(prisma),
-      ledger: new PrismaLedgerAccountRepository(prisma),
-      device: new PrismaDeviceRepository(prisma),
-      provisionedDevice: new PrismaProvisionedDeviceRepository(prisma),
+      users: new PrismaUserRepository(tx),
+      wallets: new PrismaWalletRepository(tx),
+      ledger: new PrismaLedgerAccountRepository(tx),
+      ledgerEntries: new PrismaLedgerEntryRepository(tx),
+      transaction: new PrismaTransactionRepository(tx),
+      device: new PrismaDeviceRepository(tx),
+      provisionedDevice: new PrismaProvisionedDeviceRepository(tx),
     };
   }
 }

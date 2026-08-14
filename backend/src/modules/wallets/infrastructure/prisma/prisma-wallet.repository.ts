@@ -1,13 +1,12 @@
-import type {
-  Wallet as PrismaWallet,
-  Prisma,
-  PrismaClient,
-} from "@/generated/client/client.js";
+import type { Wallet as PrismaWallet } from "@/generated/client/client.js";
 import type { WalletRepository } from "../../domain/repositories/wallets.repository.js";
-import type { Wallet } from "../../domain/entities/wallet.entity.js";
+import {
+  WalletStatus,
+  type Wallet,
+} from "../../domain/entities/wallet.entity.js";
 import { WalletMapper } from "./wallet.mapper.js";
-
-type PrismaExecuter = Prisma.TransactionClient | PrismaClient;
+import BadRequestError from "@/shared/errors/bad-request.js";
+import type { PrismaExecuter } from "@/shared/infrastructure/prisma/prisma-executor.js";
 
 export class PrismaWalletRepository implements WalletRepository {
   constructor(private readonly prisma: PrismaExecuter) {}
@@ -43,5 +42,65 @@ export class PrismaWalletRepository implements WalletRepository {
     });
 
     return WalletMapper.toDomain(updated);
+  }
+
+  async debit(walletId: string, amountMinor: bigint): Promise<void> {
+    if (amountMinor <= 0n) {
+      throw new BadRequestError(
+        "INVALID_AMOUNT",
+        "Debit amount must be greater than zero.",
+      );
+    }
+
+    const result = await this.prisma.wallet.updateMany({
+      where: {
+        id: walletId,
+        status: WalletStatus.ACTIVE,
+        balanceMinor: {
+          gte: amountMinor,
+        },
+      },
+      data: {
+        balanceMinor: {
+          decrement: amountMinor,
+        },
+      },
+    });
+
+    if (result.count !== 1) {
+      throw new BadRequestError(
+        "DEBIT_FAILED",
+        "Insufficient funds or wallet unavailable.",
+      );
+    }
+  }
+
+  async credit(walletId: string, amountMinor: bigint): Promise<void> {
+    if (amountMinor <= 0n) {
+      throw new BadRequestError(
+        "INVALID_AMOUNT",
+        "Credit amount must be greater than zero.",
+      );
+    }
+
+    const result = await this.prisma.wallet.updateMany({
+      where: {
+        id: walletId,
+        status: WalletStatus.ACTIVE,
+      },
+
+      data: {
+        balanceMinor: {
+          increment: amountMinor,
+        },
+      },
+    });
+
+    if (result.count !== 1) {
+      throw new BadRequestError(
+        "CREDIT_FAILED",
+        "Recipient wallet unavailable!",
+      );
+    }
   }
 }

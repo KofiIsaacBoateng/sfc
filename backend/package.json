@@ -9,8 +9,13 @@
     "build": "tsc",
     "start": "node --env-file .env dist/index.js",
     "prisma:migrate": "npx prisma migrate dev",
+    "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
-    "test": "vitest run",
+    "test": "cross-env NODE_ENV=test vitest run",
+    "test:integration": "cross-env NODE_ENV=test vitest run integration.test",
+    "test:migrate": "cross-env NODE_ENV=test npx prisma migrate dev",
+    "test:generate": "cross-env NODE_ENV=test npx prisma generate",
+    "test:studio": "cross-env NODE_ENV=test npx prisma studio",
     "test:watch": "vitest"
   },
   "dependencies": {
@@ -38,10 +43,18 @@
     "@types/supertest": "^7.2.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "cross-env": "^10.1.0",
     "prisma": "^7.8.0",
     "supertest": "^7.2.2",
     "tsx": "^4.22.4",
     "typescript": "^5.4.3",
     "vitest": "^4.1.10"
+  },
+  "allowScripts": {
+    "@prisma/engines@7.9.0": true,
+    "@scarf/scarf@1.4.0": true,
+    "esbuild@0.28.1": true,
+    "prisma@7.9.0": true,
+    "protobufjs@7.6.5": true
   }
 }

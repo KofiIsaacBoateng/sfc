@@ -1,3 +1,4 @@
+import BadRequestError from "@/shared/errors/bad-request.js";
 import { randomUUID } from "crypto";
 
 export enum WalletStatus {
@@ -14,7 +15,7 @@ interface WalletProps {
   id: string;
   userId: string;
   status: WalletStatus;
-  balanceMinor: number;
+  balanceMinor: bigint;
   currency: Currency;
   updatedAt: Date;
   createdAt: Date;
@@ -29,7 +30,7 @@ export class Wallet {
       userId,
       currency,
       status: WalletStatus.ACTIVE,
-      balanceMinor: 0,
+      balanceMinor: 0n,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -37,6 +38,42 @@ export class Wallet {
 
   static restore(props: WalletProps): Wallet {
     return new Wallet(props);
+  }
+
+  debit(amountMinor: number) {
+    if (amountMinor <= 0n) {
+      throw new BadRequestError(
+        "INVALID_AMOUNT",
+        "Debit amount must be greater than zero.",
+      );
+    }
+
+    if (!this.isActive()) {
+      throw new BadRequestError("WALLET_IS_INACTIVE", "Wallet must be active.");
+    }
+
+    if (this.props.balanceMinor < amountMinor) {
+      throw new BadRequestError("INSUFFICIENT_FUNDS", "Insufficient funds!");
+    }
+
+    this.props.balanceMinor -= BigInt(amountMinor);
+    this.props.updatedAt = new Date();
+  }
+
+  credit(amountMinor: number) {
+    if (amountMinor <= 0n) {
+      throw new BadRequestError(
+        "INVALID_AMOUNT",
+        "Credit amount must be greater than zero.",
+      );
+    }
+
+    if (!this.isActive()) {
+      throw new BadRequestError("WALLET_IS_INACTIVE", "Wallet must be active.");
+    }
+
+    this.props.balanceMinor += BigInt(amountMinor);
+    this.props.updatedAt = new Date();
   }
 
   get id(): string {
@@ -51,7 +88,7 @@ export class Wallet {
     return this.props.currency;
   }
 
-  get balanceMinor(): number {
+  get balanceMinor(): bigint {
     return this.props.balanceMinor;
   }
 

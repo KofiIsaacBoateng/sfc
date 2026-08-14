@@ -26,4 +26,18 @@ export interface WalletRepository {
    * @param wallet
    */
   update(wallet: Wallet): Promise<Wallet>;
+
+  /**
+   * Persists debit operation to wallet balance minor
+   * @param walletId
+   * @param amountMinor
+   */
+  debit(walletId: string, amountMinor: bigint): Promise<void>;
+
+  /**
+   * Persists credit operation to wallet balance minor
+   * @param walletId
+   * @param amountMinor
+   */
+  credit(walletId: string, amountMinor: bigint): Promise<void>;
 }

@@ -28,6 +28,7 @@ model User {
   
   status          AccountStatus
   role            Role
+  displayName     String?
 
   profile         Profile?
   business        BusinessProfile?

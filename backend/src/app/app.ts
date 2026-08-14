@@ -9,6 +9,10 @@ import { deviceRoutes } from "@/modules/devices/container.js";
 import { walletRoutes } from "@/modules/wallets/container.js";
 import { authRoutes } from "@/modules/auth/container.js";
 import { userRoutes } from "@/modules/users/container.js";
+import {
+  recipientRoutes,
+  transactionRoutes,
+} from "@/modules/transaction/container.js";
 
 export const buildApp = () => {
   const app: Express = express();
@@ -39,6 +43,9 @@ export const buildApp = () => {
   app.use("/api/v1/users", userRoutes);
   app.use("/api/v1/wallet", walletRoutes);
   app.use("/api/v1/devices", deviceRoutes);
+  /** app routes - money zone */
+  app.use("/api/v1/transfers", recipientRoutes);
+  app.use("/api/v1/transactions", transactionRoutes);
 
   // Route not found Catchment Layer
   app.use(notFoundHandler);

@@ -6,6 +6,7 @@ import type {
 import type { UserRepository } from "../../domain/repositories/user.repository.js";
 import { User } from "../../domain/entities/user.entity.js";
 import { UserMapper } from "./user.mapper.js";
+import type { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
 
 type PrismaExecuter = PrismaClient | Prisma.TransactionClient;
 
@@ -24,6 +25,14 @@ export class PrismaUserRepository implements UserRepository {
 
   async findById(id: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({ where: { id } });
+
+    return this.toDomainOrNull(user);
+  }
+
+  async findByPhoneNumber(phoneNumber: PhoneNumber): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { phoneNumber: phoneNumber.value },
+    });
 
     return this.toDomainOrNull(user);
   }

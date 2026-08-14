@@ -15,6 +15,7 @@ export class WalletMapper {
       userId: raw.userId,
       status: raw.status as WalletStatus,
       currency: raw.currency as Currency,
+      balanceMinor: raw.balanceMinor,
       updatedAt: raw.updatedAt,
       createdAt: raw.createdAt,
     });
@@ -26,6 +27,7 @@ export class WalletMapper {
       userId: wallet.userId,
       status: wallet.status,
       currency: wallet.currency,
+      balanceMinor: wallet.balanceMinor,
     };
   }
 }
