@@ -7,3 +7,14 @@ export interface TransferMoneyDto {
 
   currency: Currency;
 }
+
+export interface TransferResponseDto {
+  transactionId: string;
+  reference: string;
+  status: string;
+  type: string;
+  amount: string;
+  currency: Currency;
+  initiatedBy: string;
+  createdAt: string;
+}
