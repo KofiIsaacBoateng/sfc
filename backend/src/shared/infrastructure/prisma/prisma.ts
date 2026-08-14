@@ -1,8 +1,13 @@
 import pg from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../../generated/client/client.js";
+// import env from "@/shared/config/env.js";
+import "dotenv/config";
 
-const connectionString = process.env["DATABASE_URL"];
+const connectionString =
+  process.env["NODE_ENV"] === "test"
+    ? process.env["DATABASE_URL_TEST"]
+    : process.env["DATABASE_URL"];
 
 if (!connectionString) {
   throw new Error(

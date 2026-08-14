@@ -3,6 +3,7 @@ import { logger } from "../logger/logger.js";
 
 const envSchema = z.object({
   DATABASE_URL: z.url(),
+  DATABASE_URL_TEST: z.url(),
   PORT: z.coerce.number().min(1000),
   NODE_ENV: z
     .enum(["development", "test", "production"])
