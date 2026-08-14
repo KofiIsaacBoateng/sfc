@@ -11,7 +11,7 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
-    "test:run": "cross-env NODE_ENV=test vitest run",
+    "test": "cross-env NODE_ENV=test vitest run",
     "test:migrate": "cross-env NODE_ENV=test npx prisma migrate dev",
     "test:generate": "cross-env NODE_ENV=test npx prisma generate",
     "test:studio": "cross-env NODE_ENV=test npx prisma studio",

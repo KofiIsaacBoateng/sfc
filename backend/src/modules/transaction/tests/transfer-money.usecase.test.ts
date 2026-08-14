@@ -18,6 +18,7 @@ import { TransferMoneyUseCase } from "../application/use-cases/transfer-money.us
 import { TransactionType } from "../domain/entities/transaction.entity.js";
 import { EntryType } from "@/generated/client/enums.js";
 import type { TransferMoneyDto } from "../application/dto/transfer-money.dto.js";
+import type { TransactionReferenceGenerator } from "../application/ports/transaction-reference-generator.js";
 
 describe("Transfer money usecase", () => {
   let senderUserId = "sender-id-123";
@@ -25,6 +26,7 @@ describe("Transfer money usecase", () => {
   let senderWalletId = "wallet-sender-123";
   let recipientWalletId = "wallet-recipient-123";
   let dto: TransferMoneyDto;
+  let referenceGenerator: TransactionReferenceGenerator;
 
   const amount = "5000";
 
@@ -131,6 +133,10 @@ describe("Transfer money usecase", () => {
       amount,
       currency: Currency.GHS,
     };
+
+    referenceGenerator = {
+      generate: vi.fn().mockReturnValue("SFC-TEST-REFERENCE"),
+    };
   });
 
   /** it should successfully transfer money */
@@ -140,7 +146,10 @@ describe("Transfer money usecase", () => {
     // prepare successful transfer
     prepareSuccessfulTransfer(mocks);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
 
     const transaction = await useCase.execute(senderUserId, dto);
 
@@ -149,6 +158,7 @@ describe("Transfer money usecase", () => {
     expect(transaction.amount).toBe(5_000n);
     expect(transaction.initiatedBy).toBe(senderUserId);
     expect(transaction.currency).toBe(Currency.GHS);
+    expect(referenceGenerator.generate).toHaveBeenCalledTimes(1);
   });
 
   /** it should debit the sender */
@@ -156,7 +166,10 @@ describe("Transfer money usecase", () => {
     const mocks = createMocks();
     prepareSuccessfulTransfer(mocks);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
     await useCase.execute(senderUserId, dto);
 
     expect(mocks.wallets.debit).toHaveBeenCalledWith(senderWalletId, 5_000n);
@@ -167,7 +180,10 @@ describe("Transfer money usecase", () => {
     const mocks = createMocks();
     prepareSuccessfulTransfer(mocks);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
     await useCase.execute(senderUserId, dto);
 
     expect(mocks.wallets.credit).toHaveBeenCalledWith(
@@ -181,7 +197,10 @@ describe("Transfer money usecase", () => {
     const mocks = createMocks();
     prepareSuccessfulTransfer(mocks);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
     await useCase.execute(senderUserId, dto);
 
     expect(mocks.transaction.create).toHaveBeenCalledTimes(1);
@@ -191,7 +210,7 @@ describe("Transfer money usecase", () => {
         type: TransactionType.PAYMENT,
         amount: 5_000n,
         initiatedBy: senderUserId,
-        reference: expect.stringMatching(/^SFC-/),
+        reference: "SFC-TEST-REFERENCE",
       }),
     );
   });
@@ -201,7 +220,10 @@ describe("Transfer money usecase", () => {
     const mocks = createMocks();
     prepareSuccessfulTransfer(mocks);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
     const transaction = await useCase.execute(senderUserId, dto);
 
     expect(mocks.ledgerEntries.create).toHaveBeenCalledWith(
@@ -219,7 +241,10 @@ describe("Transfer money usecase", () => {
     const mocks = createMocks();
     prepareSuccessfulTransfer(mocks);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
     const transaction = await useCase.execute(senderUserId, dto);
 
     expect(mocks.ledgerEntries.create).toHaveBeenCalledWith(
@@ -237,7 +262,10 @@ describe("Transfer money usecase", () => {
     const mocks = createMocks();
     vi.mocked(mocks.wallets.findByUserId).mockResolvedValue(null);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
 
     await expect(useCase.execute(senderUserId, dto)).rejects.toThrow(
       "Sender wallet not found.",
@@ -250,7 +278,10 @@ describe("Transfer money usecase", () => {
     vi.mocked(mocks.wallets.findByUserId).mockResolvedValue(senderWallet);
     vi.mocked(mocks.wallets.findById).mockResolvedValue(null);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
 
     await expect(useCase.execute(senderUserId, dto)).rejects.toThrow(
       "Recipient wallet not found.",
@@ -264,10 +295,13 @@ describe("Transfer money usecase", () => {
     vi.mocked(mocks.wallets.findByUserId).mockResolvedValue(senderWallet);
     vi.mocked(mocks.wallets.findById).mockResolvedValue(senderWallet);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
 
     await expect(useCase.execute(senderUserId, dto)).rejects.toThrow(
-      "Cannot transfer from a wallet to itself",
+      "Cannot transfer to the same wallet.",
     );
   });
 
@@ -287,7 +321,10 @@ describe("Transfer money usecase", () => {
     vi.mocked(mocks.wallets.findByUserId).mockResolvedValue(lockedSenderWallet);
     vi.mocked(mocks.wallets.findById).mockResolvedValue(recipientWallet);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
 
     await expect(useCase.execute(senderUserId, dto)).rejects.toThrow(
       "Sender wallet is inactive.",
@@ -310,7 +347,10 @@ describe("Transfer money usecase", () => {
     vi.mocked(mocks.wallets.findByUserId).mockResolvedValue(senderWallet);
     vi.mocked(mocks.wallets.findById).mockResolvedValue(lockedRecipientWallet);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator,
+    );
 
     await expect(useCase.execute(senderUserId, dto)).rejects.toThrow(
       "Recipient wallet is inactive.",
@@ -323,7 +363,7 @@ describe("Transfer money usecase", () => {
 
   //     prepareSuccessfulTransfer(mocks);
 
-  //     const useCase = new TransferMoneyUseCase(mocks.unitOfWork as any);
+  //     const useCase = new TransferMoneyUseCase(mocks.unitOfWork, referenceGenerator as any);
 
   //     await expect(
   //       useCase.execute(senderUserId, {
@@ -338,7 +378,10 @@ describe("Transfer money usecase", () => {
   it("should reject a non-positive amount", async () => {
     const mocks = createMocks();
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork as any);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator as any,
+    );
 
     await expect(
       useCase.execute(senderUserId, {
@@ -355,7 +398,10 @@ describe("Transfer money usecase", () => {
 
     prepareSuccessfulTransfer(mocks);
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork as any);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator as any,
+    );
 
     await useCase.execute(senderUserId, {
       recipientWalletId,
@@ -364,6 +410,7 @@ describe("Transfer money usecase", () => {
     });
 
     expect(mocks.unitOfWork.execute).toHaveBeenCalledTimes(1);
+    expect(referenceGenerator.generate).toHaveBeenCalledTimes(1);
   });
 
   /** it should propagate an error when ledger entry creation fails */
@@ -376,7 +423,10 @@ describe("Transfer money usecase", () => {
       new Error("Ledger failure"),
     );
 
-    const useCase = new TransferMoneyUseCase(mocks.unitOfWork as any);
+    const useCase = new TransferMoneyUseCase(
+      mocks.unitOfWork,
+      referenceGenerator as any,
+    );
 
     await expect(
       useCase.execute(senderUserId, {

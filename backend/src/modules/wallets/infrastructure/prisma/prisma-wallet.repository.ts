@@ -70,7 +70,7 @@ export class PrismaWalletRepository implements WalletRepository {
     if (result.count !== 1) {
       throw new BadRequestError(
         "DEBIT_FAILED",
-        "Insufficient funds or wallet is unavailable!",
+        "Insufficient funds or wallet unavailable.",
       );
     }
   }

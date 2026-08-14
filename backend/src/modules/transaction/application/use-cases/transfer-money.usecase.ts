@@ -1,18 +1,17 @@
 import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.js";
-import { randomUUID } from "crypto";
 import type { TransferMoneyDto } from "../dto/transfer-money.dto.js";
 import { Transaction } from "../../domain/entities/transaction.entity.js";
 import type { Repositories } from "@/shared/application/unit-of-work/repositories.js";
 import BadRequestError from "@/shared/errors/bad-request.js";
 import NotFoundError from "@/shared/errors/not-found.js";
 import { EntryType } from "@/generated/client/enums.js";
-
-function generateTransactionReferenece(): string {
-  return `SFC-${Date.now()}-${randomUUID().split("-")[0]?.toUpperCase()}`;
-}
+import type { TransactionReferenceGenerator } from "../ports/transaction-reference-generator.js";
 
 export class TransferMoneyUseCase {
-  constructor(private readonly unitOfWork: UnitOfWork) {}
+  constructor(
+    private readonly unitOfWork: UnitOfWork,
+    private readonly referenceGenerator: TransactionReferenceGenerator,
+  ) {}
 
   async execute(
     senderUserId: string,
@@ -52,7 +51,7 @@ export class TransferMoneyUseCase {
         if (senderWallet.id === recipientWallet.id) {
           throw new BadRequestError(
             "SELF_PAYMENT_NOT_ALLOWED",
-            "Cannot transfer from a wallet to itself.",
+            "Cannot transfer to the same wallet.",
           );
         }
 
@@ -112,7 +111,7 @@ export class TransferMoneyUseCase {
 
         /** create transaction and persist data */
         const transaction = Transaction.createPayment({
-          reference: generateTransactionReferenece(),
+          reference: this.referenceGenerator.generate(),
           amount,
           initiatedBy: senderUserId,
           currency: dto.currency,

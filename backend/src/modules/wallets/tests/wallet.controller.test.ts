@@ -19,7 +19,7 @@ describe("Wallet controller", () => {
       id: "wallet-123",
       userId: "user-123",
       currency: Currency.GHS,
-      balanceMinor: 25000,
+      balanceMinor: 25_000n,
       status: WalletStatus.ACTIVE,
       createdAt: new Date("2026-07-30:10:00:00.000Z"),
       updatedAt: new Date("2026-07-30:10:00:00.000Z"),
