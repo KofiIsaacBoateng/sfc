@@ -7,15 +7,21 @@ import { PrismaDeviceRepository } from "@/modules/devices/infrastructure/prisma/
 import { PrismaProvisionedDeviceRepository } from "@/modules/devices/infrastructure/prisma/prisma-provisioned-device.repository.js";
 import { PrismaLedgerEntryRepository } from "@/modules/ledger/infrastructure/prisma/prisma-ledger-entry.repository.js";
 import { PrismaTransactionRepository } from "@/modules/transaction/infrastructure/prisma/prisma-transaction.repository.js";
+import { PrismaPaymentRequestRepository } from "@/modules/pay-r/infrastructure/prisma/prisma-payment-request.repository.js";
 
 export class PrismaRepositoryFactory {
   create(tx: PrismaExecuter): Repositories {
     return {
       users: new PrismaUserRepository(tx),
       wallets: new PrismaWalletRepository(tx),
+
       ledger: new PrismaLedgerAccountRepository(tx),
       ledgerEntries: new PrismaLedgerEntryRepository(tx),
+
       transaction: new PrismaTransactionRepository(tx),
+
+      paymentRequest: new PrismaPaymentRequestRepository(tx),
+
       device: new PrismaDeviceRepository(tx),
       provisionedDevice: new PrismaProvisionedDeviceRepository(tx),
     };
