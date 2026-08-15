@@ -1,3 +1,4 @@
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 import BadRequestError from "@/shared/errors/bad-request.js";
 import { randomUUID } from "crypto";
 
@@ -5,10 +6,6 @@ export enum WalletStatus {
   ACTIVE = "ACTIVE",
   LOCKED = "LOCKED",
   CLOSED = "CLOSED",
-}
-
-export enum Currency {
-  GHS = "GHS",
 }
 
 interface WalletProps {

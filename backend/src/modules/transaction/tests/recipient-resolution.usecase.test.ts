@@ -7,13 +7,11 @@ import {
 } from "../application/dto/recipient-resolution.dto.js";
 import { User, UserRole } from "@/modules/users/domain/entities/user.entity.js";
 import { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
-import {
-  Currency,
-  Wallet,
-} from "@/modules/wallets/domain/entities/wallet.entity.js";
+import { Wallet } from "@/modules/wallets/domain/entities/wallet.entity.js";
 import { RecipientResolutionUsecase } from "../application/use-cases/recipient-resolution.usecase.js";
 import { SfcDevice } from "@/modules/devices/domain/entities/sfc-device.entity.js";
 import NotFoundError from "@/shared/errors/not-found.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 /*** TEST BEGIN */
 describe("Recipient Resolution Usecase", () => {

@@ -3,10 +3,10 @@ import {
   Prisma,
 } from "@/generated/client/client.js";
 import {
-  Currency,
   Wallet,
   WalletStatus,
 } from "@/modules/wallets/domain/entities/wallet.entity.js";
+import type { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 export class WalletMapper {
   static toDomain(raw: PrismaWallet): Wallet {

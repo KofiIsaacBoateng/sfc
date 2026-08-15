@@ -1,7 +1,6 @@
 import { LedgerAccount } from "@/modules/ledger/domain/entities/ledger-account.entity.js";
 import type { LedgerAccountRepository } from "@/modules/ledger/domain/repositories/ledger-account.repository.js";
 import {
-  Currency,
   Wallet,
   WalletStatus,
 } from "@/modules/wallets/domain/entities/wallet.entity.js";
@@ -19,6 +18,7 @@ import { TransactionType } from "../domain/entities/transaction.entity.js";
 import { EntryType } from "@/generated/client/enums.js";
 import type { TransferMoneyDto } from "../application/dto/transfer-money.dto.js";
 import type { TransactionReferenceGenerator } from "../application/ports/transaction-reference-generator.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 describe("Transfer money usecase", () => {
   let senderUserId = "sender-id-123";

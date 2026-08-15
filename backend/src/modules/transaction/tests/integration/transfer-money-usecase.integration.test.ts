@@ -6,10 +6,7 @@ import {
   UserRole,
   UserStatus,
 } from "@/modules/users/domain/entities/user.entity.js";
-import {
-  Currency,
-  WalletStatus,
-} from "@/modules/wallets/domain/entities/wallet.entity.js";
+import { WalletStatus } from "@/modules/wallets/domain/entities/wallet.entity.js";
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import {
   TransactionStatus,
@@ -17,6 +14,7 @@ import {
 } from "../../domain/entities/transaction.entity.js";
 import { EntryType } from "@/generated/client/enums.js";
 import type { TransactionReferenceGenerator } from "../../application/ports/transaction-reference-generator.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 const repositoryFactory = new PrismaRepositoryFactory();
 const prismaUnitOfWork = new PrismaUnitOfWork(prisma, repositoryFactory);

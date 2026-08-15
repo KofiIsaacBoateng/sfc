@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import {
-  Currency,
   WalletStatus,
   Wallet,
 } from "@/modules/wallets/domain/entities/wallet.entity.js";
@@ -8,6 +7,7 @@ import { WalletController } from "@/modules/wallets/presentation/controllers/wal
 import type { GetMyWalletUseCase } from "@/modules/wallets/application/use-case/get-my-wallet.usecase.js";
 import type { Request, Response } from "express";
 import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 vi.mock("@/shared/presentation/utils/response-formatter.js", () => ({
   sendSuccess: vi.fn(),
