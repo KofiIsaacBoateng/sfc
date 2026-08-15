@@ -27,25 +27,27 @@ enum TransactionStatus {
 }
 
 model Transaction {
-  id            String          @id @unique @default(uuid())
+  id                String          @id @unique @default(uuid())
 
-  reference     String          @unique
+  reference         String          @unique
 
-  type          TransactionType
-  status        TransactionStatus
+  type              TransactionType
+  status            TransactionStatus
 
-  amount        BigInt
+  amount            BigInt
 
-  currency      Currency
+  currency          Currency
 
-  initiatedBy   String
+  initiatedBy       String
 
-  ledgerEntries LedgerEntry[]
+  ledgerEntries     LedgerEntry[]
 
-  createdAt     DateTime        @default(now())
+  paymentRequest    PaymentRequest? 
+
+  createdAt         DateTime        @default(now())
 
 
-  user          User            @relation(fields: [initiatedBy], references: [id])
+  user              User            @relation(fields: [initiatedBy], references: [id])
 
   @@index([reference])
   @@index([initiatedBy])

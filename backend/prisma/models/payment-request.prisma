@@ -1,0 +1,35 @@
+enum PaymentRequestStatus {
+    PENDING
+
+    COMPLETED
+
+    EXPIRED
+
+    CANCELLED
+}
+
+model PaymentRequest {
+    id                            String                   @id @default(uuid())
+    requesterId                   String                 
+    amount                        BigInt                         
+    currency                      Currency                       
+    reference                     String                   @unique
+
+    status                        PaymentRequestStatus     @default(PENDING)
+    
+    expiresAt                     DateTime                       
+
+    transactionId                 String?                   @unique
+
+    createdAt                     DateTime                 @default(now())
+    updatedAt                     DateTime                 @updatedAt
+
+
+    requester                     User                     @relation(fields: [requesterId], references: [id])
+    transaction                   Transaction?             @relation(fields: [transactionId], references: [id])
+
+
+    @@index([requesterId, status])
+    @@index([expiresAt])
+    @@map("payment_requests")
+}
