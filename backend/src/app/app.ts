@@ -13,6 +13,7 @@ import {
   recipientRoutes,
   transactionRoutes,
 } from "@/modules/transaction/container.js";
+import { paymentRequestRoutes } from "@/modules/pay-r/container.js";
 
 export const buildApp = () => {
   const app: Express = express();
@@ -46,6 +47,7 @@ export const buildApp = () => {
   /** app routes - money zone */
   app.use("/api/v1/transfers", recipientRoutes);
   app.use("/api/v1/transactions", transactionRoutes);
+  app.use("/api/v1/payment-requests", paymentRequestRoutes);
 
   // Route not found Catchment Layer
   app.use(notFoundHandler);
