@@ -1,8 +1,5 @@
 import { describe, expect, vi, it } from "vitest";
-import {
-  Currency,
-  Wallet,
-} from "@/modules/wallets/domain/entities/wallet.entity.js";
+import { Wallet } from "@/modules/wallets/domain/entities/wallet.entity.js";
 import {
   WalletProvisioningService,
   type WalletProvisioningRepositories,
@@ -10,6 +7,7 @@ import {
 import type { WalletRepository } from "@/modules/wallets/domain/repositories/wallets.repository.js";
 import type { LedgerAccountRepository } from "@/modules/ledger/domain/repositories/ledger-account.repository.js";
 import { LedgerAccount } from "@/modules/ledger/domain/entities/ledger-account.entity.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 describe("Wallet provisioning service", () => {
   it("should create wallet and ledger accounts", async () => {

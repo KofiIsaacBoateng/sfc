@@ -1,4 +1,4 @@
-import type { Currency } from "@/modules/wallets/domain/entities/wallet.entity.js";
+import type { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 import BadRequestError from "@/shared/errors/bad-request.js";
 import { randomUUID } from "crypto";
 

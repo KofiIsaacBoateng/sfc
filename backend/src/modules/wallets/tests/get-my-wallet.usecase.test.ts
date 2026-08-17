@@ -3,10 +3,10 @@ import { GetMyWalletUseCase } from "@/modules/wallets/application/use-case/get-m
 import type { WalletRepository } from "@/modules/wallets/domain/repositories/wallets.repository.js";
 import NotFoundError from "@/shared/errors/not-found.js";
 import {
-  Currency,
   Wallet,
   WalletStatus,
 } from "@/modules/wallets/domain/entities/wallet.entity.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 describe("Get My Wallet Usecase", () => {
   it("should throw NotFoundError when wallet doesn't exist", async () => {

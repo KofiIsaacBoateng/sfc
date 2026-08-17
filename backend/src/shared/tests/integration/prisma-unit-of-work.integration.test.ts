@@ -2,10 +2,8 @@ import {
   UserRole,
   UserStatus,
 } from "@/modules/users/domain/entities/user.entity.js";
-import {
-  Currency,
-  WalletStatus,
-} from "@/modules/wallets/domain/entities/wallet.entity.js";
+import { WalletStatus } from "@/modules/wallets/domain/entities/wallet.entity.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 import { PrismaRepositoryFactory } from "@/shared/infrastructure/prisma/prisma-repository-factory.js";
 import { PrismaUnitOfWork } from "@/shared/infrastructure/prisma/prisma-unit-of-work.js";
 import { prisma } from "@/shared/infrastructure/prisma/prisma.js";

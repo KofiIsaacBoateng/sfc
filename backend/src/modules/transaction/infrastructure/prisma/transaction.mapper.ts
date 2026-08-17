@@ -4,7 +4,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from "../../domain/entities/transaction.entity.js";
-import { Currency } from "@/modules/wallets/domain/entities/wallet.entity.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 export class TransactionMapper {
   static toDomain(raw: PrismaTransaction): Transaction {

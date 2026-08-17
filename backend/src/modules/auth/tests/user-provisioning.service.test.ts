@@ -8,12 +8,12 @@ import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.
 import { PhoneNumber } from "@/shared/domain/value-objects/phone-number.vo.js";
 import { describe, expect, it, vi } from "vitest";
 import {
-  Currency,
   Wallet,
   WalletStatus,
 } from "@/modules/wallets/domain/entities/wallet.entity.js";
 import type { Repositories } from "@/shared/application/unit-of-work/repositories.js";
 import { UserProvisioningService } from "../application/services/user-provisioning.service.js";
+import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
 
 describe("UserProvisioningService", () => {
   it("should return existing user if user exists", async () => {
@@ -21,6 +21,7 @@ describe("UserProvisioningService", () => {
       id: "user-123",
       firebaseUid: "firebase-id-123",
       phoneNumber: PhoneNumber.restore("+233541236789"),
+      displayName: "Test User",
       role: UserRole.INDIVIDUAL,
       status: UserStatus.ACTIVE,
       createdAt: new Date("2026-07-29T10:00:00.000Z"),
@@ -64,6 +65,7 @@ describe("UserProvisioningService", () => {
       id: "user-123",
       firebaseUid: "firebase-id-123",
       phoneNumber: PhoneNumber.restore("+233541236789"),
+      displayName: "Test User",
       role: UserRole.INDIVIDUAL,
       status: UserStatus.ACTIVE,
       createdAt: new Date("2026-07-29T10:00:00.000Z"),
@@ -74,7 +76,7 @@ describe("UserProvisioningService", () => {
       id: "wallet-123",
       userId: "user-123",
       status: WalletStatus.ACTIVE,
-      balanceMinor: 2500,
+      balanceMinor: 2_500n,
       currency: Currency.GHS,
       updatedAt: new Date("2026-07-29T10:00:00.000Z"),
       createdAt: new Date("2026-07-29T10:00:00.000Z"),
@@ -123,6 +125,7 @@ describe("UserProvisioningService", () => {
       id: "user-789",
       firebaseUid: "firebase-uid-789",
       phoneNumber: PhoneNumber.restore("+233541239999"),
+      displayName: "Test User",
       role: UserRole.INDIVIDUAL,
       status: UserStatus.ACTIVE,
       createdAt: new Date(),
