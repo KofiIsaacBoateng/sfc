@@ -11,10 +11,12 @@ enum PaymentRequestStatus {
 model PaymentRequest {
     id                            String                   @id @default(uuid())
     requesterId                   String                 
-    amount                        BigInt                         
+    amount                        BigInt
+    feeAmount                     BigInt                   @default(0)
+    totalAmount                   BigInt      
+
     currency                      Currency                       
     reference                     String                   @unique
-
     status                        PaymentRequestStatus     @default(PENDING)
     
     expiresAt                     DateTime                       
