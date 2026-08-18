@@ -12,6 +12,8 @@ export interface PaymentRequestProps {
   id: string;
   requesterId: string;
   amount: bigint;
+  feeAmount: bigint;
+  totalAmount: bigint;
   currency: Currency;
   reference: string;
   status: PaymentRequestStatus;
@@ -27,11 +29,16 @@ export class PaymentRequest {
   static create(params: {
     requesterId: string;
     amount: bigint;
+    feeAmount: bigint;
     currency: Currency;
     reference: string;
     expiresAt: Date;
   }): PaymentRequest {
     if (params.amount <= 0n) {
+      throw new Error("Payment request amount must be greater than zero.");
+    }
+
+    if (params.feeAmount <= 0n) {
       throw new Error("Payment request amount must be greater than zero.");
     }
 
@@ -41,10 +48,14 @@ export class PaymentRequest {
 
     const now = new Date();
 
+    const totalAmount = params.amount + params.feeAmount;
+
     return new PaymentRequest({
       id: randomUUID(),
       requesterId: params.requesterId,
       amount: params.amount,
+      feeAmount: params.feeAmount,
+      totalAmount,
       currency: params.currency,
       reference: params.reference,
       status: PaymentRequestStatus.PENDING,
@@ -118,6 +129,14 @@ export class PaymentRequest {
 
   get amount(): bigint {
     return this.props.amount;
+  }
+
+  get feeAmount(): bigint {
+    return this.props.feeAmount;
+  }
+
+  get totalAmount(): bigint {
+    return this.props.totalAmount;
   }
 
   get currency(): Currency {

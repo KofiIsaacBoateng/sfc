@@ -19,6 +19,8 @@ export class PaymentRequestMapper {
       id: paymentRequest.id,
       requesterId: paymentRequest.requesterId,
       amount: paymentRequest.amount,
+      feeAmount: paymentRequest.feeAmount,
+      totalAmount: paymentRequest.totalAmount,
       reference: paymentRequest.reference,
       transactionId: paymentRequest.transactionId,
       status: paymentRequest.status,

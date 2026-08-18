@@ -17,6 +17,8 @@ export interface PaymentRequestResponseDto {
   requesterId: string;
   reference: string;
   amount: bigint;
+  feeAmount: bigint;
+  totalAmount: bigint;
   currency: Currency;
   status: PaymentRequestStatus;
   transactionId: string | null;
@@ -32,6 +34,8 @@ export const toPaymentRequestResponse = (
     requesterId: request.requesterId,
     reference: request.reference,
     amount: request.amount,
+    feeAmount: request.feeAmount,
+    totalAmount: request.totalAmount,
     currency: request.currency,
     status: request.status,
     transactionId: request.transactionId,
