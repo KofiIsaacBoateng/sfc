@@ -1,9 +1,24 @@
 import type { PaymentRequest } from "../entities/payment-request.entity.js";
 
 export interface PaymentRequestRepository {
+  /**
+   * Persists payment request
+   * @param request
+   * Returns a newly created payment request
+   */
   create(request: PaymentRequest): Promise<PaymentRequest>;
 
+  /**
+   * Persists an updated payment request
+   * @param request
+   * Returns the new update
+   */
   update(request: PaymentRequest): Promise<PaymentRequest>;
 
+  /**
+   * Finds a payment request by id
+   * @param id
+   * Returns null if payment request doesn't exist
+   */
   findById(id: string): Promise<PaymentRequest | null>;
 }
