@@ -43,10 +43,10 @@ export class PaymentRequest {
       );
     }
 
-    if (params.feeAmount <= 0n) {
+    if (params.feeAmount < 0n) {
       throw new BadRequestError(
         "PAYMENT_REQUEST_ERROR",
-        "Payment request amount must be greater than zero.",
+        "Fee amount cannot be negative.",
       );
     }
 
