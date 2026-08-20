@@ -4,8 +4,9 @@ import { Transaction } from "@/modules/transaction/domain/entities/transaction.e
 import NotFoundError from "@/shared/errors/not-found.js";
 import BadRequestError from "@/shared/errors/bad-request.js";
 import { EntryType } from "@/generated/client/enums.js";
+import ConflictError from "@/shared/errors/conflict.js";
 
-export class ApprovePaymentReqeustUseCase {
+export class ApprovePaymentRequestUseCase {
   constructor(
     private readonly unitOfWork: UnitOfWork,
     private readonly referenceGenerator: TransactionReferenceGenerator,
@@ -21,7 +22,7 @@ export class ApprovePaymentReqeustUseCase {
         await repos.paymentRequest.claimPending(paymentRequestId);
 
       if (!paymentRequest) {
-        throw new BadRequestError(
+        throw new ConflictError(
           "PAYMENT_REQUEST_ERROR",
           "Payment request is unavailable, expired, or already being processed.",
         );
