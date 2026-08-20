@@ -10,7 +10,7 @@ enum LedgerAccountType {
 model LedgerAccount {
   id            String                    @id @unique @default(uuid())
 
-  walletId?      String                   @unique
+  walletId      String?                   @unique
 
   accountType    LedgerAccountType
   code           String?                  @unique     
@@ -20,7 +20,7 @@ model LedgerAccount {
   createdAt     DateTime                  @default(now())
 
 
-  wallet        Wallet                    @relation(fields: [walletId], references: [id])
+  wallet        Wallet?                    @relation(fields: [walletId], references: [id])
 
   @@index([walletId])
   @@map("ledger_accounts")

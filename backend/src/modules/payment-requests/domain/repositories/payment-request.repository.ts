@@ -16,6 +16,13 @@ export interface PaymentRequestRepository {
   update(request: PaymentRequest): Promise<PaymentRequest>;
 
   /**
+   * Tag payment request as processing
+   * @param request
+   * Returns nothing
+   */
+  claimPending(requestId: string): Promise<PaymentRequest | null>;
+
+  /**
    * Finds a payment request by id
    * @param id
    * Returns null if payment request doesn't exist

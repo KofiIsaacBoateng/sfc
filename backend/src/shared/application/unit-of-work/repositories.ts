@@ -5,7 +5,7 @@ import type { DeviceRepository } from "@/modules/devices/domain/repositories/dev
 import type { ProvisionedDeviceRepository } from "@/modules/devices/domain/repositories/provisioned-device.repository.js";
 import type { TransactionRepository } from "@/modules/transaction/domain/repositories/transaction.repository.js";
 import type { LedgerEntryRepository } from "@/modules/ledger/application/repository/ledger-entry.repository.js";
-import type { PaymentRequestRepository } from "@/modules/pay-r/domain/repositories/payment-request.repository.js";
+import type { PaymentRequestRepository } from "@/modules/payment-requests/domain/repositories/payment-request.repository.js";
 import type { MerchantRepository } from "@/modules/merchants/domain/repositories/merchant.repository.js";
 
 export interface Repositories {

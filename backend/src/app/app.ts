@@ -13,7 +13,7 @@ import {
   recipientRoutes,
   transactionRoutes,
 } from "@/modules/transaction/container.js";
-import { paymentRequestRoutes } from "@/modules/pay-r/container.js";
+import { paymentRequestRoutes } from "@/modules/payment-requests/container.js";
 
 export const buildApp = () => {
   const app: Express = express();

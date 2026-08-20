@@ -1,8 +1,8 @@
 import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.js";
 
-import { PaymentRequest } from "@/modules/pay-r/domain/entities/payment-request.entity.js";
+import { PaymentRequest } from "@/modules/payment-requests/domain/entities/payment-request.entity.js";
 
-import type { PaymentRequestReferenceGenerator } from "@/modules/pay-r/application/ports/payment-request-reference-generator.js";
+import type { PaymentRequestReferenceGenerator } from "@/modules/payment-requests/application/ports/payment-request-reference-generator.js";
 
 import type { MerchantChargePolicy } from "../../domain/policies/merchant-charge.policy.js";
 

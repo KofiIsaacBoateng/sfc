@@ -1,6 +1,6 @@
 import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.js";
 import type { PaymentRequestReferenceGenerator } from "../ports/payment-request-reference-generator.js";
-import type { CreatePaymentRequestDto } from "../dto/payment-request.dto.js";
+import type { CreatePaymentRequestDto } from "../dto/create-payment-request.dto.js";
 import { PaymentRequest } from "../../domain/entities/payment-request.entity.js";
 import NotFoundError from "@/shared/errors/not-found.js";
 import BadRequestError from "@/shared/errors/bad-request.js";
@@ -46,6 +46,7 @@ export class CreatePaymentRequestUseCase {
       const paymentRequest = PaymentRequest.create({
         requesterId,
         amount,
+        feeAmount: 0n /* TODO: make dynamic but no charge for now */,
         currency: dto.currency,
         expiresAt,
         reference: this.referenceGenerator.generate(),
