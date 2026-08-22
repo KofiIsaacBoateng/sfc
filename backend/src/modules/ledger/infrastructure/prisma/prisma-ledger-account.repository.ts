@@ -33,4 +33,14 @@ export class PrismaLedgerAccountRepository implements LedgerAccountRepository {
 
     return LedgerAccountMapper.toDomain(created);
   }
+
+  async findByCode(code: string): Promise<LedgerAccount | null> {
+    const ledgerAccount = await this.prisma.ledgerAccount.findUnique({
+      where: {
+        code,
+      },
+    });
+
+    return this.toDomainOrNull(ledgerAccount);
+  }
 }
