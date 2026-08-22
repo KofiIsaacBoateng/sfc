@@ -27,7 +27,9 @@ describe("Wallet provisioning service", () => {
         create: vi.fn().mockResolvedValue(createdWallet),
       } as unknown as WalletRepository,
       ledger: {
-        create: vi.fn().mockResolvedValue(LedgerAccount.create("wallet-123")),
+        create: vi
+          .fn()
+          .mockResolvedValue(LedgerAccount.createWalletAccount("wallet-123")),
       } as unknown as LedgerAccountRepository,
     } as WalletProvisioningRepositories;
 

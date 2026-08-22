@@ -22,7 +22,7 @@ export class WalletProvisioningService {
 
     const createdWallet = await repos.wallets.create(wallet);
 
-    const ledgerAccount = LedgerAccount.create(createdWallet.id);
+    const ledgerAccount = LedgerAccount.createWalletAccount(createdWallet.id);
     await repos.ledger.create(ledgerAccount);
 
     return createdWallet;

@@ -15,6 +15,7 @@ import {
 import { EntryType } from "@/generated/client/enums.js";
 import type { TransactionReferenceGenerator } from "../../application/ports/transaction-reference-generator.js";
 import { Currency } from "@/shared/domain/value-objects/currency.vo.js";
+import { LedgerAccountType } from "@/modules/ledger/domain/entities/ledger-account.entity.js";
 
 const repositoryFactory = new PrismaRepositoryFactory();
 const prismaUnitOfWork = new PrismaUnitOfWork(prisma, repositoryFactory);
@@ -73,6 +74,7 @@ const createLedgerAccount = async (param: { walletId: string }) => {
   return prisma.ledgerAccount.create({
     data: {
       walletId: param.walletId,
+      accountType: LedgerAccountType.WALLET,
     },
   });
 };
