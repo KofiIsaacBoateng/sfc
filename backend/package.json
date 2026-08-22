@@ -11,11 +11,13 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
+    "prisma:reset": "npx prisma migrate reset",
     "test": "cross-env NODE_ENV=test vitest run",
     "test:integration": "cross-env NODE_ENV=test vitest run integration.test",
     "test:migrate": "cross-env NODE_ENV=test npx prisma migrate dev",
     "test:generate": "cross-env NODE_ENV=test npx prisma generate",
     "test:studio": "cross-env NODE_ENV=test npx prisma studio",
+    "test:reset": "cross-env NODE_ENV=test npx prisma migrate reset",
     "test:watch": "vitest"
   },
   "dependencies": {

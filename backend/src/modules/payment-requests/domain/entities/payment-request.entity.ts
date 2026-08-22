@@ -1,8 +1,10 @@
 import type { Currency } from "@/shared/domain/value-objects/currency.vo.js";
+import BadRequestError from "@/shared/errors/bad-request.js";
 import { randomUUID } from "node:crypto";
 
 export enum PaymentRequestStatus {
   PENDING = "PENDING",
+  PROCESSING = "PROCESSING",
   COMPLETED = "COMPLETED",
   EXPIRED = "EXPIRED",
   CANCELLED = "CANCELLED",
@@ -35,15 +37,24 @@ export class PaymentRequest {
     expiresAt: Date;
   }): PaymentRequest {
     if (params.amount <= 0n) {
-      throw new Error("Payment request amount must be greater than zero.");
+      throw new BadRequestError(
+        "PAYMENT_REQUEST_ERROR",
+        "Payment request amount must be greater than zero.",
+      );
     }
 
-    if (params.feeAmount <= 0n) {
-      throw new Error("Payment request amount must be greater than zero.");
+    if (params.feeAmount < 0n) {
+      throw new BadRequestError(
+        "PAYMENT_REQUEST_ERROR",
+        "Fee amount cannot be negative.",
+      );
     }
 
     if (params.expiresAt.getTime() <= Date.now()) {
-      throw new Error("Payment request must expire in the future.");
+      throw new BadRequestError(
+        "PAYMENT_REQUEST_ERROR",
+        "Payment request must expire in the future.",
+      );
     }
 
     const now = new Date();
@@ -74,6 +85,10 @@ export class PaymentRequest {
     return this.props.status === PaymentRequestStatus.PENDING;
   }
 
+  isProcessing(): boolean {
+    return this.props.status === PaymentRequestStatus.PROCESSING;
+  }
+
   isExpired(): boolean {
     return (
       this.props.status === PaymentRequestStatus.EXPIRED ||
@@ -81,9 +96,25 @@ export class PaymentRequest {
     );
   }
 
-  complete(transactionId: string): void {
+  startProcessing(): void {
     if (!this.isPending()) {
-      throw new Error("Payment request is no longer pending.");
+      throw new BadRequestError(
+        "PAYMENT_REQUEST_ERROR",
+        "Payment request is not pending.",
+      );
+    }
+
+    this.props.status = PaymentRequestStatus.PROCESSING;
+
+    this.props.updatedAt = new Date();
+  }
+
+  complete(transactionId: string): void {
+    if (!this.isProcessing()) {
+      throw new BadRequestError(
+        "PAYMENT_REQUEST_ERROR",
+        "Payment request is no longer processing.",
+      );
     }
 
     if (this.isExpired()) {
@@ -91,7 +122,10 @@ export class PaymentRequest {
 
       this.props.updatedAt = new Date();
 
-      throw new Error("Payment request has expired.");
+      throw new BadRequestError(
+        "PAYMENT_REQUEST_EXPIRED",
+        "Payment request has expired.",
+      );
     }
 
     this.props.status = PaymentRequestStatus.COMPLETED;
@@ -103,7 +137,10 @@ export class PaymentRequest {
 
   cancel(): void {
     if (!this.isPending()) {
-      throw new Error("Only pending payment requests can be cancelled.");
+      throw new BadRequestError(
+        "PAYMENT_REQUEST_ERROR",
+        "Only pending payment requests can be cancelled.",
+      );
     }
 
     this.props.status = PaymentRequestStatus.CANCELLED;

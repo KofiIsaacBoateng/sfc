@@ -13,7 +13,10 @@ import {
   recipientRoutes,
   transactionRoutes,
 } from "@/modules/transaction/container.js";
-import { paymentRequestRoutes } from "@/modules/pay-r/container.js";
+import {
+  paymentExecutionRoutes,
+  paymentRequestRoutes,
+} from "@/modules/payment-requests/container.js";
 
 export const buildApp = () => {
   const app: Express = express();
@@ -48,6 +51,7 @@ export const buildApp = () => {
   app.use("/api/v1/transfers", recipientRoutes);
   app.use("/api/v1/transactions", transactionRoutes);
   app.use("/api/v1/payment-requests", paymentRequestRoutes);
+  app.use("/api/v1/payment-requests", paymentExecutionRoutes);
 
   // Route not found Catchment Layer
   app.use(notFoundHandler);

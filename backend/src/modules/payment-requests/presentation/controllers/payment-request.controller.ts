@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 
 import { CreatePaymentRequestUseCase } from "../../application/use-cases/create-payment-request.usecase.js";
 
-import { toPaymentRequestResponse } from "../../application/dto/payment-request.dto.js";
+import { toPaymentRequestResponse } from "../../application/dto/create-payment-request.dto.js";
 import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
 
 export class PaymentRequestController {

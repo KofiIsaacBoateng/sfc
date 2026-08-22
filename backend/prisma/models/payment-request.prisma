@@ -1,6 +1,8 @@
 enum PaymentRequestStatus {
     PENDING
 
+    PROCESSING
+
     COMPLETED
 
     EXPIRED

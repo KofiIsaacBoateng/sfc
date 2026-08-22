@@ -9,6 +9,13 @@ export interface LedgerAccountRepository {
   findByWalletId(walletId: string): Promise<LedgerAccount | null>;
 
   /**
+   * Find a ledger account by code
+   * @param code
+   * Returns null if ledger account doesn't exist
+   */
+  findByCode(code: string): Promise<LedgerAccount | null>;
+
+  /**
    * Persists a new ledger account
    * @param account
    */
