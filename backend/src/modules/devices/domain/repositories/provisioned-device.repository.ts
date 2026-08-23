@@ -2,6 +2,13 @@ import type { ProvisionedDevice } from "../entities/provisioned-device.entity.js
 
 export interface ProvisionedDeviceRepository {
   /**
+   * Retrieve a provisioned device by its id
+   * @param id
+   * Return null if device doesn't exist
+   */
+  findById(id: string): Promise<ProvisionedDevice | null>;
+
+  /**
    * Retrieved provisioned sfc device by activation code
    * @param hash
    * Returns null if device doesn't exist our inventory

@@ -23,6 +23,14 @@ export class PrismaProvisionedDeviceRepository implements ProvisionedDeviceRepos
     return ProvisionedDeviceMapper.toDomain(raw);
   }
 
+  async findById(id: string): Promise<ProvisionedDevice | null> {
+    const raw = await this.prisma.provisionedDevice.findUnique({
+      where: { id },
+    });
+
+    return raw ? ProvisionedDeviceMapper.toDomain(raw) : null;
+  }
+
   async findByActivationCodeHash(
     hash: string,
   ): Promise<ProvisionedDevice | null> {

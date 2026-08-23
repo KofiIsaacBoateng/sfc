@@ -1,0 +1,44 @@
+enum PaymentAuthorizationMethod {
+  PIN
+  SECURE_SFC
+}
+
+enum PaymentAuthorizationChannel {
+  APP
+  USSD
+}
+
+enum PaymentAuthorizationStatus {
+  PENDING
+  AUTHORIZED
+  CONSUMED
+  EXPIRED
+  REVOKED
+}
+
+model PaymentAuthorization {
+  id                String                         @id @default(uuid())
+  paymentRequestId  String
+  userId            String
+
+  method            PaymentAuthorizationMethod
+  channel           PaymentAuthorizationChannel
+  status            PaymentAuthorizationStatus    @default(PENDING)
+
+  expiresAt         DateTime
+
+  authorizedAt      DateTime?
+  consumedAt        DateTime?
+
+  createdAt         DateTime                       @default(now())
+  updatedAt         DateTime                       @updatedAt
+
+  paymentRequest    PaymentRequest                @relation(fields: [paymentRequestId], references: [id])
+
+  user              User                           @relation(fields: [userId], references: [id])
+
+  @@index([paymentRequestId, status])
+  @@index([userId, status])
+  @@index([expiresAt])
+  @@map("payment_authorizations")
+}

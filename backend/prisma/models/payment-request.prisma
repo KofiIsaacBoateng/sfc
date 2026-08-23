@@ -33,6 +33,8 @@ model PaymentRequest {
     transaction                   Transaction?             @relation(fields: [transactionId], references: [id])
 
 
+    paymentAuthorizations         PaymentAuthorization[]
+
     @@index([requesterId, status])
     @@index([expiresAt])
     @@map("payment_requests")

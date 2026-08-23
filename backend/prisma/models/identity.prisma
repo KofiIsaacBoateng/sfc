@@ -20,34 +20,36 @@ enum Role {
 
 // account
 model User {
-  id              String          @id @unique @default(uuid())
+  id                          String                              @id @unique @default(uuid())
 
-  firebaseUid     String          @unique
-  phoneNumber     String          @unique
-  pinHash         String?
+  firebaseUid                 String                              @unique
+  phoneNumber                 String                              @unique
+  pinHash                     String?
   
-  status          AccountStatus
-  role            Role
-  displayName     String?
+  status                      AccountStatus
+  role                        Role
+  displayName                 String?
 
-  profile         Profile?
-  business        BusinessProfile?
+  profile                     Profile?
+  business                    BusinessProfile?
 
-  merchant        Merchant?
+  merchant                    Merchant?
 
-  wallet          Wallet?
+  wallet                      Wallet?
 
-  sfcDevices      SfcDevice[]
+  sfcDevices                  SfcDevice[]
 
-  notifications   Notification[]
+  notifications               Notification[]
 
-  transactions    Transaction[]
+  transactions                Transaction[]
 
-  paymentRequests PaymentRequest[]
+  paymentRequests             PaymentRequest[]
+
+  paymentAuthorizations       PaymentAuthorization[]
 
 
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt                   DateTime                            @default(now())
+  updatedAt                   DateTime                            @updatedAt
 
 
   @@index([phoneNumber])
