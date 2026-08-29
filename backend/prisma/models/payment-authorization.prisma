@@ -37,6 +37,7 @@ model PaymentAuthorization {
 
   user              User                           @relation(fields: [userId], references: [id])
 
+  @@unique([paymentRequestId, userId])
   @@index([paymentRequestId, status])
   @@index([userId, status])
   @@index([expiresAt])

@@ -7,6 +7,7 @@ import type { TransactionRepository } from "@/modules/transaction/domain/reposit
 import type { LedgerEntryRepository } from "@/modules/ledger/application/repository/ledger-entry.repository.js";
 import type { PaymentRequestRepository } from "@/modules/payment-requests/domain/repositories/payment-request.repository.js";
 import type { MerchantRepository } from "@/modules/merchants/domain/repositories/merchant.repository.js";
+import type { PaymentAuthorizationRepository } from "@/modules/payment-authorization/domain/repositories/payment-authorization.repository.js";
 
 export interface Repositories {
   users: UserRepository;
@@ -19,6 +20,7 @@ export interface Repositories {
 
   paymentRequest: PaymentRequestRepository;
   merchant: MerchantRepository;
+  paymentAuthorization: PaymentAuthorizationRepository; // TODO: create repo and import
 
   device: DeviceRepository;
   provisionedDevice: ProvisionedDeviceRepository;

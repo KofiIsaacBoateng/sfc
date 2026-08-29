@@ -7,6 +7,11 @@ export interface PaymentAuthorizationRepository {
 
   findById(id: string): Promise<PaymentAuthorization | null>;
 
+  findByPaymentRequestIdAndUserId(
+    paymentRequestId: string,
+    userId: string,
+  ): Promise<PaymentAuthorization | null>;
+
   claimAuthorized(
     id: string,
     userId: string,

@@ -1,4 +1,11 @@
-import type { SfcDeviceVerificationResult } from "../../../devices/domain/authentication/sfc-device-verification-result.ts.js";
+import { SecurityTier } from "@/modules/devices/domain/entities/provisioned-device.entity.js";
+
+export interface SfcDeviceVerificationResult {
+  verified: boolean;
+  deviceId: string;
+  userId: string;
+  securityTier: SecurityTier;
+}
 
 export interface SfcDeviceVerifier {
   verify(params: { tagData: string }): Promise<SfcDeviceVerificationResult>;
