@@ -5,6 +5,8 @@ import NotFoundError from "@/shared/errors/not-found.js";
 import BadRequestError from "@/shared/errors/bad-request.js";
 import { EntryType } from "@/generated/client/enums.js";
 import ConflictError from "@/shared/errors/conflict.js";
+import UnauthorizedError from "@/shared/errors/unauthorized.js";
+import ForbiddenError from "@/shared/errors/forbidden.js";
 
 export class ApprovePaymentRequestUseCase {
   constructor(
@@ -15,8 +17,29 @@ export class ApprovePaymentRequestUseCase {
   async execute(
     senderUserId: string,
     paymentRequestId: string,
+    authorizationId: string,
   ): Promise<Transaction> {
     return this.unitOfWork.execute(async (repos) => {
+      /*** AUTHORIZE PAYMENT */
+      const authorization = await repos.paymentAuthorization.claimAuthorized(
+        authorizationId,
+        senderUserId,
+      );
+
+      if (!authorization) {
+        throw new UnauthorizedError(
+          undefined,
+          "Payment authorization is invalid, expired, or already consumed.",
+        );
+      }
+
+      if (authorization.paymentRequestId !== paymentRequestId) {
+        throw new ForbiddenError(
+          undefined,
+          "Payment authorization does not belong to this payment request.",
+        );
+      }
+
       /** CLAIM PAYMENT REQUEST */
       const paymentRequest =
         await repos.paymentRequest.claimPending(paymentRequestId);

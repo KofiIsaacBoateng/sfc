@@ -71,6 +71,7 @@ export class PrismaPaymentAuthorizationRepository implements PaymentAuthorizatio
       where: {
         id,
         userId,
+        status: PaymentAuthorizationStatus.AUTHORIZED,
         expiresAt: {
           gt: now,
         },
