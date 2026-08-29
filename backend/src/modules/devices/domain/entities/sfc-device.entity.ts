@@ -40,6 +40,10 @@ export class SfcDevice {
     return new SfcDevice(input);
   }
 
+  isActive(): boolean {
+    return this.props.status === DeviceStatus.ACTIVE;
+  }
+
   markAsSeen() {
     this.props.lastSeenAt = new Date();
     this.props.updatedAt = new Date();

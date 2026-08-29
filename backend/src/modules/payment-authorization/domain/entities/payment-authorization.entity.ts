@@ -1,4 +1,3 @@
-import BadRequestError from "@/shared/errors/bad-request.js";
 import { randomUUID } from "crypto";
 
 export enum PaymentAuthorizationMethod {
@@ -17,6 +16,12 @@ export enum PaymentAuthorizationStatus {
   CONSUMED = "CONSUMED",
   EXPIRED = "EXPIRED",
   REVOKED = "REVOKED",
+}
+
+export enum PaymentAuthorizationDuration {
+  THIRTY_SECONDS = 30,
+  ONE_MINUTE = 60,
+  TWO_MINUTES = 120,
 }
 
 export interface PaymentAuthorizationProps {
@@ -41,16 +46,11 @@ export class PaymentAuthorization {
     userId: string;
     method: PaymentAuthorizationMethod;
     channel: PaymentAuthorizationChannel;
-    expiresAt: Date;
+    duration: PaymentAuthorizationDuration;
   }): PaymentAuthorization {
     const now = new Date();
 
-    if (params.expiresAt.getTime() <= now.getTime()) {
-      throw new BadRequestError(
-        undefined,
-        "Authorization must expire in the future.",
-      );
-    }
+    const expiresAt = new Date(now.getTime() + params.duration * 1000);
 
     return new PaymentAuthorization({
       id: randomUUID(),
@@ -58,6 +58,7 @@ export class PaymentAuthorization {
       status: PaymentAuthorizationStatus.PENDING,
       consumedAt: null,
       authorizedAt: null,
+      expiresAt,
       createdAt: now,
       updatedAt: now,
     });

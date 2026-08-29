@@ -1,7 +1,7 @@
 import { sendSuccess } from "@/shared/presentation/utils/response-formatter.js";
-import type { RegisterDeviceUseCase } from "../../applications/use-cases/register-device.usecase.js";
+import type { RegisterDeviceUseCase } from "../../application/use-cases/register-device.usecase.js";
 import type { Request, Response } from "express";
-import type { RegisterDeviceDto } from "../../applications/dtos/register-device.dto.js";
+import type { RegisterDeviceDto } from "../../application/dtos/register-device.dto.js";
 
 export class DeviceController {
   constructor(private readonly registerDeviceUseCase: RegisterDeviceUseCase) {}

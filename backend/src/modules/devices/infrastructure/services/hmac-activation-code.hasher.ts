@@ -1,5 +1,5 @@
 import { createHmac } from "node:crypto";
-import type { ActivationCodeHasher } from "../../applications/ports/activation-code-hasher.js";
+import type { ActivationCodeHasher } from "../../application/ports/activation-code-hasher.js";
 
 export class HamacActivationCodeHasher implements ActivationCodeHasher {
   constructor(private readonly secret: string) {}

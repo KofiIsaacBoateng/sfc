@@ -1,5 +1,5 @@
 import { PrismaUnitOfWork } from "@/shared/infrastructure/prisma/prisma-unit-of-work.js";
-import { RegisterDeviceUseCase } from "./applications/use-cases/register-device.usecase.js";
+import { RegisterDeviceUseCase } from "./application/use-cases/register-device.usecase.js";
 import { HamacActivationCodeHasher } from "./infrastructure/services/hmac-activation-code.hasher.js";
 import { prisma } from "@/shared/infrastructure/prisma/prisma.js";
 import { PrismaRepositoryFactory } from "@/shared/infrastructure/prisma/prisma-repository-factory.js";

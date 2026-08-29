@@ -6,23 +6,26 @@ import {
   PaymentAuthorizationMethod,
 } from "../../domain/entities/payment-authorization.entity.js";
 
-import type { SfcDeviceVerifier } from "../ports/sfc-device-verifier.js";
-import type { PaymentAuthorizationNotifier } from "../ports/payment-authorization-notifier.js";
+import type { SfcDeviceVerifier } from "../../../devices/application/ports/sfc-device-verifier.port.js";
 import UnauthorizedError from "@/shared/errors/unauthorized.js";
 import NotFoundError from "@/shared/errors/not-found.js";
 import ConflictError from "@/shared/errors/conflict.js";
 import ForbiddenError from "@/shared/errors/forbidden.js";
+import type { PaymentRealtimeChannel } from "../ports/payment-realtime-channel.js";
+import type { PaymentAuthorizationPolicy } from "../../domain/policies/payment-authorization.policy.js";
+import type { HandleSfcTapDto } from "../dto/handle-sfc-tap.dto.js";
 
 export class HandleSfcPaymentTapUseCase {
   constructor(
     private readonly unitOfWork: UnitOfWork,
     private readonly sfcDeviceVerifier: SfcDeviceVerifier,
-    private readonly notifier: PaymentAuthorizationNotifier,
+    private readonly authorizationPolicy: PaymentAuthorizationPolicy,
+    private readonly realtimeChannel: PaymentRealtimeChannel,
   ) {}
 
-  async execute(params: { paymentRequestId: string; tagData: string }) {
+  async execute(dto: HandleSfcTapDto) {
     const verification = await this.sfcDeviceVerifier.verify({
-      tagData: params.tagData,
+      tagData: dto.tagData,
     });
 
     if (!verification.verified) {
@@ -31,7 +34,7 @@ export class HandleSfcPaymentTapUseCase {
 
     return this.unitOfWork.execute(async (repos) => {
       const paymentRequest = await repos.paymentRequest.findById(
-        params.paymentRequestId,
+        dto.paymentRequestId,
       );
 
       if (!paymentRequest) {
@@ -53,39 +56,40 @@ export class HandleSfcPaymentTapUseCase {
         );
       }
 
-      const method =
-        verification.securityTier === "SECURE"
-          ? PaymentAuthorizationMethod.SECURE_SFC
-          : PaymentAuthorizationMethod.PIN;
-
-      const channel = PaymentAuthorizationChannel.APP; // TODO: APP or USSD
+      const requiresAuthorization =
+        this.authorizationPolicy.requiresCustomerAuthorization({
+          amount: paymentRequest.amount,
+          currency: paymentRequest.currency,
+          securityTier: verification.securityTier,
+        });
 
       const authorization = PaymentAuthorization.create({
         paymentRequestId: paymentRequest.id,
         userId: verification.userId,
-        method,
-        channel,
-        expiresAt: new Date(Date.now() + 30_000),
+        method: requiresAuthorization
+          ? PaymentAuthorizationMethod.PIN
+          : PaymentAuthorizationMethod.SECURE_SFC,
+        channel: PaymentAuthorizationChannel.APP,
+        duration: dto.authorizationDuration,
       });
 
-      if (verification.securityTier === "SECURE") {
-        authorization.authorize();
+      if (!requiresAuthorization) {
+        authorization.authorize(); // authorize immediately
       }
 
       const created = await repos.paymentAuthorization.create(authorization);
 
-      if (verification.securityTier === "BASIC") {
-        await this.notifier.notifyAuthorizationRequired({
+      if (requiresAuthorization) {
+        await this.realtimeChannel.notifyMerchantWaiting({
           paymentRequestId: paymentRequest.id,
-          userId: verification.userId,
-          authorizationId: created.id,
-          expiresAt: created.expiresAt,
+          merchantUserId: paymentRequest.requesterId,
         });
-      } else {
-        await this.notifier.notifyAuthorizationResult({
+
+        await this.realtimeChannel.notifyCustomerAuthorizationRequired({
           paymentRequestId: paymentRequest.id,
+          authorizationId: created.id,
           userId: verification.userId,
-          authorized: true,
+          expiresAt: created.expiresAt,
         });
       }
 
