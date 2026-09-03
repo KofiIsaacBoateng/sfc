@@ -22,6 +22,8 @@ model SfcDevice {
 
   status                        DeviceStatus       @default(ACTIVE)
 
+  lastAcceptedCounter           BigInt?
+
   lastSeenAt                    DateTime?
 
   createdAt                     DateTime              @default(now())

@@ -37,4 +37,12 @@ export interface DeviceRepository {
   findByProvisionedDeviceId(
     provisionedDeviceId: string,
   ): Promise<SfcDevice | null>;
+
+  /**
+   * Compares and persists an updated cryptographic counter
+   * @param deviceId
+   * @param counter
+   * Returns true if the comparison is a match else...
+   */
+  acceptSecureCounter(deviceId: string, counter: bigint): Promise<boolean>;
 }

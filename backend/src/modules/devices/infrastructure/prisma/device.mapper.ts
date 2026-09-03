@@ -19,6 +19,7 @@ export class DeviceMapper {
       tagUid: device.tagUid,
       provisionedDeviceId: device.provisionedDeviceId,
       status: device.status,
+      lastAcceptedCounter: device.lastAcceptedCounter,
       lastSeenAt: device.lastSeenAt,
       updatedAt: device.updatedAt,
       createdAt: device.createdAt,

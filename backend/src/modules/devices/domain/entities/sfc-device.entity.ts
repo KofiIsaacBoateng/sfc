@@ -13,6 +13,7 @@ export interface SfcDeviceProps {
   provisionedDeviceId: string;
   tagUid: string;
   status: DeviceStatus;
+  lastAcceptedCounter: bigint | null;
   lastSeenAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -30,6 +31,7 @@ export class SfcDevice {
       id: randomUUID(),
       ...input,
       status: DeviceStatus.ACTIVE,
+      lastAcceptedCounter: null,
       lastSeenAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -87,6 +89,10 @@ export class SfcDevice {
 
   get status(): DeviceStatus {
     return this.props.status;
+  }
+
+  get lastAcceptedCounter(): bigint | null {
+    return this.props.lastAcceptedCounter;
   }
 
   get lastSeenAt(): Date | null {

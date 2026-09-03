@@ -29,12 +29,14 @@ export class SfcDeviceVerifierService implements SfcDeviceVerifier {
     tagData: string;
     proof?: SecureSfcProof;
   }): Promise<SfcDeviceVerificationResult> {
+    /** locate device from registered device archive */
     const device = await this.devices.findByTagUid(params.tagData);
 
     if (!device) {
       throw new NotFoundError(undefined, "SFC device is not registered.");
     }
 
+    /** locate registered device from our inventory to tell the security tier */
     const provisionedDevice = await this.provisionedDevices.findById(
       device.provisionedDeviceId,
     );
@@ -57,6 +59,7 @@ export class SfcDeviceVerifierService implements SfcDeviceVerifier {
       );
     }
 
+    /** If S-Tier, verify proof */
     if (provisionedDevice.securityTier === SecurityTier.SECURE) {
       if (!params.proof) {
         throw new UnauthorizedError(undefined, "Secure SFC proof is required.");
@@ -65,13 +68,11 @@ export class SfcDeviceVerifierService implements SfcDeviceVerifier {
       const verified = await this.secureSfcProofVerifier.verify({
         proof: params.proof,
         deviceId: device.id,
+        provisionedDeviceId: provisionedDevice.id,
       });
 
       if (!verified) {
-        throw new UnauthorizedError(
-          undefined,
-          "SFC secure device verification failed.",
-        );
+        throw new UnauthorizedError(undefined, "Invalid secure SFC proof.");
       }
     }
 

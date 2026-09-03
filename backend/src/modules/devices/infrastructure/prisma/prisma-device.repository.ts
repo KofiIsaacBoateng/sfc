@@ -2,6 +2,7 @@ import type { PrismaExecuter } from "@/shared/infrastructure/prisma/prisma-execu
 import type { DeviceRepository } from "../../domain/repositories/device.repository.js";
 import type { SfcDevice } from "../../domain/entities/sfc-device.entity.js";
 import { DeviceMapper } from "./device.mapper.js";
+import BadRequestError from "@/shared/errors/bad-request.js";
 
 export class PrismaDeviceRepository implements DeviceRepository {
   constructor(private readonly prisma: PrismaExecuter) {}
@@ -45,5 +46,33 @@ export class PrismaDeviceRepository implements DeviceRepository {
     const raw = await this.prisma.sfcDevice.findMany({ where: { userId } });
 
     return raw.map((value) => DeviceMapper.toDomain(value));
+  }
+
+  async acceptSecureCounter(
+    deviceId: string,
+    counter: bigint,
+  ): Promise<boolean> {
+    if (counter < 0n) {
+      throw new BadRequestError(undefined, "Invalid secure counter.");
+    }
+    const result = await this.prisma.sfcDevice.updateMany({
+      where: {
+        id: deviceId,
+        OR: [
+          { lastAcceptedCounter: null },
+          {
+            lastAcceptedCounter: {
+              lt: counter,
+            },
+          },
+        ],
+      },
+      data: {
+        lastAcceptedCounter: counter,
+        updatedAt: new Date(),
+      },
+    });
+
+    return result.count === 1;
   }
 }
