@@ -28,4 +28,11 @@ export interface PaymentRequestRepository {
    * Returns null if payment request doesn't exist
    */
   findById(id: string): Promise<PaymentRequest | null>;
+
+  /**
+   * Persist all expired requests as EXPIRED
+   * @param data
+   * Returns the number of expired payment requests
+   */
+  expirePending(now: Date): Promise<number>;
 }

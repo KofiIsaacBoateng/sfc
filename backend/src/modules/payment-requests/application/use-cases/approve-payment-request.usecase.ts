@@ -30,6 +30,7 @@ export class ApprovePaymentRequestUseCase {
           "Payment authorization is invalid, expired, or already consumed.",
         );
       }
+
       // Are we authorizing the right payment request?
       if (authorization.paymentRequestId !== paymentRequestId) {
         throw new ConflictError(

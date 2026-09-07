@@ -1,6 +1,9 @@
 import type { PrismaExecuter } from "@/shared/infrastructure/prisma/prisma-executor.js";
 import type { PaymentRequestRepository } from "../../domain/repositories/payment-request.repository.js";
-import type { PaymentRequest } from "../../domain/entities/payment-request.entity.js";
+import {
+  PaymentRequestStatus,
+  type PaymentRequest,
+} from "../../domain/entities/payment-request.entity.js";
 import { PaymentRequestMapper } from "./payment-request.mapper.js";
 
 export class PrismaPaymentRequestRepository implements PaymentRequestRepository {
@@ -60,5 +63,23 @@ export class PrismaPaymentRequestRepository implements PaymentRequestRepository 
     const raw = await this.prisma.paymentRequest.findUnique({ where: { id } });
 
     return raw ? PaymentRequestMapper.toDomain(raw) : null;
+  }
+
+  async expirePending(now: Date): Promise<number> {
+    const results = await this.prisma.paymentRequest.updateMany({
+      where: {
+        status: PaymentRequestStatus.PENDING,
+        expiresAt: {
+          lte: now,
+        },
+      },
+
+      data: {
+        status: PaymentRequestStatus.EXPIRED,
+        updatedAt: now,
+      },
+    });
+
+    return results.count;
   }
 }
