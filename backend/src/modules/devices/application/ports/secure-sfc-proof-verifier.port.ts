@@ -3,7 +3,7 @@ export interface SecureSfcProof {
   counter: bigint;
   cryptogram: string;
 }
-
+/** implemented by the device repository for now */
 export interface SfcProofReplayStore {
   acceptCounter(deviceId: string, counter: bigint): Promise<boolean>;
 }
@@ -11,7 +11,7 @@ export interface SfcProofReplayStore {
 export interface SecureSfcCryptographicVerifier {
   verify(params: {
     provisionedDeviceId: string;
-    proof: SecureSfcProof;
+    secureSfcProof: SecureSfcProof;
   }): Promise<boolean>;
 }
 
@@ -19,6 +19,6 @@ export interface SecureSfcProofVerifier {
   verify(params: {
     deviceId: string;
     provisionedDeviceId: string;
-    proof: SecureSfcProof;
+    secureSfcProof: SecureSfcProof;
   }): Promise<boolean>;
 }

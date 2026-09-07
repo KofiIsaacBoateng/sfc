@@ -9,14 +9,17 @@ import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.
 import { PaymentAuthorizationMethod } from "../../domain/entities/payment-authorization.entity.js";
 
 import type { PinVerifier } from "../ports/pin-verifier.js";
+import type { PaymentRealtimeChannel } from "../ports/payment-realtime-channel.js";
 
-export class Basicervice {
+export class BasicPaymentAuthorizationService {
   constructor(
     private readonly unitOfWork: UnitOfWork,
     private readonly pinVerifier: PinVerifier,
+    private readonly realtimeChannel: PaymentRealtimeChannel,
   ) {}
 
   async authorize(params: {
+    paymentRequestId: string;
     authorizationId: string;
     userId: string;
     pin: string;
@@ -30,13 +33,20 @@ export class Basicervice {
       throw new UnauthorizedError(undefined, "Invalid PIN.");
     }
 
-    return this.unitOfWork.execute(async (repos) => {
+    let result = await this.unitOfWork.execute(async (repos) => {
       const authorization = await repos.paymentAuthorization.findById(
         params.authorizationId,
       );
 
       if (!authorization) {
         throw new NotFoundError(undefined, "Payment authorization not found.");
+      }
+
+      if (authorization.paymentRequestId !== params.paymentRequestId) {
+        throw new ConflictError(
+          undefined,
+          "Authorization does not belong to this payment request.",
+        );
       }
 
       if (authorization.userId !== params.userId) {
@@ -60,9 +70,24 @@ export class Basicervice {
         );
       }
 
+      if (authorization.isExpired()) {
+        throw new ConflictError(
+          undefined,
+          "Payment authorization has expired.",
+        );
+      }
+
       authorization.authorize();
 
       return repos.paymentAuthorization.update(authorization);
     });
+
+    await this.realtimeChannel.notifyAuthorizationResult({
+      paymentRequestId: result.paymentRequestId,
+      userId: result.userId,
+      authorized: result.isAuthorized(),
+    });
+
+    return result;
   }
 }

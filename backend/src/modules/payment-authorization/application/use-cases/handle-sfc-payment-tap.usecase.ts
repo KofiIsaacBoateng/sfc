@@ -23,77 +23,87 @@ export class HandleSfcPaymentTapUseCase {
     private readonly realtimeChannel: PaymentRealtimeChannel,
   ) {}
 
-  async execute(dto: HandleSfcTapDto) {
+  async execute(dto: HandleSfcTapDto): Promise<PaymentAuthorization> {
+    /** VERIFY DEVICE */
     const verification = await this.sfcDeviceVerifier.verify({
       tagData: dto.tagData,
+      secureSfcProof: dto.secureSfcProof,
     });
 
     if (!verification.verified) {
       throw new UnauthorizedError(undefined, "SFC device verification failed.");
     }
 
-    return this.unitOfWork.execute(async (repos) => {
-      const paymentRequest = await repos.paymentRequest.findById(
-        dto.paymentRequestId,
-      );
-
-      if (!paymentRequest) {
-        throw new NotFoundError(undefined, "Payment request not found.");
-      }
-
-      if (!paymentRequest.isPending()) {
-        throw new ConflictError(undefined, "Payment request is not pending.");
-      }
-
-      if (paymentRequest.isExpired()) {
-        throw new ConflictError(undefined, "Payment request has expired.");
-      }
-
-      if (paymentRequest.requesterId === verification.userId) {
-        throw new ForbiddenError(
-          undefined,
-          "Merchant cannot authorize their own payment request.",
+    return this.unitOfWork.execute(
+      async (repos): Promise<PaymentAuthorization> => {
+        const paymentRequest = await repos.paymentRequest.findById(
+          dto.paymentRequestId,
         );
-      }
 
-      const requiresAuthorization =
-        this.authorizationPolicy.requiresCustomerAuthorization({
-          amount: paymentRequest.amount,
-          currency: paymentRequest.currency,
-          securityTier: verification.securityTier,
-        });
+        if (!paymentRequest) {
+          throw new NotFoundError(undefined, "Payment request not found.");
+        }
 
-      const authorization = PaymentAuthorization.create({
-        paymentRequestId: paymentRequest.id,
-        userId: verification.userId,
-        method: requiresAuthorization
-          ? PaymentAuthorizationMethod.PIN
-          : PaymentAuthorizationMethod.SECURE_SFC,
-        channel: PaymentAuthorizationChannel.APP,
-        duration: dto.authorizationDuration,
-      });
+        if (!paymentRequest.isPending()) {
+          throw new ConflictError(undefined, "Payment request is not pending.");
+        }
 
-      if (!requiresAuthorization) {
-        authorization.authorize(); // authorize immediately
-      }
+        if (paymentRequest.isExpired()) {
+          throw new ConflictError(undefined, "Payment request has expired.");
+        }
 
-      const created = await repos.paymentAuthorization.create(authorization);
+        if (paymentRequest.requesterId === verification.userId) {
+          throw new ForbiddenError(
+            undefined,
+            "Merchant cannot authorize their own payment request.",
+          );
+        }
 
-      if (requiresAuthorization) {
-        await this.realtimeChannel.notifyMerchantWaiting({
+        const requiresAuthorization =
+          this.authorizationPolicy.requiresCustomerAuthorization({
+            amount: paymentRequest.amount,
+            currency: paymentRequest.currency,
+            securityTier: verification.securityTier,
+          });
+
+        const authorization = PaymentAuthorization.create({
           paymentRequestId: paymentRequest.id,
-          merchantUserId: paymentRequest.requesterId,
-        });
-
-        await this.realtimeChannel.notifyCustomerAuthorizationRequired({
-          paymentRequestId: paymentRequest.id,
-          authorizationId: created.id,
           userId: verification.userId,
-          expiresAt: created.expiresAt,
+          method: requiresAuthorization
+            ? PaymentAuthorizationMethod.PIN
+            : PaymentAuthorizationMethod.SECURE_SFC,
+          channel: PaymentAuthorizationChannel.APP,
+          duration: dto.authorizationDuration,
         });
-      }
 
-      return created;
-    });
+        if (!requiresAuthorization) {
+          authorization.authorize(); // authorize immediately
+        }
+
+        const created = await repos.paymentAuthorization.create(authorization);
+
+        if (requiresAuthorization) {
+          await this.realtimeChannel.notifyMerchantWaiting({
+            paymentRequestId: paymentRequest.id,
+            merchantUserId: paymentRequest.requesterId,
+          });
+
+          await this.realtimeChannel.notifyCustomerAuthorizationRequired({
+            paymentRequestId: paymentRequest.id,
+            authorizationId: created.id,
+            userId: verification.userId,
+            expiresAt: created.expiresAt,
+          });
+        } else {
+          await this.realtimeChannel.notifyAuthorizationResult({
+            paymentRequestId: created.paymentRequestId,
+            userId: created.userId,
+            authorized: created.isAuthorized(),
+          });
+        }
+
+        return created;
+      },
+    );
   }
 }

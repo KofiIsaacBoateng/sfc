@@ -55,7 +55,7 @@ describe("SfcDeviceVerifierService", () => {
 
     const result = await service.verify({
       tagData: "04AABBCCDD",
-      proof: {
+      secureSfcProof: {
         uid: "04AABBCCDD",
         counter: 42n,
         cryptogram: "ABC123",
@@ -197,7 +197,7 @@ describe("SfcDeviceVerifierService", () => {
 
     const result = await service.verify({
       tagData: "dynamic-sfc-data",
-      proof: {
+      secureSfcProof: {
         uid: "04AABBCCDD",
         counter: 42n,
         cryptogram: "ABC123",
@@ -234,7 +234,7 @@ describe("SfcDeviceVerifierService", () => {
     await expect(
       service.verify({
         tagData: "dynamic-sfc-data",
-        proof: {
+        secureSfcProof: {
           uid: "04AABBCCDD",
           counter: 42n,
           cryptogram: "ABC123",

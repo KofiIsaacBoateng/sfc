@@ -42,14 +42,14 @@ describe("SecureSfcProofVerifierService", () => {
     const result = await sut.verify({
       deviceId: "sfc-device-id",
       provisionedDeviceId: "provisioned-device-id",
-      proof,
+      secureSfcProof: proof,
     });
 
     expect(result).toBe(true);
 
     expect(cryptographicVerifier.verify).toHaveBeenCalledWith({
       provisionedDeviceId: "provisioned-device-id",
-      proof,
+      secureSfcProof: proof,
     });
 
     expect(sfcDevices.acceptSecureCounter).toHaveBeenCalledWith(
@@ -66,7 +66,7 @@ describe("SecureSfcProofVerifierService", () => {
     const result = await sut.verify({
       deviceId: "sfc-device-id",
       provisionedDeviceId: "provisioned-device-id",
-      proof,
+      secureSfcProof: proof,
     });
 
     expect(result).toBe(false);
@@ -82,7 +82,7 @@ describe("SecureSfcProofVerifierService", () => {
     const result = await sut.verify({
       deviceId: "sfc-device-id",
       provisionedDeviceId: "provisioned-device-id",
-      proof,
+      secureSfcProof: proof,
     });
 
     expect(result).toBe(false);
@@ -95,7 +95,7 @@ describe("SecureSfcProofVerifierService", () => {
       sut.verify({
         deviceId: "sfc-device-id",
         provisionedDeviceId: "provisioned-device-id",
-        proof: {
+        secureSfcProof: {
           ...proof,
           counter: -1n,
         },
@@ -112,7 +112,7 @@ describe("SecureSfcProofVerifierService", () => {
       sut.verify({
         deviceId: "sfc-device-id",
         provisionedDeviceId: "provisioned-device-id",
-        proof: {
+        secureSfcProof: {
           ...proof,
           uid: "   ",
         },
@@ -127,7 +127,7 @@ describe("SecureSfcProofVerifierService", () => {
       sut.verify({
         deviceId: "sfc-device-id",
         provisionedDeviceId: "provisioned-device-id",
-        proof: {
+        secureSfcProof: {
           ...proof,
           cryptogram: "   ",
         },

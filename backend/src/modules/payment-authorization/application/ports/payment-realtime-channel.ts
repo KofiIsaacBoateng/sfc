@@ -11,6 +11,12 @@ export interface PaymentRealtimeChannel {
     expiresAt: Date;
   }): Promise<void>;
 
+  notifyAuthorizationResult(params: {
+    paymentRequestId: string;
+    userId: string;
+    authorized: boolean;
+  }): Promise<void>;
+
   notifyPaymentCompleted(params: {
     paymentRequestId: string;
     merchantUserId: string;

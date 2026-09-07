@@ -11,6 +11,6 @@ export interface SfcDeviceVerificationResult {
 export interface SfcDeviceVerifier {
   verify(params: {
     tagData: string;
-    proof?: SecureSfcProof;
+    secureSfcProof?: SecureSfcProof | undefined;
   }): Promise<SfcDeviceVerificationResult>;
 }

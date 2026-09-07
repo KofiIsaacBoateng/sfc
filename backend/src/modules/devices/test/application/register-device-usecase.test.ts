@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ActivationCodeHasher } from "../applications/ports/activation-code-hasher.js";
+import type { ActivationCodeHasher } from "../../application/ports/activation-code-hasher.js";
 import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.js";
 import type { Repositories } from "@/shared/application/unit-of-work/repositories.js";
-import { RegisterDeviceUseCase } from "../applications/use-cases/register-device.usecase.js";
+import { RegisterDeviceUseCase } from "../../application/use-cases/register-device.usecase.js";
 import NotFoundError from "@/shared/errors/not-found.js";
 import {
   ProvisionedDevice,
@@ -10,17 +10,17 @@ import {
   ProvisionedDeviceType,
   SecurityTier,
   type ProvisionedDeviceProps,
-} from "../domain/entities/provisioned-device.entity.js";
+} from "../../domain/entities/provisioned-device.entity.js";
 import ConflictError from "@/shared/errors/conflict.js";
 import {
   DeviceStatus,
   SfcDevice,
   type SfcDeviceProps,
-} from "../domain/entities/sfc-device.entity.js";
+} from "../../domain/entities/sfc-device.entity.js";
 import type {
   RegisterDeviceDto,
   RegisterDeviceResponseDto,
-} from "../applications/dtos/register-device.dto.js";
+} from "../../application/dtos/register-device.dto.js";
 
 /*** TEST BEGINS */
 describe("Rigister Device Usecase", () => {
@@ -45,6 +45,7 @@ describe("Rigister Device Usecase", () => {
     userId: "user-123",
     provisionedDeviceId: "p-device-123",
     status: DeviceStatus.ACTIVE,
+    lastAcceptedCounter: null,
     lastSeenAt: null,
     createdAt: new Date("2026-08-03:10:00:00.000Z"),
     updatedAt: new Date("2026-08-03:10:00:00.000Z"),

@@ -15,7 +15,8 @@ import type {
 import { SecurityTier } from "../../domain/entities/provisioned-device.entity.js";
 
 export interface VerifySfcDeviceInput {
-  tagData: SecureSfcProof | string;
+  tagData: string;
+  secureSfcProof?: SecureSfcProof;
 }
 
 export class SfcDeviceVerifierService implements SfcDeviceVerifier {
@@ -25,10 +26,9 @@ export class SfcDeviceVerifierService implements SfcDeviceVerifier {
     private readonly secureSfcProofVerifier: SecureSfcProofVerifier,
   ) {}
 
-  async verify(params: {
-    tagData: string;
-    proof?: SecureSfcProof;
-  }): Promise<SfcDeviceVerificationResult> {
+  async verify(
+    params: VerifySfcDeviceInput,
+  ): Promise<SfcDeviceVerificationResult> {
     /** locate device from registered device archive */
     const device = await this.devices.findByTagUid(params.tagData);
 
@@ -61,12 +61,12 @@ export class SfcDeviceVerifierService implements SfcDeviceVerifier {
 
     /** If S-Tier, verify proof */
     if (provisionedDevice.securityTier === SecurityTier.SECURE) {
-      if (!params.proof) {
+      if (!params.secureSfcProof) {
         throw new UnauthorizedError(undefined, "Secure SFC proof is required.");
       }
 
       const verified = await this.secureSfcProofVerifier.verify({
-        proof: params.proof,
+        secureSfcProof: params.secureSfcProof,
         deviceId: device.id,
         provisionedDeviceId: provisionedDevice.id,
       });

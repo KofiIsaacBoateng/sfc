@@ -6,7 +6,6 @@ import BadRequestError from "@/shared/errors/bad-request.js";
 import { EntryType } from "@/generated/client/enums.js";
 import ConflictError from "@/shared/errors/conflict.js";
 import UnauthorizedError from "@/shared/errors/unauthorized.js";
-import ForbiddenError from "@/shared/errors/forbidden.js";
 
 export class ApprovePaymentRequestUseCase {
   constructor(
@@ -20,11 +19,10 @@ export class ApprovePaymentRequestUseCase {
     authorizationId: string,
   ): Promise<Transaction> {
     return this.unitOfWork.execute(async (repos) => {
-      /*** AUTHORIZE PAYMENT */
-      const authorization = await repos.paymentAuthorization.claimAuthorized(
-        authorizationId,
-        senderUserId,
-      );
+      /*** CONSUME AUTHORIZED PAYMENT */
+      // load payment authorization
+      const authorization =
+        await repos.paymentAuthorization.findById(authorizationId);
 
       if (!authorization) {
         throw new UnauthorizedError(
@@ -32,11 +30,33 @@ export class ApprovePaymentRequestUseCase {
           "Payment authorization is invalid, expired, or already consumed.",
         );
       }
-
+      // Are we authorizing the right payment request?
       if (authorization.paymentRequestId !== paymentRequestId) {
-        throw new ForbiddenError(
+        throw new ConflictError(
           undefined,
           "Payment authorization does not belong to this payment request.",
+        );
+      }
+
+      // Does the authorization belong to the authenticatedf sender?
+      if (authorization.userId !== senderUserId) {
+        throw new UnauthorizedError(
+          undefined,
+          "Payment authorization does not belong to the authenticated user.",
+        );
+      }
+
+      // Claim(consume) payment authorization here!
+      const claimedAuthorization =
+        await repos.paymentAuthorization.claimAuthorized(
+          authorizationId,
+          senderUserId,
+        );
+
+      if (!claimedAuthorization) {
+        throw new UnauthorizedError(
+          undefined,
+          "Payment authorization is invalid, expired, or already consumed.",
         );
       }
 

@@ -15,33 +15,36 @@ export class SecureSfcProofVerifierService implements SecureSfcProofVerifier {
   async verify({
     deviceId,
     provisionedDeviceId,
-    proof,
+    secureSfcProof,
   }: {
     deviceId: string;
     provisionedDeviceId: string;
-    proof: SecureSfcProof;
+    secureSfcProof: SecureSfcProof;
   }): Promise<boolean> {
-    if (proof.counter < 0n) {
+    if (secureSfcProof.counter < 0n) {
       throw new BadRequestError(undefined, "Invalid secure counter.");
     }
 
-    if (!proof.uid.trim()) {
+    if (!secureSfcProof.uid.trim()) {
       throw new BadRequestError(undefined, "Invalid SFC UID.");
     }
 
-    if (!proof.cryptogram.trim()) {
+    if (!secureSfcProof.cryptogram.trim()) {
       throw new BadRequestError(undefined, "Invalid secure cryptogram.");
     }
 
     const cryptographicallyValid = await this.cryptographicVerifier.verify({
       provisionedDeviceId,
-      proof,
+      secureSfcProof,
     });
 
     if (!cryptographicallyValid) {
       return false;
     }
 
-    return this.sfcDevices.acceptSecureCounter(deviceId, proof.counter);
+    return this.sfcDevices.acceptSecureCounter(
+      deviceId,
+      secureSfcProof.counter,
+    );
   }
 }
