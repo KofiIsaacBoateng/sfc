@@ -4,7 +4,7 @@ export interface PaymentRealtimeChannel {
     merchantUserId: string;
   }): Promise<void>;
 
-  notifyCustomerAuthorizationRequired(params: {
+  notifyAuthorizationRequired(params: {
     paymentRequestId: string;
     authorizationId: string;
     userId: string;

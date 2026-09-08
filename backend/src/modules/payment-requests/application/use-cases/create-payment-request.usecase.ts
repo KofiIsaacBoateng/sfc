@@ -19,10 +19,25 @@ export class CreatePaymentRequestUseCase {
     const expiresAt = new Date(dto.expiresAt);
 
     if (Number.isNaN(expiresAt.getTime())) {
-      throw new Error("Invalid expiry date.");
+      throw new BadRequestError(undefined, "Invalid expiry date.");
     }
 
     return this.unitOfWork.execute(async (repos) => {
+      const existing = await repos.paymentRequest.findByIdempotencyKey(
+        requesterId,
+        dto.idempotencyKey,
+      );
+
+      if (existing) {
+        if (existing.amount !== amount || existing.currency !== dto.currency) {
+          throw new BadRequestError(
+            undefined,
+            "Idempotency key has already been used for a different payment request.",
+          );
+        }
+        return existing;
+      }
+
       const wallet = await repos.wallets.findByUserId(requesterId);
 
       if (!wallet) {
@@ -48,6 +63,7 @@ export class CreatePaymentRequestUseCase {
         amount,
         feeAmount: 0n /* TODO: make dynamic but no charge for now */,
         currency: dto.currency,
+        idempotencyKey: dto.idempotencyKey,
         expiresAt,
         reference: this.referenceGenerator.generate(),
       });

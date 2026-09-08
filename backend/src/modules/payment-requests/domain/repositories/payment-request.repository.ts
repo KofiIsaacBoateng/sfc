@@ -2,6 +2,24 @@ import type { PaymentRequest } from "../entities/payment-request.entity.js";
 
 export interface PaymentRequestRepository {
   /**
+   * Finds a payment request by id
+   * @param id
+   * Returns null if payment request doesn't exist
+   */
+  findById(id: string): Promise<PaymentRequest | null>;
+
+  /**
+   * Find payment by the unique constraints: requesterId and idempotencyKey
+   * @param requesterId
+   * @param idempotencyKey
+   * Returns null if payment request doesn't exist
+   */
+  findByIdempotencyKey(
+    requesterId: string,
+    idempotencyKey: string,
+  ): Promise<PaymentRequest | null>;
+
+  /**
    * Persists payment request
    * @param request
    * Returns a newly created payment request
@@ -21,13 +39,6 @@ export interface PaymentRequestRepository {
    * Returns nothing
    */
   claimPending(requestId: string): Promise<PaymentRequest | null>;
-
-  /**
-   * Finds a payment request by id
-   * @param id
-   * Returns null if payment request doesn't exist
-   */
-  findById(id: string): Promise<PaymentRequest | null>;
 
   /**
    * Persist all expired requests as EXPIRED

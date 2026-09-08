@@ -19,6 +19,7 @@ export interface PaymentRequestProps {
   currency: Currency;
   reference: string;
   status: PaymentRequestStatus;
+  idempotencyKey: string;
   expiresAt: Date;
   transactionId: string | null;
   createdAt: Date;
@@ -35,6 +36,7 @@ export class PaymentRequest {
     currency: Currency;
     reference: string;
     expiresAt: Date;
+    idempotencyKey: string;
   }): PaymentRequest {
     if (params.amount <= 0n) {
       throw new BadRequestError(
@@ -71,6 +73,7 @@ export class PaymentRequest {
       reference: params.reference,
       status: PaymentRequestStatus.PENDING,
       expiresAt: params.expiresAt,
+      idempotencyKey: params.idempotencyKey,
       transactionId: null,
       createdAt: now,
       updatedAt: now,
@@ -190,6 +193,10 @@ export class PaymentRequest {
 
   get expiresAt(): Date {
     return this.props.expiresAt;
+  }
+
+  get idempotencyKey(): string {
+    return this.props.idempotencyKey;
   }
 
   get transactionId(): string | null {

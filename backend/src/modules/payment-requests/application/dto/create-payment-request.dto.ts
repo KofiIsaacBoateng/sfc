@@ -9,6 +9,7 @@ export interface CreatePaymentRequestDto {
   amount: string;
   currency: Currency;
   expiresAt: Date;
+  idempotencyKey: string;
 }
 
 /** response */

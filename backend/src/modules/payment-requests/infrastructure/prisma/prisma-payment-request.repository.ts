@@ -5,24 +5,62 @@ import {
   type PaymentRequest,
 } from "../../domain/entities/payment-request.entity.js";
 import { PaymentRequestMapper } from "./payment-request.mapper.js";
+import { Prisma } from "@/generated/client/client.js";
+import ConflictError from "@/shared/errors/conflict.js";
 
 export class PrismaPaymentRequestRepository implements PaymentRequestRepository {
   constructor(private readonly prisma: PrismaExecuter) {}
 
-  async create(request: PaymentRequest): Promise<PaymentRequest> {
-    const raw = await this.prisma.paymentRequest.create({
-      data: PaymentRequestMapper.toPersistence(request),
-    });
+  async findById(id: string): Promise<PaymentRequest | null> {
+    const raw = await this.prisma.paymentRequest.findUnique({ where: { id } });
 
-    return PaymentRequestMapper.toDomain(raw);
+    return raw ? PaymentRequestMapper.toDomain(raw) : null;
   }
 
-  async update(request: PaymentRequest): Promise<PaymentRequest> {
+  async findByIdempotencyKey(
+    requesterId: string,
+    idempotencyKey: string,
+  ): Promise<PaymentRequest | null> {
+    const raw = await this.prisma.paymentRequest.findUnique({
+      where: {
+        requesterId_idempotencyKey: {
+          requesterId,
+          idempotencyKey,
+        },
+      },
+    });
+
+    return raw ? PaymentRequestMapper.toDomain(raw) : null;
+  }
+
+  async create(paymentRequest: PaymentRequest): Promise<PaymentRequest> {
+    try {
+      const raw = await this.prisma.paymentRequest.create({
+        data: PaymentRequestMapper.toPersistence(paymentRequest),
+      });
+
+      return PaymentRequestMapper.toDomain(raw);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new ConflictError(
+          undefined,
+          "Idempotency key has already been used.",
+        );
+      }
+
+      throw error;
+    }
+  }
+
+  async update(paymentRequest: PaymentRequest): Promise<PaymentRequest> {
     const raw = await this.prisma.paymentRequest.update({
       where: {
-        id: request.id,
+        id: paymentRequest.id,
       },
-      data: PaymentRequestMapper.toPersistence(request),
+      data: PaymentRequestMapper.toPersistence(paymentRequest),
     });
 
     return PaymentRequestMapper.toDomain(raw);
@@ -57,12 +95,6 @@ export class PrismaPaymentRequestRepository implements PaymentRequestRepository 
     });
 
     return request ? PaymentRequestMapper.toDomain(request) : null;
-  }
-
-  async findById(id: string): Promise<PaymentRequest | null> {
-    const raw = await this.prisma.paymentRequest.findUnique({ where: { id } });
-
-    return raw ? PaymentRequestMapper.toDomain(raw) : null;
   }
 
   async expirePending(now: Date): Promise<number> {

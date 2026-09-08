@@ -88,7 +88,7 @@ export class HandleSfcPaymentTapUseCase {
             merchantUserId: paymentRequest.requesterId,
           });
 
-          await this.realtimeChannel.notifyCustomerAuthorizationRequired({
+          await this.realtimeChannel.notifyAuthorizationRequired({
             paymentRequestId: paymentRequest.id,
             authorizationId: created.id,
             userId: verification.userId,

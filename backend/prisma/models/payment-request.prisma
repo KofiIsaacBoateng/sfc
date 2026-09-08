@@ -20,6 +20,8 @@ model PaymentRequest {
     currency                      Currency                       
     reference                     String                   @unique
     status                        PaymentRequestStatus     @default(PENDING)
+
+    idempotencyKey                String
     
     expiresAt                     DateTime                       
 
@@ -35,6 +37,7 @@ model PaymentRequest {
 
     paymentAuthorizations         PaymentAuthorization[]
 
+    @@unique([requesterId, idempotencyKey])
     @@index([requesterId, status])
     @@index([expiresAt])
     @@map("payment_requests")
