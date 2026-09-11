@@ -1,5 +1,5 @@
 import type { Server } from "socket.io";
-import type { PaymentRealtimeChannel } from "../../application/ports/payment-realtime-channel.js";
+import type { PaymentRealtimeChannel } from "../../application/ports/payment-realtime-channel.port.js";
 
 export class SocketIoPaymentRealtimeChannel implements PaymentRealtimeChannel {
   constructor(private readonly io: Server) {}

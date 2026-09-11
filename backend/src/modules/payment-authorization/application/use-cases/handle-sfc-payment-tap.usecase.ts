@@ -11,7 +11,7 @@ import UnauthorizedError from "@/shared/errors/unauthorized.js";
 import NotFoundError from "@/shared/errors/not-found.js";
 import ConflictError from "@/shared/errors/conflict.js";
 import ForbiddenError from "@/shared/errors/forbidden.js";
-import type { PaymentRealtimeChannel } from "../ports/payment-realtime-channel.js";
+import type { PaymentRealtimeChannel } from "../ports/payment-realtime-channel.port.js";
 import type { PaymentAuthorizationPolicy } from "../../domain/policies/payment-authorization.policy.js";
 import type { HandleSfcTapDto } from "../dto/handle-sfc-tap.dto.js";
 

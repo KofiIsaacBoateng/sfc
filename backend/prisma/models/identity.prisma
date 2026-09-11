@@ -47,6 +47,8 @@ model User {
 
   paymentAuthorizations       PaymentAuthorization[]
 
+  pushDevices                 PushDevice[]
+
 
   createdAt                   DateTime                            @default(now())
   updatedAt                   DateTime                            @updatedAt

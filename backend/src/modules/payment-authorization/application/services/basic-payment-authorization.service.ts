@@ -8,8 +8,8 @@ import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.
 
 import { PaymentAuthorizationMethod } from "../../domain/entities/payment-authorization.entity.js";
 
-import type { PinVerifier } from "../ports/pin-verifier.js";
-import type { PaymentRealtimeChannel } from "../ports/payment-realtime-channel.js";
+import type { PinVerifier } from "../ports/pin-verifier.port.js";
+import type { PaymentRealtimeChannel } from "../ports/payment-realtime-channel.port.js";
 
 export class BasicPaymentAuthorizationService {
   constructor(
