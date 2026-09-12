@@ -16,6 +16,19 @@ export interface TransactionRepository {
   findByReference(ref: string): Promise<Transaction | null>;
 
   /**
+   * Finds all transactions belonging to a user
+   * @param userId
+   * Returns a list of transactions
+   */
+  findByUserId(
+    userId: string,
+    params?: {
+      limit?: number;
+      cursor?: string;
+    },
+  ): Promise<Transaction[]>;
+
+  /**
    * Persists a transaction record in the database
    * @param transaction
    * Returns nothing
