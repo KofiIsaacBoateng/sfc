@@ -6,9 +6,9 @@ import { toWalletResponse } from "../../application/dto/wallet-response.dto.js";
 export class WalletController {
   constructor(private readonly getMyWalletUseCase: GetMyWalletUseCase) {}
 
-  getMyWallet = async (req: Request, res: Response): Promise<void> => {
+  async getMyWallet(req: Request, res: Response): Promise<void> {
     const wallet = await this.getMyWalletUseCase.execute(req.authUser.userId);
 
     sendSuccess(res, toWalletResponse(wallet), "Wallet retrieved successfully");
-  };
+  }
 }

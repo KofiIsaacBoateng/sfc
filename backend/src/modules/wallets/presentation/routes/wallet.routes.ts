@@ -26,6 +26,11 @@ export const buildWalletRoutes = (
    *         description: Wallet not found
    */
 
-  router.get("/", requireAuth(jwtSecret), controller.getMyWallet);
+  router.get(
+    "/",
+    requireAuth(jwtSecret),
+    controller.getMyWallet.bind(controller),
+  );
+
   return router;
 };

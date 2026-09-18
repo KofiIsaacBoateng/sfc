@@ -17,6 +17,19 @@ export class PrismaPaymentRequestRepository implements PaymentRequestRepository 
     return raw ? PaymentRequestMapper.toDomain(raw) : null;
   }
 
+  async findByRequesterId(requesterId: string): Promise<PaymentRequest[]> {
+    const raw = await this.prisma.paymentRequest.findMany({
+      where: {
+        requesterId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return raw.map(PaymentRequestMapper.toDomain);
+  }
+
   async findByIdempotencyKey(
     requesterId: string,
     idempotencyKey: string,

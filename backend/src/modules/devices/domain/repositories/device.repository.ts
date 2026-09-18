@@ -16,6 +16,13 @@ export interface DeviceRepository {
   findByTagUid(tagUid: string): Promise<SfcDevice | null>;
 
   /**
+   * Finds a device the device's id
+   * @param deviceId
+   * Returns null if device doesn't exist
+   */
+  findById(deviceId: string): Promise<SfcDevice | null>;
+
+  /**
    * Finds a device by the userId
    * @param userId
    * Returns a new device

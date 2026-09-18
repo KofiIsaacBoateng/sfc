@@ -34,6 +34,14 @@ export class PrismaDeviceRepository implements DeviceRepository {
     return raw ? DeviceMapper.toDomain(raw) : null;
   }
 
+  async findById(deviceId: string): Promise<SfcDevice | null> {
+    const raw = await this.prisma.sfcDevice.findUnique({
+      where: { id: deviceId },
+    });
+
+    return raw ? DeviceMapper.toDomain(raw) : null;
+  }
+
   async findByTagUid(tagUid: string): Promise<SfcDevice | null> {
     const raw = await this.prisma.sfcDevice.findUnique({
       where: { tagUid },

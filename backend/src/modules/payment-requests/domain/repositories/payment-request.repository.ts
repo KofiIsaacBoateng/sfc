@@ -9,6 +9,13 @@ export interface PaymentRequestRepository {
   findById(id: string): Promise<PaymentRequest | null>;
 
   /**
+   * Finds a payment request by the requester id
+   * @param requesterId
+   * Returns null if payment request doesn't exist
+   */
+  findByRequesterId(requesterId: string): Promise<PaymentRequest[]>;
+
+  /**
    * Find payment by the unique constraints: requesterId and idempotencyKey
    * @param requesterId
    * @param idempotencyKey

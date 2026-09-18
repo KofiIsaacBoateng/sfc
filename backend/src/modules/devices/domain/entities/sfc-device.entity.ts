@@ -46,6 +46,10 @@ export class SfcDevice {
     return this.props.status === DeviceStatus.ACTIVE;
   }
 
+  isBlocked(): boolean {
+    return this.props.status === DeviceStatus.BLOCKED;
+  }
+
   markAsSeen() {
     this.props.lastSeenAt = new Date();
     this.props.updatedAt = new Date();
@@ -53,6 +57,11 @@ export class SfcDevice {
 
   block() {
     this.props.status = DeviceStatus.BLOCKED;
+    this.props.updatedAt = new Date();
+  }
+
+  unblock() {
+    this.props.status = DeviceStatus.ACTIVE;
     this.props.updatedAt = new Date();
   }
 

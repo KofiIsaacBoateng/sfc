@@ -54,6 +54,10 @@ export class Merchant {
     this.props.updatedAt = new Date();
   }
 
+  updateBusinessName(businessName: string): void {
+    this.props.businessName = businessName;
+  }
+
   get id(): string {
     return this.props.id;
   }

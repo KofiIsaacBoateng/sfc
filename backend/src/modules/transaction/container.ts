@@ -9,6 +9,8 @@ import { TransferMoneyUseCase } from "./application/use-cases/transfer-money.use
 import { DefaultTransactionReferenceGenerator } from "./infrastructure/transaction-reference.generator.js";
 import { TransactionController } from "./presentation/controllers/transaction.controller.js";
 import { buildTransactionRoutes } from "./presentation/routes/transaction.route.js";
+import { GetTransactionHistoryUseCase } from "./application/use-cases/get-transaction-history.usecase.js";
+import { PrismaTransactionRepository } from "./infrastructure/prisma/prisma-transaction.repository.js";
 
 const repositoryFactory = new PrismaRepositoryFactory();
 const unitOfWork = new PrismaUnitOfWork(prisma, repositoryFactory);
@@ -29,7 +31,16 @@ const transferMoneyUseCase = new TransferMoneyUseCase(
   referenceGenerator,
 );
 
-const transactionController = new TransactionController(transferMoneyUseCase);
+/** transaction history */
+const transactionRepository = new PrismaTransactionRepository(prisma);
+const getTransactionHistoryUseCase = new GetTransactionHistoryUseCase(
+  transactionRepository,
+);
+
+const transactionController = new TransactionController(
+  transferMoneyUseCase,
+  getTransactionHistoryUseCase,
+);
 export const transactionRoutes = buildTransactionRoutes(
   transactionController,
   env.JWT_ACCESS_SECRET,

@@ -26,7 +26,35 @@ export const buildUserRoutes = (
    *         description: Server error
    */
 
-  router.get("/me", requireAuth(jwtSecret), usersController.me);
+  router.get(
+    "/me",
+    requireAuth(jwtSecret),
+    usersController.me.bind(usersController),
+  );
+
+  /**
+   * @openapi
+   * /api/v1/users/profile:
+   *   get:
+   *     tags:
+   *       - Users
+   *     summary: Get current authenticated user's profile
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Current user profile
+   *       401:
+   *         description: Unauthorized
+   *       500:
+   *         description: Server error
+   */
+
+  router.get(
+    "/profile",
+    requireAuth(jwtSecret),
+    usersController.getMyProfile.bind(usersController),
+  );
 
   return router;
 };

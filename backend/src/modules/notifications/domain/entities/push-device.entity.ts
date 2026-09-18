@@ -52,6 +52,14 @@ export class PushDevice {
     return this.props.lastSeenAt;
   }
 
+  get createdAt(): Date {
+    return this.props.createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this.props.updatedAt;
+  }
+
   touch(): void {
     const now = new Date();
 

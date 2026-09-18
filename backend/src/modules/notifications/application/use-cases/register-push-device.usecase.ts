@@ -1,18 +1,17 @@
-import type { UnitOfWork } from "@/shared/application/unit-of-work/unit-of-work.js";
-
 import BadRequestError from "@/shared/errors/bad-request.js";
 
 import { PushDevice } from "../../domain/entities/push-device.entity.js";
+import type { RegisterPushDeviceDto } from "../dtos/register-push-device.dto.js";
+import type { PushDeviceRepository } from "../../domain/repositories/push-device.repository.js";
 
 export class RegisterPushDeviceUseCase {
-  constructor(private readonly unitOfWork: UnitOfWork) {}
+  constructor(private readonly pushDeviceRepository: PushDeviceRepository) {}
 
-  async execute(params: {
-    userId: string;
-    token: string;
-    platform: string;
-  }): Promise<PushDevice> {
-    if (!params.token.trim()) {
+  async execute(
+    userId: string,
+    dto: RegisterPushDeviceDto,
+  ): Promise<PushDevice> {
+    if (!dto.token.trim()) {
       throw new BadRequestError(
         // "INVALID_PUSH_TOKEN", // TODO: missing error codes
         undefined,
@@ -20,7 +19,7 @@ export class RegisterPushDeviceUseCase {
       );
     }
 
-    if (!params.platform.trim()) {
+    if (!dto.platform.trim()) {
       throw new BadRequestError(
         // "INVALID_PLATFORM",
         undefined,
@@ -28,22 +27,20 @@ export class RegisterPushDeviceUseCase {
       );
     }
 
-    return this.unitOfWork.execute(async (repos) => {
-      const existing = await repos.pushDevice.findByToken(params.token);
+    const existing = await this.pushDeviceRepository.findByToken(dto.token);
 
-      if (existing) {
-        existing.touch();
+    if (existing) {
+      existing.touch();
 
-        return repos.pushDevice.update(existing);
-      }
+      return this.pushDeviceRepository.update(existing);
+    }
 
-      const device = PushDevice.create({
-        userId: params.userId,
-        token: params.token,
-        platform: params.platform,
-      });
-
-      return repos.pushDevice.create(device);
+    const device = PushDevice.create({
+      userId,
+      token: dto.token,
+      platform: dto.platform,
     });
+
+    return this.pushDeviceRepository.create(device);
   }
 }

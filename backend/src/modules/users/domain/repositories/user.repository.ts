@@ -14,7 +14,7 @@ export interface UserRepository {
    * @param id
    * Useful for authenticated requests.
    */
-  findById(id: string): Promise<User | null>;
+  findById(userId: string): Promise<User | null>;
 
   /**
    * Finds a a user by their unique ID

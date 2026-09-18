@@ -23,9 +23,10 @@ export class PrismaTransactionRepository implements TransactionRepository {
   ): Promise<Transaction[]> {
     const raw = await this.prisma.transaction.findMany({
       where: { initiatedBy: userId },
+      orderBy: { createdAt: "desc" },
     });
 
-    return raw.map((item) => TransactionMapper.toDomain(item));
+    return raw.map(TransactionMapper.toDomain);
   }
 
   async findByReference(ref: string): Promise<Transaction | null> {

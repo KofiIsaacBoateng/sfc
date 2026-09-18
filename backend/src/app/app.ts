@@ -17,6 +17,9 @@ import {
   paymentExecutionRoutes,
   paymentRequestRoutes,
 } from "@/modules/payment-requests/container.js";
+import { merchantRoutes } from "@/modules/merchants/container.js";
+import { paymentAuthorizationRoutes } from "@/modules/payment-authorization/container.js";
+import { notificationDeviceRoutes } from "@/modules/notifications/container.js";
 
 export const buildApp = () => {
   const app: Express = express();
@@ -45,13 +48,18 @@ export const buildApp = () => {
   // app routes
   app.use("/api/v1/auth", authRoutes);
   app.use("/api/v1/users", userRoutes);
+  app.use("/api/v1/merchant", merchantRoutes);
   app.use("/api/v1/wallet", walletRoutes);
-  app.use("/api/v1/devices", deviceRoutes);
+  app.use("/api/v1/sfc-devices", deviceRoutes);
   /** app routes - money zone */
   app.use("/api/v1/transfers", recipientRoutes);
   app.use("/api/v1/transactions", transactionRoutes);
   app.use("/api/v1/payment-requests", paymentRequestRoutes);
+  app.use("/api/v1/payment-requests", paymentAuthorizationRoutes);
   app.use("/api/v1/payment-requests", paymentExecutionRoutes);
+
+  // notifications
+  app.use("/api/v1/notifications", notificationDeviceRoutes);
 
   // Route not found Catchment Layer
   app.use(notFoundHandler);

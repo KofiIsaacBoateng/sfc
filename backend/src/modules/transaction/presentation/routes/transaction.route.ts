@@ -64,5 +64,33 @@ export function buildTransactionRoutes(
     controller.transfer.bind(controller),
   );
 
+  /**
+   * @openapi
+   * /api/v1/transactions:
+   *   get:
+   *     tags:
+   *       - Transactions
+   *     summary: Get authenticated user's transaction history
+   *     description: Returns the transactions initiated by the authenticated user, ordered from newest to oldest.
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Transaction history retrieved successfully.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/TransactionResponse'
+   *       401:
+   *         description: Authentication required.
+   */
+  router.get(
+    "/",
+    requireAuth(jwtSecret),
+    controller.getMyTransactions.bind(controller),
+  );
+
   return router;
 }

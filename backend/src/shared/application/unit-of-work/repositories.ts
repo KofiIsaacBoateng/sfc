@@ -8,7 +8,7 @@ import type { LedgerEntryRepository } from "@/modules/ledger/application/reposit
 import type { PaymentRequestRepository } from "@/modules/payment-requests/domain/repositories/payment-request.repository.js";
 import type { MerchantRepository } from "@/modules/merchants/domain/repositories/merchant.repository.js";
 import type { PaymentAuthorizationRepository } from "@/modules/payment-authorization/domain/repositories/payment-authorization.repository.js";
-import type { PushDeviceRepository } from "@/modules/notifications/domain/repositories/push-notification.repository.js";
+import type { PushDeviceRepository } from "@/modules/notifications/domain/repositories/push-device.repository.js";
 
 export interface Repositories {
   users: UserRepository;
